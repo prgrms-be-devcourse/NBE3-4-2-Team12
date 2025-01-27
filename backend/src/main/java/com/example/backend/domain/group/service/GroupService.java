@@ -27,7 +27,6 @@ public class GroupService {
                 .maxParticipants(groupRequestDto.getMaxParticipants())
                 .build();
         groupRepository.save(group);
-
         return new GroupResponseDto(group);
     }
 
