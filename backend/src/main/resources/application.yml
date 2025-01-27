@@ -1,1 +1,13 @@
-spring.application.name=backend
+spring:
+  config:
+    activate:
+      on-profile: local
+  application:
+    name: backend
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
