@@ -1,6 +1,7 @@
 package com.example.backend.domain.group.dto;
 
 import com.example.backend.domain.group.entity.Group;
+import com.example.backend.domain.group.entity.GroupStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class GroupResponseDto {
     private String title;
     private String description;
     private Integer maxParticipants;
+    private GroupStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -25,6 +27,7 @@ public class GroupResponseDto {
         this.title = group.getTitle();
         this.description = group.getDescription();
         this.maxParticipants = group.getMaxParticipants();
+        this.status = group.getStatus();
         this.createdAt = group.getCreatedAt();
         this.modifiedAt = group.getModifiedAt();
     }
