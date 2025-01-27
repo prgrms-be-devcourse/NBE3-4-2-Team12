@@ -26,7 +26,7 @@ public class GroupController {
 
     @GetMapping
     public ResponseEntity<List<GroupResponseDto>> listGroups(){
-        List<GroupResponseDto> response = groupService.findAll();
+        List<GroupResponseDto> response = groupService.findAllGroups();
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 

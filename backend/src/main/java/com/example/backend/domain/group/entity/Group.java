@@ -11,6 +11,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "\"groups\"")
 public class Group extends BaseEntity {
 
     @Id
