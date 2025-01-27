@@ -23,7 +23,7 @@ public class Group extends BaseEntity {
     @NotBlank(message = "설명은 필수 사항입니다.")
     private String description;
 
-    private Long owner_id;
+    private Long ownerId;
 
     private GroupStatus status;
 
