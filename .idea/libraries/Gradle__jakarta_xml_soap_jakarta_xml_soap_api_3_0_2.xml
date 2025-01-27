@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: jakarta.xml.soap:jakarta.xml.soap-api:3.0.2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="jakarta.xml.soap" artifactId="jakarta.xml.soap-api" version="3.0.2" baseVersion="3.0.2" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/jakarta.xml.soap/jakarta.xml.soap-api/3.0.2/445830286faf84fe40a3f47ccd7537d69cd58c4/jakarta.xml.soap-api-3.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

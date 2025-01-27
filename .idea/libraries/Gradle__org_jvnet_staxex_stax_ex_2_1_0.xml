@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jvnet.staxex:stax-ex:2.1.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.jvnet.staxex" artifactId="stax-ex" version="2.1.0" baseVersion="2.1.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jvnet.staxex/stax-ex/2.1.0/33160568d70c01da407f8ba982bacf283d00ad4a/stax-ex-2.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
