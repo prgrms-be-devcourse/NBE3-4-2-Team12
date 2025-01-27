@@ -6,9 +6,8 @@
 #### 아침에 첫 작업 시작 전:
 ```bash
 git fetch origin  # 원격 저장소 변경사항 확인
-git checkout feature/develop  # develop중인 본인 브랜치로 이동
+git checkout feature/vote-1  # 본인의 feature 브랜치로 이동
 git pull  # 최신 변경사항 가져오기
-git checkout -b feature/new-work  # 새 작업 브랜치 생성
 ```
 
 ## 브랜치명 규칙
@@ -25,14 +24,14 @@ git checkout -b feature/new-work  # 새 작업 브랜치 생성
 # 원격 저장소의 최신 변경사항을 가져옵니다
 git fetch origin
 
-# develop 브랜치로 이동합니다
-git checkout develop
+# main 브랜치로 이동합니다
+git checkout main
 
-# 원격의 develop 브랜치를 로컬에 반영합니다
-git merge origin/develop
+# 원격의 main 브랜치를 로컬에 반영합니다
+git merge origin/main
 
 # 새로운 기능 브랜치를 생성합니다
-git checkout -b feature/user-authentication
+git checkout -b feature/vote-1
 ```
 
 ## 작업 중 최신 변경사항 동기화하기
@@ -57,10 +56,10 @@ git commit -m "merge: develop 브랜치 변경사항 반영"
 
 ```bash
 # 원격의 변경사항을 가져옵니다
-git fetch origin develop
+git fetch origin main
 
-# 현재 브랜치의 커밋들을 develop 브랜치 위로 재배치합니다
-git rebase origin/develop
+# 현재 브랜치의 커밋들을 main 브랜치 위로 재배치합니다
+git rebase origin/main
 
 # 충돌이 발생한 경우:
 # 1. 충돌을 해결합니다
@@ -81,10 +80,13 @@ git rebase --abort
 git add .
 
 # 커밋합니다 (커밋 메시지 컨벤션을 따릅니다)
-git commit -m "feat: 사용자 인증 기능 구현"
+git commit -m "feat: 투표 기능 구현"
 
 # 원격 저장소에 푸시합니다
-git push origin feature/user-authentication
+git push origin feature/vote-1
+
+# rebase 후에는 강제 푸시가 필요할 수 있습니다 - 파일손실 가능
+git push origin feature/vote-1 --force
 ```
 
 ## 커밋 메시지 컨벤션
