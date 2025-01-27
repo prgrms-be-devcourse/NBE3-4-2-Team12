@@ -31,7 +31,7 @@ public class GroupController {
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
-    @DeleteMapping("{ownerId}")
+    @DeleteMapping("/{ownerId}")
     public ResponseEntity<GroupResponseDto> deleteGroup(@PathVariable("ownerId") Long id){
         groupService.deleteGroup(id);
         return new ResponseEntity<>(null,HttpStatus.OK);
