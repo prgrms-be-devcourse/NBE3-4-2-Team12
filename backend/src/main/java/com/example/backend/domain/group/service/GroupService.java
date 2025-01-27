@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class GroupService {
@@ -24,8 +27,12 @@ public class GroupService {
                 .maxParticipants(groupRequestDto.getMaxParticipants())
                 .build();
         groupRepository.save(group);
+
         return new GroupResponseDto(group);
     }
 
+    public List<GroupResponseDto> listGroups() {
+        return groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
+    }
 }
 
