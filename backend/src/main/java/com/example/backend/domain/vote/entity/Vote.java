@@ -1,17 +1,17 @@
 package com.example.backend.domain.vote.entity;
 
+import com.example.backend.domain.vote.user.entity.User;
 import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@Getter
-@Setter
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Vote extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +28,7 @@ public class Vote extends BaseEntity {
     @Column(name = "voter_count")
     private Integer voterCount;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // 외래키 FK를 (user_id)로 지정
+    private User user;
 }
