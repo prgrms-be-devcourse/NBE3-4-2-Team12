@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.h2database:h2:2.3.232" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.h2database" artifactId="h2" version="2.3.232" baseVersion="2.3.232" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.h2database/h2/2.3.232/4fcc05d966ccdb2812ae8b9a718f69226c0cf4e2/h2-2.3.232.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.h2database/h2/2.3.232/96211dafcaec0a1f6f7e735200771711b766f399/h2-2.3.232-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.h2database/h2/2.3.232/a3aa5e3ff002e0a490b5b454f7f41bc8e5216ae3/h2-2.3.232-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
