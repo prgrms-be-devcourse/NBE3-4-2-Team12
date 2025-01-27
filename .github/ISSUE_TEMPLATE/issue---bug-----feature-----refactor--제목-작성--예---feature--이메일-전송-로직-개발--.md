@@ -1,7 +1,7 @@
 ---
 name: 'Issue: [Bug] / [Feature] / [Refactor] 제목 작성 (예: [Feature] 이메일 전송 로직 개발) '
 about: 'Issue: [Bug] / [Feature] / [Refactor] 제목 작성 (예: [Feature] 이메일 전송 로직 개발) '
-title: ''
+title: 'Issue: [Bug] / [Feature] / [Refactor] 제목 작성 (예: [Feature] 이메일 전송 로직 개발)'
 labels: ''
 assignees: ''
 
