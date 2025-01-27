@@ -30,7 +30,7 @@ public class GroupService {
         return new GroupResponseDto(group);
     }
 
-    public List<GroupResponseDto> findAll() {
+    public List<GroupResponseDto> findAllGroups() {
         return groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
     }
 }
