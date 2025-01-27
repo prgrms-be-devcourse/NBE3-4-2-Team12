@@ -13,7 +13,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum GlobalErrorCode {
-	NOT_VALID(HttpStatus.BAD_REQUEST, "400-1", "입력된 객체가 유효하지 않습니다");
+	NOT_VALID(HttpStatus.BAD_REQUEST, "400-1", "입력된 객체가 유효하지 않습니다"),
+	NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 그룹은 존재하지 않습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String code;
