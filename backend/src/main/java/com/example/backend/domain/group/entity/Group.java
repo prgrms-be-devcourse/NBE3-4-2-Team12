@@ -1,0 +1,31 @@
+package com.example.backend.domain.group.entity;
+
+import com.example.backend.global.base.BaseEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+
+@Entity
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Group extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "제목은 필수 사항입니다.")
+    private String title;
+
+    @NotBlank(message = "설명은 필수 사항입니다.")
+    private String description;
+
+    private Long owner_id;
+
+    private GroupStatus status;
+
+    private Integer maxParticipants;
+}
