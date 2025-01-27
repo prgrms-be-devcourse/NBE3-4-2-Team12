@@ -6,7 +6,7 @@
 #### 아침에 첫 작업 시작 전:
 ```bash
 git fetch origin  # 원격 저장소 변경사항 확인
-git checkout develop  # develop 브랜치로 이동
+git checkout feature/develop  # develop중인 본인 브랜치로 이동
 git pull  # 최신 변경사항 가져오기
 git checkout -b feature/new-work  # 새 작업 브랜치 생성
 ```
