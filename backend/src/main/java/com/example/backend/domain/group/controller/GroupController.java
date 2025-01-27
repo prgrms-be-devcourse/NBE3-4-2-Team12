@@ -5,6 +5,7 @@ import com.example.backend.domain.group.dto.GroupResponseDto;
 import com.example.backend.domain.group.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,4 +31,9 @@ public class GroupController {
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
+    @DeleteMapping("{ownerId}")
+    public ResponseEntity<GroupResponseDto> deleteGroup(@PathVariable("ownerId") Long id){
+        groupService.deleteGroup(id);
+        return new ResponseEntity<>(null,HttpStatus.OK);
+    }
 }

@@ -4,6 +4,8 @@ import com.example.backend.domain.group.dto.GroupRequestDto;
 import com.example.backend.domain.group.dto.GroupResponseDto;
 import com.example.backend.domain.group.entity.Group;
 import com.example.backend.domain.group.entity.GroupStatus;
+import com.example.backend.domain.group.exception.GroupErrorCode;
+import com.example.backend.domain.group.exception.GroupException;
 import com.example.backend.domain.group.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,15 @@ public class GroupService {
         return new GroupResponseDto(group);
     }
 
+    @Transactional
     public List<GroupResponseDto> findAllGroups() {
         return groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteGroup(Long id) {
+        Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
+        groupRepository.delete(group);
     }
 }
 
