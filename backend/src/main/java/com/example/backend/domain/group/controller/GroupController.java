@@ -41,10 +41,9 @@ public class GroupController {
     }
 
     @PutMapping("/{ownerId}")
-    public ResponseEntity<GroupResponseDto>modifyGroup(@PathVariable Long ownerId, @RequestBody GroupRequestDto requestDto){
+    public ResponseEntity<GroupResponseDto>modifyGroup(@PathVariable Long ownerId,@RequestParam Long id, @RequestBody GroupRequestDto requestDto){
         log.info("Modifying a particular group is being requested");
-        GroupResponseDto response = groupService.modifyGroup(ownerId,requestDto);
+        GroupResponseDto response = groupService.modifyGroup(ownerId,id,requestDto);
         return new ResponseEntity<>(response,HttpStatus.valueOf(200));
     }
-
 }
