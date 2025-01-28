@@ -42,5 +42,14 @@ public class GroupService {
         Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
         groupRepository.delete(group);
     }
+
+    @Transactional
+    public GroupResponseDto modifyGroup(Long ownerId, GroupRequestDto groupRequestDto) {
+        Group group = groupRepository.findById(ownerId).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
+        group.setTitle(groupRequestDto.getTitle());
+        group.setDescription(groupRequestDto.getDescription());
+        group.setMaxParticipants(groupRequestDto.getMaxParticipants());
+        return new GroupResponseDto(groupRepository.save(group));
+    }
 }
 
