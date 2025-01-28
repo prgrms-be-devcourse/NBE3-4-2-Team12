@@ -1,5 +1,6 @@
 package com.example.backend.domain.group.controller;
 
+import com.example.backend.domain.group.dto.GroupModifyRequestDto;
 import com.example.backend.domain.group.dto.GroupRequestDto;
 import com.example.backend.domain.group.dto.GroupResponseDto;
 import com.example.backend.domain.group.service.GroupService;
@@ -41,9 +42,9 @@ public class GroupController {
     }
 
     @PutMapping("/{ownerId}")
-    public ResponseEntity<GroupResponseDto>modifyGroup(@PathVariable Long ownerId,@RequestParam Long id, @RequestBody GroupRequestDto requestDto){
+    public ResponseEntity<GroupResponseDto>modifyGroup(@PathVariable Long ownerId, @RequestBody GroupModifyRequestDto modifyRequestDto){
         log.info("Modifying a particular group is being requested");
-        GroupResponseDto response = groupService.modifyGroup(ownerId,id,requestDto);
+        GroupResponseDto response = groupService.modifyGroup(ownerId,modifyRequestDto);
         return new ResponseEntity<>(response,HttpStatus.valueOf(200));
     }
 }

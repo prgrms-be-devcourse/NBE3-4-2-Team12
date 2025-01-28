@@ -1,5 +1,6 @@
 package com.example.backend.domain.group.service;
 
+import com.example.backend.domain.group.dto.GroupModifyRequestDto;
 import com.example.backend.domain.group.dto.GroupRequestDto;
 import com.example.backend.domain.group.dto.GroupResponseDto;
 import com.example.backend.domain.group.entity.Group;
@@ -44,22 +45,21 @@ public class GroupService {
     }
 
     @Transactional
-    public GroupResponseDto modifyGroup(Long ownerId,Long id, GroupRequestDto groupRequestDto) {
+    public GroupResponseDto modifyGroup(Long ownerId, GroupModifyRequestDto groupModifyRequestDto) {
         List<Group> groups = groupRepository.findByOwnerId(ownerId).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
         GroupResponseDto groupResponseDto = new GroupResponseDto();
         for(Group group : groups){
-            if(group.getId() == id){
-                group.setTitle(groupRequestDto.getTitle());
-                group.setDescription(groupRequestDto.getDescription());
-                group.setMaxParticipants(groupRequestDto.getMaxParticipants());
+            if(group.getId() == groupModifyRequestDto.getGroupId()){
+                group.setTitle(groupModifyRequestDto.getTitle());
+                group.setDescription(groupModifyRequestDto.getDescription());
+                group.setMaxParticipants(groupModifyRequestDto.getMaxParticipants());
                 groupRepository.save(group);
                 groupResponseDto = new GroupResponseDto(group);
                 break;
             }
-
-            else{
-                throw new GroupException(GroupErrorCode.NOT_FOUND);
-            }
+        }
+        if(groupResponseDto == null){
+            throw new GroupException(GroupErrorCode.NOT_FOUND);
         }
         return groupResponseDto;
     }
