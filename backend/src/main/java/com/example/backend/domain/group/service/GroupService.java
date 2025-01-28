@@ -51,9 +51,11 @@ public class GroupService {
         GroupResponseDto groupResponseDto = new GroupResponseDto();
         for(Group group : groups){
             if(group.getId() == groupModifyRequestDto.getGroupId()){
-                group.setTitle(groupModifyRequestDto.getTitle());
-                group.setDescription(groupModifyRequestDto.getDescription());
-                group.setMaxParticipants(groupModifyRequestDto.getMaxParticipants());
+                group.update(
+                        groupModifyRequestDto.getTitle(),
+                        groupModifyRequestDto.getDescription(),
+                        groupModifyRequestDto.getMaxParticipants()
+                );
                 groupRepository.save(group);
                 groupResponseDto = new GroupResponseDto(group);
                 break;

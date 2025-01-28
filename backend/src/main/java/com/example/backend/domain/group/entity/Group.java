@@ -29,4 +29,10 @@ public class Group extends BaseEntity {
     private GroupStatus status;
 
     private Integer maxParticipants;
+
+    public void update(String title, String description, Integer maxParticipants) {
+        this.title = title;
+        this.description = description;
+        this.maxParticipants = maxParticipants;
+    }
 }
