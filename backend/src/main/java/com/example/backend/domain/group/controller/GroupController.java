@@ -21,19 +21,23 @@ public class GroupController {
 
     @PostMapping("/{ownerId}")
     public ResponseEntity<GroupResponseDto>createGroup(@PathVariable Long ownerId, @RequestBody GroupRequestDto requestDto) {
+        log.info("New group creation requested");
         GroupResponseDto response = groupService.create(ownerId, requestDto);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
     @GetMapping
     public ResponseEntity<List<GroupResponseDto>> listGroups(){
+        log.info("Listing all groups are requested");
         List<GroupResponseDto> response = groupService.findAllGroups();
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
     @DeleteMapping("/{ownerId}")
     public ResponseEntity<GroupResponseDto> deleteGroup(@PathVariable("ownerId") Long id){
+        log.info("Deleting a particular group is being requested");
         groupService.deleteGroup(id);
         return new ResponseEntity<>(null,HttpStatus.OK);
     }
+
 }
