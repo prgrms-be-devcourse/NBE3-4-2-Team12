@@ -41,7 +41,8 @@ public class GroupService {
     @Transactional
     public void deleteGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
-        groupRepository.delete(group);
+        group.setStatus(GroupStatus.INACTIVE);
+        groupRepository.save(group);
     }
 
     @Transactional
