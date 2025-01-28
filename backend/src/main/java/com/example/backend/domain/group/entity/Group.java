@@ -4,6 +4,8 @@ import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Builder
@@ -11,6 +13,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql="UPDATE group SET is_deleted = true WHERE id = ?")
 @Table(name = "\"groups\"")
 public class Group extends BaseEntity {
 
@@ -29,4 +32,6 @@ public class Group extends BaseEntity {
     private GroupStatus status;
 
     private Integer maxParticipants;
+
+    private boolean isDeleted = false;
 }

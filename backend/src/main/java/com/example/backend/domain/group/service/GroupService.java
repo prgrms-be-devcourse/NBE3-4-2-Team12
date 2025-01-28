@@ -33,14 +33,23 @@ public class GroupService {
     }
 
     @Transactional
-    public List<GroupResponseDto> findAllGroups() {
-        return groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
+    public void deleteGroup(Long id) {
+        Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
+        group.setDeleted(true);
+        groupRepository.save(group);
     }
 
     @Transactional
-    public void deleteGroup(Long id) {
-        Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
-        groupRepository.delete(group);
+    public List<GroupResponseDto> findByIsDeleted(){
+        return groupRepository.findByDeletedFalse().stream()
+                .map(group -> GroupResponseDto.builder()
+                        .id(group.getId())
+                        .title(group.getTitle())
+                        .description(group.getDescription())
+                        .status(group.getStatus())
+                        .maxParticipants(group.getMaxParticipants())
+                        .build())
+                .collect(Collectors.toList());
     }
 }
 

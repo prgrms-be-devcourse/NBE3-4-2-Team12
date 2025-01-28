@@ -27,8 +27,8 @@ public class GroupController {
 
     @GetMapping
     public ResponseEntity<List<GroupResponseDto>> listGroups(){
-        List<GroupResponseDto> response = groupService.findAllGroups();
-        return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
+        List<GroupResponseDto> Group = groupService.findByIsDeleted();
+        return ResponseEntity.ok(Group);
     }
 
     @DeleteMapping("/{ownerId}")
