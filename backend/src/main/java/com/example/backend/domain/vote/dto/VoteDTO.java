@@ -12,7 +12,7 @@ public class VoteDTO {
     private Double longitude;
 
     // Entity -> DTO
-    public static VoteDTO from(Vote vote) {
+    public static VoteDTO toDTO(Vote vote) {
         VoteDTO voteDto = new VoteDTO();
         voteDto.location = vote.getLocation();
         voteDto.address = vote.getAddress();
