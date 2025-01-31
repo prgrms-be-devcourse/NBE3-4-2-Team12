@@ -2,7 +2,6 @@ package com.example.backend.domain.group.entity;
 
 import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -15,14 +14,19 @@ public class Group extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String title;
 
+    @Column
     private String description;
 
+    @Column
     private Long ownerId;
 
+    @Column
     private GroupStatus status;
 
+    @Column
     private Integer maxParticipants;
 
 
