@@ -69,6 +69,9 @@ public class GroupService {
         if (groupStatus == GroupStatus.DELETED){
             throw new GroupException(GroupErrorCode.ALREADY_DELETED);
         }
+        if (groupStatus == GroupStatus.EXPIRED){
+            throw new GroupException(GroupErrorCode.EXPIRED);
+        }
     }
 
     public void joinGroup(Long groupId, Long memberId) {
