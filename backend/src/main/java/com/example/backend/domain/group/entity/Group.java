@@ -1,5 +1,6 @@
 package com.example.backend.domain.group.entity;
 
+import com.example.backend.domain.member.entity.Member;
 import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,8 +21,9 @@ public class Group extends BaseEntity {
     @Column
     private String description;
 
-    @Column
-    private Long ownerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column
     private GroupStatus status;
@@ -31,9 +33,10 @@ public class Group extends BaseEntity {
 
 
     @Builder
-    public Group(String title, String description, Long ownerId, GroupStatus status, Integer maxParticipants) {
+    public Group(String title, String description, Member member, GroupStatus status, Integer maxParticipants) {
         this.title = title;
         this.description = description;
+        this.member = member;
         this.status = status;
         this.maxParticipants = maxParticipants;
     }

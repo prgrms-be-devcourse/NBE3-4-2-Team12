@@ -28,9 +28,11 @@ public class GroupService {
 
     @Transactional
     public GroupResponseDto create(GroupRequestDto groupRequestDto){
+        Member member = memberRepository.findById(groupRequestDto.getOwnerId()).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND_MEMBER));
         Group group = Group.builder()
                 .title(groupRequestDto.getTitle())
                 .description(groupRequestDto.getDescription())
+                .member(member)
                 .status(GroupStatus.RECRUITING)
                 .maxParticipants(groupRequestDto.getMaxParticipants())
                 .build();
