@@ -1,6 +1,5 @@
 package com.example.backend.domain.vote.entity;
 
-import com.example.backend.domain.vote.user.entity.User;
 import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
