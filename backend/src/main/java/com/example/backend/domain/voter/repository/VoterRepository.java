@@ -3,6 +3,5 @@ package com.example.backend.domain.voter.repository;
 import com.example.backend.domain.voter.entity.Voter;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
-public class VoterRepository {
+public interface VoterRepository{
 }
