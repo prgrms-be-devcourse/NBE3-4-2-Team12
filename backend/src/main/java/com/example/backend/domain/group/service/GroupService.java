@@ -33,15 +33,16 @@ public class GroupService {
         return new GroupResponseDto(group);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GroupResponseDto> findAllGroups() {
         return groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
     }
 
+
     @Transactional
     public void deleteGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
-        group.setStatus(GroupStatus.DELETED);
+        group.updateStatus(GroupStatus.DELETED);
         groupRepository.save(group);
     }
 
