@@ -4,6 +4,7 @@ import com.example.backend.domain.group.dto.GroupModifyRequestDto;
 import com.example.backend.domain.group.dto.GroupRequestDto;
 import com.example.backend.domain.group.dto.GroupResponseDto;
 import com.example.backend.domain.group.service.GroupService;
+import com.example.backend.domain.group.dto.JoinGroupRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,5 +55,19 @@ public class GroupController {
         log.info("Modifying a particular group is being requested");
         GroupResponseDto response = groupService.modifyGroup(groupId,modifyRequestDto);
         return new ResponseEntity<>(response,HttpStatus.valueOf(200));
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<String> joinGroup(@RequestBody @Valid JoinGroupRequestDto joinGroupRequestDto){
+        Long groupId = joinGroupRequestDto.getGroupId();
+        Long memberId = joinGroupRequestDto.getMemberId();
+
+        if (memberId == null || groupId == null) {
+            return ResponseEntity.badRequest().body("그룹 또는 회원의 데이터가 없습니다.");
+        }
+
+        groupService.joinGroup(groupId, memberId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
