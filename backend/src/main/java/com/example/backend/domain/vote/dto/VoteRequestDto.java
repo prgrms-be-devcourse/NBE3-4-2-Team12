@@ -1,13 +1,12 @@
 package com.example.backend.domain.vote.dto;
 
 import com.example.backend.domain.vote.entity.Vote;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class VoteRequest {
+public class VoteRequestDto {
     private String location;
     private String address;
     private Double latitude;

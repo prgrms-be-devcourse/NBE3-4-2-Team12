@@ -1,6 +1,7 @@
 package com.example.backend.domain.vote.service;
 
-import com.example.backend.domain.vote.dto.VoteDTO;
+import com.example.backend.domain.vote.dto.VoteRequestDto;
+import com.example.backend.domain.vote.dto.VoteResponseDto;
 import com.example.backend.domain.vote.entity.Vote;
 import com.example.backend.domain.vote.repository.VoteRepository;
 import jakarta.transaction.Transactional;
@@ -13,9 +14,10 @@ public class VoteService {
     private final VoteRepository voteRepository;
 
     @Transactional
-    public VoteDTO createVote(Long groupId, VoteDTO voteDTO) {
-        Vote vote = voteDTO.toEntity(groupId);
+    public VoteResponseDto createVote(Long groupId, VoteRequestDto request) {
+        Vote vote = request.toEntity(groupId);
         Vote savedVote = voteRepository.save(vote);
-        return VoteDTO.toDTO(savedVote);
+
+        return VoteResponseDto.toDto(savedVote);
     }
 }

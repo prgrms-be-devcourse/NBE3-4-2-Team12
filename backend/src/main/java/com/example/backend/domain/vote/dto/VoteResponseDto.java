@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class VoteResponse {
+public class VoteResponseDto {
     private Long id;
     private String location;
     private String address;
@@ -17,8 +17,8 @@ public class VoteResponse {
     private Integer voterCount;
     private LocalDateTime createdAt;
 
-    public static VoteResponse from(Vote vote) {
-        return VoteResponse.builder()
+    public static VoteResponseDto toDto(Vote vote) {
+        return VoteResponseDto.builder()
                 .id(vote.getId())
                 .location(vote.getLocation())
                 .address(vote.getAddress())

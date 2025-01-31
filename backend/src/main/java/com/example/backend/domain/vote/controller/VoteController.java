@@ -1,6 +1,7 @@
 package com.example.backend.domain.vote.controller;
 
-import com.example.backend.domain.vote.dto.VoteDTO;
+import com.example.backend.domain.vote.dto.VoteRequestDto;
+import com.example.backend.domain.vote.dto.VoteResponseDto;
 import com.example.backend.domain.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,10 @@ public class VoteController {
 
     // Controller
     @PostMapping("/groups/{groupId}/votes")
-    public ResponseEntity<VoteDTO> createVote(@PathVariable Long groupId,
-                                              @RequestBody VoteDTO voteDTO) {
-        return ResponseEntity.ok(voteService.createVote(groupId, voteDTO));
+    public ResponseEntity<VoteResponseDto> createVote(
+            @PathVariable Long groupId,
+            @RequestBody VoteRequestDto request  // <- 여기서 VoteRequest DTO로 변환
+    ) {
+        return ResponseEntity.ok(voteService.createVote(groupId, request));
     }
 }
