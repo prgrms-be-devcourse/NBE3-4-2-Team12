@@ -36,6 +36,13 @@ public class GroupController {
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
+    @GetMapping("/{groupId}")
+    public ResponseEntity<GroupResponseDto> getGroup(@PathVariable("groupId") Long id){
+        log.info("Getting group by groupId {}", id);
+        GroupResponseDto response = groupService.findGroup(id);
+        return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
+    }
+
     @DeleteMapping("/{groupId}")
     public ResponseEntity<GroupResponseDto> deleteGroup(@PathVariable("groupId") Long id){
         log.info("Deleting a particular group is being requested");
