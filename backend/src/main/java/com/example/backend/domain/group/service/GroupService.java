@@ -57,5 +57,10 @@ public class GroupService {
         groupRepository.save(group);
         return new GroupResponseDto(group);
     }
+    public void checkValidity(GroupStatus groupStatus){
+        if (groupStatus == GroupStatus.DELETED){
+            throw new GroupException(GroupErrorCode.ALREADY_DELETED);
+        }
+    }
 }
 

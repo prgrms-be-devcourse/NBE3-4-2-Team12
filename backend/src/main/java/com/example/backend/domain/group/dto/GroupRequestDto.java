@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+//@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class GroupRequestDto {
 
     @NotBlank(message = "타이틀은 필수 항목입니다.")
