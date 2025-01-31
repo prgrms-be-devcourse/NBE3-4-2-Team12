@@ -2,6 +2,7 @@ package com.example.backend.domain.category.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,4 +19,10 @@ public class Category {
     private String name;
 
     private CategoryType categoryType;
+
+    @Builder
+    public Category(String name, CategoryType categoryType) {
+        this.name = name;
+        this.categoryType = categoryType;
+    }
 }
