@@ -35,15 +35,15 @@ public class GroupController {
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
-    @DeleteMapping("/{ownerId}")
-    public ResponseEntity<GroupResponseDto> deleteGroup(@PathVariable("ownerId") Long id){
+    @DeleteMapping("/{groupId}")
+    public ResponseEntity<GroupResponseDto> deleteGroup(@PathVariable("groupId") Long id){
         log.info("Deleting a particular group is being requested");
         groupService.deleteGroup(id);
         return new ResponseEntity<>(null,HttpStatus.OK);
     }
 
     @PutMapping("/{groupId}")
-    public ResponseEntity<GroupResponseDto>modifyGroup(@PathVariable Long groupId, @RequestBody @Valid GroupModifyRequestDto modifyRequestDto){
+    public ResponseEntity<GroupResponseDto>modifyGroup(@PathVariable("groupId") Long groupId, @RequestBody @Valid GroupModifyRequestDto modifyRequestDto){
         log.info("Modifying a particular group is being requested");
         GroupResponseDto response = groupService.modifyGroup(groupId,modifyRequestDto);
         return new ResponseEntity<>(response,HttpStatus.valueOf(200));

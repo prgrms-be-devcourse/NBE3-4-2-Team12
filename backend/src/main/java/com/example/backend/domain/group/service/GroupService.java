@@ -42,6 +42,7 @@ public class GroupService {
     @Transactional
     public void deleteGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
+        checkValidity(group.getStatus());
         group.updateStatus(GroupStatus.DELETED);
         groupRepository.save(group);
     }
@@ -49,6 +50,7 @@ public class GroupService {
     @Transactional
     public GroupResponseDto modifyGroup(Long id, GroupModifyRequestDto groupModifyRequestDto) {
         Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
+        checkValidity(group.getStatus());
         group.update(
                 groupModifyRequestDto.getTitle(),
                 groupModifyRequestDto.getDescription(),
