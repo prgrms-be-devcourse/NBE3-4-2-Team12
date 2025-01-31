@@ -61,4 +61,11 @@ public class VoteService {
 
         return VoteResponseDto.toDto(updatedVote);
     }
+
+    public void deleteVote(Long groupId, Long voteId) {
+        Vote vote = voteRepository.findByIdAndGroupId(voteId, groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Vote not found"));
+
+        voteRepository.delete(vote);
+    }
 }

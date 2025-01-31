@@ -20,15 +20,16 @@ public class VoteController {
     @PostMapping("/groups/{groupId}/votes")
     public ResponseEntity<VoteResponseDto> createVote(
             @PathVariable Long groupId,
-            @RequestBody VoteRequestDto request  // <- 여기서 VoteRequest DTO로 변환
-    ) {
+            @RequestBody VoteRequestDto request)
+    {
         return ResponseEntity.ok(voteService.createVote(groupId, request));
     }
 
     //투표 목록조회
     @GetMapping("/groups/{groupId}/votes")
     public ResponseEntity<List<VoteResponseDto>> getVotesByGroupId(
-            @PathVariable Long groupId){
+            @PathVariable Long groupId)
+    {
         return ResponseEntity.ok(voteService.findAllByGroupId(groupId));
     }
 
@@ -36,7 +37,8 @@ public class VoteController {
     @GetMapping("/groups/{groupId}/votes/{voteId}")
     public ResponseEntity<VoteResponseDto> getVote(
             @PathVariable Long groupId,
-            @PathVariable Long voteId){
+            @PathVariable Long voteId)
+    {
         return ResponseEntity.ok(voteService.findById(groupId, voteId));
     }
 
@@ -48,5 +50,14 @@ public class VoteController {
             @Valid @RequestBody VoteRequestDto requestDto)
     {
         return ResponseEntity.ok(voteService.modifyVote(groupId, voteId, requestDto));
+    }
+
+    @DeleteMapping("/groups/{groupId}/votes/{voteId}")
+    public ResponseEntity<Void> deleteVote(
+            @PathVariable Long groupId,
+            @PathVariable Long voteId)
+    {
+        voteService.deleteVote(groupId, voteId);
+        return ResponseEntity.ok().build();
     }
 }
