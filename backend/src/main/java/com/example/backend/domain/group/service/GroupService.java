@@ -31,7 +31,7 @@ public class GroupService {
         Group group = Group.builder()
                 .title(groupRequestDto.getTitle())
                 .description(groupRequestDto.getDescription())
-                .status(GroupStatus.ACTIVE)
+                .status(GroupStatus.RECRUITING)
                 .maxParticipants(groupRequestDto.getMaxParticipants())
                 .build();
         groupRepository.save(group);
@@ -68,9 +68,12 @@ public class GroupService {
     public void checkValidity(GroupStatus groupStatus){
         if (groupStatus == GroupStatus.DELETED){
             throw new GroupException(GroupErrorCode.ALREADY_DELETED);
-        }
-        if (groupStatus == GroupStatus.EXPIRED){
-            throw new GroupException(GroupErrorCode.EXPIRED);
+        } else if (groupStatus == GroupStatus.NOT_RECRUITING){
+            throw new GroupException(GroupErrorCode.NOT_RECRUITING);
+        } else if (groupStatus == GroupStatus.COMPLETED) {
+            throw new GroupException(GroupErrorCode.COMPLETED);
+        } else if (groupStatus == GroupStatus.VOTING) {
+            throw new GroupException(GroupErrorCode.VOTING);
         }
     }
 
