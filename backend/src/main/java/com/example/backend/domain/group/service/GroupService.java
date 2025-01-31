@@ -37,6 +37,11 @@ public class GroupService {
         return groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public GroupResponseDto findGroup(Long id){
+        return groupRepository.findById(id).map(GroupResponseDto::new).orElse(null);
+    }
+
 
     @Transactional
     public void deleteGroup(Long id) {
@@ -58,6 +63,8 @@ public class GroupService {
         groupRepository.save(group);
         return new GroupResponseDto(group);
     }
+
+
     public void checkValidity(GroupStatus groupStatus){
         if (groupStatus == GroupStatus.DELETED){
             throw new GroupException(GroupErrorCode.ALREADY_DELETED);
