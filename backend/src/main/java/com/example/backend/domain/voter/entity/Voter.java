@@ -1,49 +1,31 @@
 package com.example.backend.domain.voter.entity;
 
 import com.example.backend.domain.vote.entity.Vote;
-import com.example.backend.domain.vote.user.entity.User;
+import com.example.backend.domain.member.entity.Member;
+import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Voter {
+public class Voter extends BaseEntity {
 
     @EmbeddedId
-    private VoterId id; // 복합 키 정의
+    private VoterId id; // 키 정의
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("voteId") // 복합 키의 voteId를 FK로 매핑
+    @MapsId("voteId") // 키의 voteId를 FK로 매핑
     @JoinColumn(name = "vote_id", nullable = false)
     private Vote vote;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId") // 복합 키의 userId를 FK로 매핑
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "modified_at")
-    private LocalDateTime modifiedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.modifiedAt = LocalDateTime.now();
-    }
+    @MapsId("memberId") // 키의 userId를 FK로 매핑
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Embeddable
     @Getter
@@ -51,7 +33,7 @@ public class Voter {
     @AllArgsConstructor
     @EqualsAndHashCode
     public static class VoterId implements Serializable {
-        private Long userId;
+        private Long memberId;
         private Long voteId;
     }
 }

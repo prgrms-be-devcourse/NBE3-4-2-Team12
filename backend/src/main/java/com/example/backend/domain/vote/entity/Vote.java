@@ -1,6 +1,6 @@
 package com.example.backend.domain.vote.entity;
 
-import com.example.backend.domain.vote.user.entity.User;
+import com.example.backend.domain.member.entity.Member;
 import com.example.backend.domain.voter.entity.Voter;
 import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
@@ -32,8 +32,8 @@ public class Vote extends BaseEntity {
     private Integer voterCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") // 외래키 FK를 (user_id)로 지정
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     // Voter와의 연관 관계
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL, orphanRemoval = true)
