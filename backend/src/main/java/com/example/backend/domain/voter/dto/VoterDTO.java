@@ -22,7 +22,7 @@ public class VoterDTO {
 
     public Voter toEntity(Member member, Vote vote) {
         return Voter.builder()
-                .id(new Voter.VoterId(memberId, voteId)) // ✅ Voter 내부의 VoterId에 접근
+                .id(new Voter.VoterId(memberId, voteId))
                 .member(member)
                 .vote(vote)
                 .build();
