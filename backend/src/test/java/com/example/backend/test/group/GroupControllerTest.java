@@ -16,7 +16,7 @@ public class GroupControllerTest {
     @Test
     @DisplayName("그룹 생성")
     void contextLoads() {
-        groupService.create(1L,new GroupRequestDto("제목1","내용1",5));
+        groupService.create(new GroupRequestDto("제목1","내용1",5,1L));
     }
 
     @Test

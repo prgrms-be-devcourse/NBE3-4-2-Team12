@@ -30,7 +30,6 @@ public class Group extends BaseEntity {
     public Group(String title, String description, Long ownerId, GroupStatus status, Integer maxParticipants) {
         this.title = title;
         this.description = description;
-        this.ownerId = ownerId;
         this.status = status;
         this.maxParticipants = maxParticipants;
     }

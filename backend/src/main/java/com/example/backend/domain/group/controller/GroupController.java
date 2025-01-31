@@ -21,10 +21,10 @@ import java.util.List;
 public class GroupController {
     private final GroupService groupService;
 
-    @PostMapping("/{ownerId}")
-    public ResponseEntity<GroupResponseDto>createGroup(@PathVariable Long ownerId, @RequestBody @Valid GroupRequestDto requestDto) {
+    @PostMapping
+    public ResponseEntity<GroupResponseDto>createGroup(@RequestBody @Valid GroupRequestDto requestDto) {
         log.info("New group creation requested");
-        GroupResponseDto response = groupService.create(ownerId, requestDto);
+        GroupResponseDto response = groupService.create(requestDto);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 

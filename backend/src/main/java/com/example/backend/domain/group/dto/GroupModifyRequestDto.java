@@ -8,9 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-//@Builder
-//@NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 public class GroupModifyRequestDto {
     private Long groupId;
     @NotBlank(message = "타이틀은 필수 항목입니다.")

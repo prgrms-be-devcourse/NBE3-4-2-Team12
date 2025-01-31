@@ -21,12 +21,11 @@ public class GroupService {
     private final GroupRepository groupRepository;
 
     @Transactional
-    public GroupResponseDto create(Long ownerId, GroupRequestDto groupRequestDto){
+    public GroupResponseDto create(GroupRequestDto groupRequestDto){
         Group group = Group.builder()
                 .title(groupRequestDto.getTitle())
                 .description(groupRequestDto.getDescription())
                 .status(GroupStatus.ACTIVE)
-                .ownerId(ownerId)
                 .maxParticipants(groupRequestDto.getMaxParticipants())
                 .build();
         groupRepository.save(group);
