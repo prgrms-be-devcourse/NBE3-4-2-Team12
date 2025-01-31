@@ -2,11 +2,7 @@ package com.example.backend.domain.category.dto;
 
 import com.example.backend.domain.category.entity.Category;
 import com.example.backend.domain.category.entity.CategoryType;
-import com.example.backend.domain.group.entity.Group;
-import com.example.backend.domain.group.entity.GroupStatus;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class CategoryResponseDto {
