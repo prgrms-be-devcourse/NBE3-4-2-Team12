@@ -28,7 +28,4 @@ public class Vote extends BaseEntity {
     @Column(name = "voter_count")
     private Integer voterCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") // 외래키 FK를 (user_id)로 지정
-    private User user;
 }
