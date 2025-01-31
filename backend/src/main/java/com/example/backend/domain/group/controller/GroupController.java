@@ -4,6 +4,7 @@ import com.example.backend.domain.group.dto.GroupModifyRequestDto;
 import com.example.backend.domain.group.dto.GroupRequestDto;
 import com.example.backend.domain.group.dto.GroupResponseDto;
 import com.example.backend.domain.group.service.GroupService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping("/{ownerId}")
-    public ResponseEntity<GroupResponseDto>createGroup(@PathVariable Long ownerId, @RequestBody GroupRequestDto requestDto) {
+    public ResponseEntity<GroupResponseDto>createGroup(@PathVariable Long ownerId, @RequestBody @Valid GroupRequestDto requestDto) {
         log.info("New group creation requested");
         GroupResponseDto response = groupService.create(ownerId, requestDto);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
@@ -41,8 +42,8 @@ public class GroupController {
         return new ResponseEntity<>(null,HttpStatus.OK);
     }
 
-    @PutMapping("/{ownerId}")
-    public ResponseEntity<GroupResponseDto>modifyGroup(@PathVariable Long ownerId, @RequestBody GroupModifyRequestDto modifyRequestDto){
+    @PutMapping("/{groupId}")
+    public ResponseEntity<GroupResponseDto>modifyGroup(@PathVariable Long groupId, @RequestBody @Valid GroupModifyRequestDto modifyRequestDto){
         log.info("Modifying a particular group is being requested");
         GroupResponseDto response = groupService.modifyGroup(groupId,modifyRequestDto);
         return new ResponseEntity<>(response,HttpStatus.valueOf(200));

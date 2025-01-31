@@ -47,25 +47,15 @@ public class GroupService {
     }
 
     @Transactional
-    public GroupResponseDto modifyGroup(Long ownerId, GroupModifyRequestDto groupModifyRequestDto) {
-        List<Group> groups = groupRepository.findByOwnerId(ownerId).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
-        GroupResponseDto groupResponseDto = new GroupResponseDto();
-        for(Group group : groups){
-            if(group.getId() == groupModifyRequestDto.getGroupId()){
-                group.update(
-                        groupModifyRequestDto.getTitle(),
-                        groupModifyRequestDto.getDescription(),
-                        groupModifyRequestDto.getMaxParticipants()
-                );
-                groupRepository.save(group);
-                groupResponseDto = new GroupResponseDto(group);
-                break;
-            }
-        }
-        if(groupResponseDto == null){
-            throw new GroupException(GroupErrorCode.NOT_FOUND);
-        }
-        return groupResponseDto;
+    public GroupResponseDto modifyGroup(Long id, GroupModifyRequestDto groupModifyRequestDto) {
+        Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
+        group.update(
+                groupModifyRequestDto.getTitle(),
+                groupModifyRequestDto.getDescription(),
+                groupModifyRequestDto.getMaxParticipants()
+        );
+        groupRepository.save(group);
+        return new GroupResponseDto(group);
     }
 }
 
