@@ -2,10 +2,7 @@ package com.example.backend.domain.group.dto;
 
 import com.example.backend.domain.group.entity.Group;
 import com.example.backend.domain.group.entity.GroupStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +11,7 @@ public class GroupResponseDto {
     private Long id;
     private String title;
     private String description;
+    private Long memberId;
     private Integer maxParticipants;
     private GroupStatus status;
     private LocalDateTime createdAt;
@@ -23,6 +21,7 @@ public class GroupResponseDto {
         this.id = group.getId();
         this.title = group.getTitle();
         this.description = group.getDescription();
+        this.memberId = group.getMember().getId();
         this.maxParticipants = group.getMaxParticipants();
         this.status = group.getStatus();
         this.createdAt = group.getCreatedAt();
