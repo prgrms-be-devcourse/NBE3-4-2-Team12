@@ -14,10 +14,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @RequiredArgsConstructor
 @Service
 public class VoteService {
     private final VoteRepository voteRepository;
+
     private final GroupService groupService;
 
     @Transactional
@@ -67,5 +69,6 @@ public class VoteService {
                 .orElseThrow(() -> new EntityNotFoundException("Vote not found"));
 
         voteRepository.delete(vote);
+
     }
 }
