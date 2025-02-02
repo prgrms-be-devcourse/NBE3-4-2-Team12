@@ -14,4 +14,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/voters")
 public class VoterController {
 
+    private final VoterService voterService;
+
+    // 특정 투표에 참여한 Voter 목록 조회 API
+    @GetMapping("/{voteId}")
+    public List<VoterDTO> getVotersByVote(@PathVariable Long voteId) {
+        return voterService.getVotersByVoteId(voteId);
+    }
+
 }
