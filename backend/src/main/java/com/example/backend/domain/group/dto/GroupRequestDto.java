@@ -2,7 +2,10 @@ package com.example.backend.domain.group.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -18,4 +21,6 @@ public class GroupRequestDto {
     private Integer maxParticipants;
 
     private Long ownerId;
+
+    private List<Long> categoryIds;
 }
