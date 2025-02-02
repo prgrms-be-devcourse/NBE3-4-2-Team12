@@ -31,11 +31,4 @@ public class Vote extends BaseEntity {
     @Column(name = "voter_count")
     private Integer voterCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
-    // Voter와의 연관 관계
-    @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Voter> voters = new ArrayList<>();
 }
