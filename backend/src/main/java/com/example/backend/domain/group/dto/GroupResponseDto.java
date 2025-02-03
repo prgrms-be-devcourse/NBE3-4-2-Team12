@@ -5,6 +5,8 @@ import com.example.backend.domain.group.entity.GroupStatus;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class GroupResponseDto {
@@ -14,6 +16,7 @@ public class GroupResponseDto {
     private Long memberId;
     private Integer maxParticipants;
     private GroupStatus status;
+    private List<String> categoryNames;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -24,6 +27,9 @@ public class GroupResponseDto {
         this.memberId = group.getMember().getId();
         this.maxParticipants = group.getMaxParticipants();
         this.status = group.getStatus();
+        this.categoryNames = group.getGroupCategories().stream()
+                .map(gc->gc.getCategory().getName())
+                .collect(Collectors.toList());
         this.createdAt = group.getCreatedAt();
         this.modifiedAt = group.getModifiedAt();
     }
