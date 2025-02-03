@@ -25,4 +25,11 @@ public class CategoryController {
         CategoryResponseDto response = categoryService.create(categoryRequestDto);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<CategoryResponseDto>modifyCategory(@PathVariable("id") Long id, @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
+        log.info("Modify category requested");
+        CategoryResponseDto response = categoryService.modify(id,categoryRequestDto);
+        return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
+    }
 }
