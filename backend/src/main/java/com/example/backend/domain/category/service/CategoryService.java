@@ -48,4 +48,9 @@ public class CategoryService {
         Category category = categoryRepository.findById(id).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND));
         return new CategoryResponseDto(category);
     }
+
+    public void delete(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND));
+        categoryRepository.delete(category);
+    }
 }
