@@ -18,9 +18,11 @@ public class VoterController {
     private final VoterService voterService;
 
     // 특정 투표 참여 API 추가
-    @PostMapping("/{voteId}/{memberId}")
-    public ResponseEntity<VoterDTO> addVoter(@PathVariable Long voteId, @PathVariable Long memberId) {
-        return ResponseEntity.ok(VoterDTO.from(voterService.addVoter(voteId, memberId)));
+    @PostMapping("/{groupId}/{voteId}/{memberId}")
+    public ResponseEntity<VoterDTO> addVoter(@PathVariable Long groupId,
+                                             @PathVariable Long voteId,
+                                             @PathVariable Long memberId) {
+        return ResponseEntity.ok(VoterDTO.from(voterService.addVoter(groupId, voteId, memberId)));
     }
 
     // 특정 투표에 참여한 Voter 목록 조회 API
