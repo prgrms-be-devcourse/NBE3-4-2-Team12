@@ -5,9 +5,11 @@ import com.example.backend.domain.member.entity.Member;
 import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class GroupMember extends BaseEntity {
 

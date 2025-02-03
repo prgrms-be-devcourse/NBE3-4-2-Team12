@@ -1,9 +1,15 @@
 package com.example.backend.domain.group.entity;
 
+import com.example.backend.domain.groupcategory.GroupCategory;
 import com.example.backend.domain.member.entity.Member;
 import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,14 +37,18 @@ public class Group extends BaseEntity {
     @Column
     private Integer maxParticipants;
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GroupCategory> groupCategories = new ArrayList<>();
+
 
     @Builder
-    public Group(String title, String description, Member member, GroupStatus status, Integer maxParticipants) {
+    public Group(String title, String description, Member member, GroupStatus status, Integer maxParticipants, List<GroupCategory> groupCategories) {
         this.title = title;
         this.description = description;
         this.member = member;
         this.status = status;
         this.maxParticipants = maxParticipants;
+        this.groupCategories = groupCategories;
     }
 
     public void update(String title, String description, Integer maxParticipants) {
@@ -49,5 +59,9 @@ public class Group extends BaseEntity {
 
     public void updateStatus(GroupStatus status) {
         this.status = status;
+    }
+
+    public void addGroupCategories(List<GroupCategory> groupCategories) {
+        this.groupCategories = groupCategories;
     }
 }

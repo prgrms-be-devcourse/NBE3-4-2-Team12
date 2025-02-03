@@ -1,5 +1,7 @@
 package com.example.backend.domain.group.service;
 
+import com.example.backend.domain.category.entity.Category;
+import com.example.backend.domain.category.repository.CategoryRepository;
 import com.example.backend.domain.group.dto.GroupModifyRequestDto;
 import com.example.backend.domain.group.dto.GroupRequestDto;
 import com.example.backend.domain.group.dto.GroupResponseDto;
@@ -8,6 +10,7 @@ import com.example.backend.domain.group.entity.GroupStatus;
 import com.example.backend.domain.group.exception.GroupErrorCode;
 import com.example.backend.domain.group.exception.GroupException;
 import com.example.backend.domain.group.repository.GroupRepository;
+import com.example.backend.domain.groupcategory.GroupCategory;
 import com.example.backend.domain.groupmember.entity.GroupMember;
 import com.example.backend.domain.groupmember.repository.GroupMemberRepository;
 import com.example.backend.domain.member.entity.Member;
@@ -25,10 +28,13 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final MemberRepository memberRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public GroupResponseDto create(GroupRequestDto groupRequestDto){
         Member member = memberRepository.findById(groupRequestDto.getOwnerId()).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND_MEMBER));
+
+        List<Category> categories = categoryRepository.findAllById(groupRequestDto.getCategoryIds());
         Group group = Group.builder()
                 .title(groupRequestDto.getTitle())
                 .description(groupRequestDto.getDescription())
@@ -36,18 +42,28 @@ public class GroupService {
                 .status(GroupStatus.RECRUITING)
                 .maxParticipants(groupRequestDto.getMaxParticipants())
                 .build();
+
+        List<GroupCategory> groupCategories = categories.stream()
+                        .map(category -> new GroupCategory(group,category))
+                                .collect(Collectors.toList());
+
+        group.addGroupCategories(groupCategories);
         groupRepository.save(group);
         return new GroupResponseDto(group);
     }
 
     @Transactional(readOnly = true)
     public List<GroupResponseDto> findAllGroups() {
-        return groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
+        List<GroupResponseDto> groups = groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
+        if (groups.isEmpty()) {
+            throw new GroupException(GroupErrorCode.NOT_FOUND_LIST);
+        }
+        return groups;
     }
 
     @Transactional(readOnly = true)
     public GroupResponseDto findGroup(Long id){
-        return groupRepository.findById(id).map(GroupResponseDto::new).orElse(null);
+        return groupRepository.findById(id).map(GroupResponseDto::new).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND));
     }
 
 

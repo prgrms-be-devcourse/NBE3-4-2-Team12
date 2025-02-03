@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum GroupErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND,"404","해당 그룹은 존재하지 않습니다."),
+    NOT_FOUND_LIST(HttpStatus.NOT_FOUND,"404","그룹 목록이 존재하지 않습니다."),
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND,"404","해당 회원은 존재하지 않습니다."),
     ALREADY_DELETED(HttpStatus.BAD_REQUEST,"404","이미 삭제된 그룹입니다."),
     EXISTED_MEMBER(HttpStatus.CONFLICT,"409","이미 가입된 회원입니다."),
