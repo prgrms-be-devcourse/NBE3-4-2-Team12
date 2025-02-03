@@ -1,4 +1,4 @@
-package com.example.backend.global.config;
+package com.example.backend.global.auth.jwt;
 
 
 import jakarta.servlet.FilterChain;
@@ -26,7 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // 요청 헤더에서 JWT 토큰 가져오기
         String token = resolveToken(request);
 
-        // 토큰이 유효하면 SecurityContext에 인증 정보 저장
+        // 토큰이 유효하면 SecurityContext 에 인증 정보 저장
         if(token != null && jwtProvider.validateToken(token)) {
             Authentication authentication = jwtProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);

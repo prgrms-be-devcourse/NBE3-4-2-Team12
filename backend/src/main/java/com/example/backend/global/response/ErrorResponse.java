@@ -1,9 +1,9 @@
 package com.example.backend.global.response;
 
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.Builder;
+
+import java.util.List;
 
 /**
  * ErrorResponse
