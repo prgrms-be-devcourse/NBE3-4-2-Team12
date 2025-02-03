@@ -32,4 +32,9 @@ public class Category {
         this.name = name;
         this.categoryType = categoryType;
     }
+
+    public void modify(String name, CategoryType categoryType) {
+        this.name = name;
+        this.categoryType = categoryType;
+    }
 }
