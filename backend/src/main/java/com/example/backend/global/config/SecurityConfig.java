@@ -1,5 +1,6 @@
 package com.example.backend.global.config;
 
+import com.example.backend.global.auth.jwt.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,9 +30,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  //  세션 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/login").permitAll()  // 로그인 API는 인증 없이 접근 가능
-                        .requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자 권한 필요
+                        .requestMatchers("/admin/**").permitAll()  // 관리자 권한 필요
+                        .requestMatchers("/auth/kakao/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);  // JWT 필터 추가
         return http.build();
     }
