@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
@@ -33,6 +36,16 @@ public class CategoryService {
                 categoryRequestDto.getType()
         );
         categoryRepository.save(category);
+        return new CategoryResponseDto(category);
+    }
+
+    public List<CategoryResponseDto> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream().map(CategoryResponseDto::new).collect(Collectors.toList());
+    }
+
+    public CategoryResponseDto getCategory(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND));
         return new CategoryResponseDto(category);
     }
 }
