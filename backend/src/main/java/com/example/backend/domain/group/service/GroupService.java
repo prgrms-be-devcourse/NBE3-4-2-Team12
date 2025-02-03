@@ -54,12 +54,16 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public List<GroupResponseDto> findAllGroups() {
-        return groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
+        List<GroupResponseDto> groups = groupRepository.findAll().stream().map(GroupResponseDto::new).collect(Collectors.toList());
+        if (groups.isEmpty()) {
+            throw new GroupException(GroupErrorCode.NOT_FOUND_LIST);
+        }
+        return groups;
     }
 
     @Transactional(readOnly = true)
     public GroupResponseDto findGroup(Long id){
-        return groupRepository.findById(id).map(GroupResponseDto::new).orElse(null);
+        return groupRepository.findById(id).map(GroupResponseDto::new).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND));
     }
 
 
