@@ -32,7 +32,7 @@ public class GroupService {
 
     @Transactional
     public GroupResponseDto create(GroupRequestDto groupRequestDto){
-        Member member = memberRepository.findById(groupRequestDto.getOwnerId()).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND_MEMBER));
+        Member member = memberRepository.findById(groupRequestDto.getMemberId()).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND_MEMBER));
 
         List<Category> categories = categoryRepository.findAllById(groupRequestDto.getCategoryIds());
         Group group = Group.builder()
