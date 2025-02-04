@@ -3,7 +3,6 @@ package com.example.backend.domain.admin.entity;
 import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,21 +26,21 @@ public class Admin extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role = Role.ADMIN;  // 관리자 권한 (ADMIN)
 
-    @Column
+    @Column(unique = true)
     private String refreshToken;
 
     @Column
-    private LocalDateTime expiryDate;
+    private LocalDateTime refreshTokenExpiryDate;
 
     public enum  Role {
         ADMIN  // 관리자 권한
     }
 
-    @Builder
-    public Admin(String adminName, String password, String refreshToken, LocalDateTime expiryDate) {
-        this.adminName = adminName;
-        this.password = password;
+    public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
-        this.expiryDate = expiryDate;
+    }
+
+    public void setRefreshTokenExpiryDate(LocalDateTime refreshTokenExpiryDate) {
+        this.refreshTokenExpiryDate = refreshTokenExpiryDate;
     }
 }

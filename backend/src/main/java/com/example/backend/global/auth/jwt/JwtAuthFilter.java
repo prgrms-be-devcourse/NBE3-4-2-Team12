@@ -31,6 +31,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             Authentication authentication = jwtProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+//        else if (token != null && jwtProvider.isTokenExpired(token)) {
+//            String refreshToken = request.getHeader("Refresh-Token");
+//        }
 
         // 다음 필터에 요청 전달
         chain.doFilter(request, response);
