@@ -18,14 +18,14 @@ public class GroupMember extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_Id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-
 
     @ManyToOne
     @JoinColumn(name = "groups_id", nullable = false)
     private Group group;
 
+    @Enumerated(value = EnumType.STRING)
     private GroupMemberStatus groupMemberStatus;
 
     @Builder
