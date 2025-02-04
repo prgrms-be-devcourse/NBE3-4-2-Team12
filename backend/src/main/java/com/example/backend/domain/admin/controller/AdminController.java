@@ -25,7 +25,7 @@ public class AdminController {
         Admin admin = adminService.getAdmin(request.getAdminName(), request.getPassword());
 
         String accessToken = this.jwtProvider.generateToken(admin);
-        String refreshToken = this.jwtProvider.generateRefreshToken(admin);
+        String refreshToken = this.jwtProvider.generateRefreshToken();
 
         return ResponseEntity.ok(new AdminLoginResponseDto(accessToken));
     }

@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -97,9 +98,12 @@ public class JwtProvider {
 	}
 
 	// 리프레시 토큰 생성
-	public String generateRefreshToken(Admin admin) {
+	public String generateRefreshToken() {
         return UUID.randomUUID().toString();
 	}
 
-
+	// 리프레시 토큰 만료 시간 계산
+	public LocalDateTime getRefreshTokenExpiryDate() {
+		return LocalDateTime.now().plusDays(jwtUtil.getRefreshTokenExpirationTime());
+	}
 }
