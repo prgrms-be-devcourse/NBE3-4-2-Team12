@@ -1,28 +1,23 @@
 package com.example.backend.global.auth.jwt;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.crypto.SecretKey;
-
+import com.example.backend.domain.admin.entity.Admin;
+import com.example.backend.global.auth.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.example.backend.domain.admin.entity.Admin;
-import com.example.backend.global.auth.util.JwtUtil;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
+import javax.crypto.SecretKey;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -101,51 +96,10 @@ public class JwtProvider {
 		return parseToken(token).get("role", String.class);
 	}
 
-	// 리프레시토큰 생성
+	// 리프레시 토큰 생성
 	public String generateRefreshToken(Admin admin) {
-		return Jwts.builder()
-			.setSubject(admin.getId().toString())
-			.setIssuedAt(new Date())
-			.setExpiration(Date.from(Instant.now().plus(7, ChronoUnit.DAYS)))
-			.signWith(SignatureAlgorithm.HS256, jwtUtil.getSecretKey())
-			.compact();
+        return UUID.randomUUID().toString();
 	}
 
-	// 리프레시 토큰으로 사용자 반환
-	//    public Admin getsubjectFreshToken(String refreshToken) {
-	//
-	//    }
 
-	//    // 리프레시 토큰 생성
-	//    public String createRefreshToken(Admin admin) {
-	//        String refreshToken = jwtProvider.generateRefreshToken(admin);
-	//
-	//        LocalDateTime expiryDate = LocalDateTime.now().plusDays(7);
-	//
-	//        RefreshToken newRefreshToken = RefreshToken.builder()
-	//                .admin(admin)
-	//                .token(refreshToken)  // 랜덤으로 토큰 생성
-	//                .expiryDate(expiryDate)  // 7일 후 만료
-	//                .build();
-	//
-	//        return refreshToken;
-	//    }
-
-	// 리프레시 토큰 검증
-	//    public Admin refreshAccessToken(String refreshToken) {
-	//        if(!jwtProvider.validateToken(refreshToken)) {
-	//            throw new InvalidTokenException(GlobalErrorCode.INVALID_REFRESH_TOKEN);
-	//        }
-	//
-	//        Admin admin = jwtProvider.getsubjectFreshToken(refreshToken);
-	//
-	//        RefreshToken refreshTokenEntity = refreshTokenRepository.findByToken(refreshToken)
-	//                .orElseThrow(() -> new InvalidTokenException(GlobalErrorCode.INVALID_REFRESH_TOKEN));
-	//
-	//        if(refreshTokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
-	//            throw new InvalidTokenException(GlobalErrorCode.INVALID_REFRESH_TOKEN);
-	//        }
-	//
-	//        return refreshTokenEntity.getAdmin();
-	//    }
 }
