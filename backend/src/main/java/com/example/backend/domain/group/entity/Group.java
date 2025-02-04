@@ -33,7 +33,7 @@ public class Group extends BaseEntity {
 
     @Column
     @Enumerated(value = EnumType.STRING)
-    private GroupStatus status;
+    private GroupStatus status = GroupStatus.RECRUITING;
 
     @Column
     private Integer maxParticipants;
