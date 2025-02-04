@@ -1,4 +1,4 @@
-package com.example.backend.global.auth.kakao.service;
+package com.example.backend.global.auth.service;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.backend.domain.member.service.MemberService;
-import com.example.backend.global.auth.kakao.dto.KakaoTokenResponseDto;
-import com.example.backend.global.auth.kakao.dto.KakaoUserInfoResponseDto;
-import com.example.backend.global.auth.kakao.exception.KakaoAuthErrorCode;
-import com.example.backend.global.auth.kakao.exception.KakaoAuthException;
-import com.example.backend.global.auth.kakao.util.KakaoAuthUtil;
+import com.example.backend.global.auth.dto.KakaoTokenResponseDto;
+import com.example.backend.global.auth.dto.KakaoUserInfoResponseDto;
+import com.example.backend.global.auth.exception.KakaoAuthErrorCode;
+import com.example.backend.global.auth.exception.KakaoAuthException;
+import com.example.backend.global.auth.util.KakaoAuthUtil;
 
 import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.RequiredArgsConstructor;

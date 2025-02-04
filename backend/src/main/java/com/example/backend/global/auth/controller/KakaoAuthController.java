@@ -1,4 +1,4 @@
-package com.example.backend.global.auth.kakao.controller;
+package com.example.backend.global.auth.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.global.auth.kakao.dto.KakaoTokenResponseDto;
-import com.example.backend.global.auth.kakao.dto.KakaoUserInfoResponseDto;
-import com.example.backend.global.auth.kakao.service.KakaoAuthService;
+import com.example.backend.global.auth.dto.KakaoTokenResponseDto;
+import com.example.backend.global.auth.dto.KakaoUserInfoResponseDto;
+import com.example.backend.global.auth.service.CookieService;
+import com.example.backend.global.auth.service.KakaoAuthService;
 import com.example.backend.global.response.ApiResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class KakaoAuthController {
 
 	private final KakaoAuthService kakaoAuthService;
+	private final CookieService cookieService;
 
 	/**
 	 * 카카오 로그인 페이지로 리다이렉트 및
@@ -55,7 +59,8 @@ public class KakaoAuthController {
 	public ResponseEntity<Object> getTokenFromKakao(
 		@RequestParam(value = "code", required = false) String authorizationCode,
 		@RequestParam(value = "error", required = false) String error,
-		@RequestParam(value = "error-description", required = false) String errorDescription) {
+		@RequestParam(value = "error-description", required = false) String errorDescription,
+		HttpServletRequest request, HttpServletResponse response) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Location", "https://localhost:3000");
@@ -78,7 +83,8 @@ public class KakaoAuthController {
 			kakaoAuthService.join(kakaoUserInfoDto, kakaoTokenDto.refreshToken());
 		}
 
-		//TODO: 쿠키에 엑세스토큰 담는 로직 필요
+		cookieService.addAccessTokenToCookie(kakaoTokenDto.accessToken(), response);
+		cookieService.addRefreshTokenToCookie(kakaoTokenDto.refreshToken(), response);
 
 		return ResponseEntity.ok()
 			.headers(headers)
