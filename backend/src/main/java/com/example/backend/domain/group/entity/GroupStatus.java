@@ -1,5 +1,7 @@
 package com.example.backend.domain.group.entity;
 
+import com.example.backend.domain.group.exception.GroupErrorCode;
+import com.example.backend.domain.group.exception.GroupException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum GroupStatus {
@@ -16,6 +18,6 @@ public enum GroupStatus {
                 return status;
             }
         }
-        throw new IllegalArgumentException("잘못된 그룹 상태 값입니다: " + value);
+        throw new GroupException(GroupErrorCode.INCORRECT);
     }
 }
