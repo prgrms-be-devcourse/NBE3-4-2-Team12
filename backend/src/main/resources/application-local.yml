@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/nbe2-team12
+    username: root
+    password: lldj123414
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 4e76269fc93f47cfaba96f380ddbcf67
+            redirect-uri: http://localhost:8080/auth/kakao/callback
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+    jwt:
+      secret-key: q_W?DNW;gK"[S8k}q{J>!8lDvH<SL#p8E;f&SA7:^p9rJPQ"`CaSM_vfyynbq8I
+      access-token:
+        expiration: 21600000
+      refresh-token:
+        expiration: 5184000000
+
