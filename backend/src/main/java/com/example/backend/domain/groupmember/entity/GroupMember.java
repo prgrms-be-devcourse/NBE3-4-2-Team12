@@ -21,6 +21,7 @@ public class GroupMember extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+
     @ManyToOne
     @JoinColumn(name = "groups_id", nullable = false)
     private Group group;
