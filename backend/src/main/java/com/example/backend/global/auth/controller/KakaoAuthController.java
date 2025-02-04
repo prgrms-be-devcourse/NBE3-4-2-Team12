@@ -79,6 +79,7 @@ public class KakaoAuthController {
 		KakaoTokenResponseDto kakaoTokenDto = kakaoAuthService.getTokenFromKakao(authorizationCode);
 		KakaoUserInfoResponseDto kakaoUserInfoDto = kakaoAuthService.getUserInfo(kakaoTokenDto.accessToken());
 
+		// 기존 사용자 인지 검증 후 신규 사용자일 시 회원가입 진행
 		if (!kakaoAuthService.existsMemberByKakaoId(kakaoUserInfoDto.id())) {
 			kakaoAuthService.join(kakaoUserInfoDto, kakaoTokenDto.refreshToken());
 		}
