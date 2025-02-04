@@ -1,7 +1,13 @@
 package com.example.backend.domain.voter.service;
 
+import com.example.backend.domain.voter.dto.VoterDTO;
+import com.example.backend.domain.voter.entity.Voter;
+import com.example.backend.domain.voter.repository.VoterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
