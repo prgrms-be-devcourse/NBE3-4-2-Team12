@@ -24,7 +24,7 @@ public class AdminService {
                 .orElseThrow(() -> new AdminException(AdminErrorCode.NOT_FOUND_ADMIN));
 
         // 비밀번호 검증
-        if(!passwordEncoder.matches(password, admin.getPassword())) {
+        if (!passwordEncoder.matches(password, admin.getPassword())) {
             throw new AdminException(AdminErrorCode.INVALID_CREDENTIALS);
         }
 
