@@ -1,5 +1,6 @@
 package com.example.backend.domain.group.dto;
 
+import com.example.backend.domain.group.entity.GroupStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,4 +24,7 @@ public class GroupRequestDto {
     private Long memberId;
 
     private List<Long> categoryIds;
+
+    @NotNull
+    private GroupStatus status;
 }
