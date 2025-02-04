@@ -26,6 +26,7 @@ public class GroupMember extends BaseEntity {
     @JoinColumn(name = "groups_id", nullable = false)
     private Group group;
 
+    @Enumerated(EnumType.STRING)
     private GroupMemberStatus groupMemberStatus;
 
     @Builder

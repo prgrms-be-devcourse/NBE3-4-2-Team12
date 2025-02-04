@@ -32,6 +32,7 @@ public class Group extends BaseEntity {
     private Member member;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private GroupStatus status;
 
     @Column
