@@ -49,6 +49,12 @@ public class GroupService {
 
         group.addGroupCategories(groupCategories);
         groupRepository.save(group);
+        GroupMember groupMember = GroupMember.builder()
+                .member(member)
+                .group(group)
+                .build();
+        groupMemberRepository.save(groupMember);
+
         return new GroupResponseDto(group);
     }
 
@@ -100,6 +106,7 @@ public class GroupService {
         }
     }
 
+    @Transactional
     public void joinGroup(Long groupId, Long memberId) {
         Group group = groupRepository.findById(groupId).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
 
@@ -120,6 +127,18 @@ public class GroupService {
                 .build();
 
         groupMemberRepository.save(groupMember);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GroupResponseDto> getGroupByMemberId(Long id){
+        Member member = memberRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
+
+        List<GroupMember> groupMembers = groupMemberRepository.findByMember(member);
+
+        if (groupMembers.isEmpty()) {
+            throw new GroupException(GroupErrorCode.NOT_FOUND_LIST);
+        }
+        return groupMembers.stream().map(groupMember -> new GroupResponseDto(groupMember.getGroup())).collect(Collectors.toList());
     }
 }
 

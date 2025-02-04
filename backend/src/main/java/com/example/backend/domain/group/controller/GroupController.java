@@ -70,4 +70,10 @@ public class GroupController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("member/{MemberId}")
+    public ResponseEntity<List<GroupResponseDto>> getGroupByMember(@PathVariable("MemberId") Long id){
+        List<GroupResponseDto> response =  groupService.getGroupByMemberId(id);
+        return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
+    }
 }
