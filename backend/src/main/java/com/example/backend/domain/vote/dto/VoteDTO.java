@@ -2,7 +2,6 @@ package com.example.backend.domain.vote.dto;
 
 import com.example.backend.domain.vote.entity.Vote;
 import lombok.Getter;
-import org.hibernate.bytecode.internal.bytebuddy.BytecodeProviderImpl;
 
 @Getter
 public class VoteDTO {
