@@ -1,14 +1,20 @@
 package com.example.backend.domain.voter.exception;
 
-public class VoterException extends RuntimeException {
-    private final VoterErrorCode errorCode;
+import org.springframework.http.HttpStatus;
 
-    public VoterException(VoterErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
+public class VoterException extends RuntimeException {
+    private final VoterErrorCode voterErrorCode;
+
+    public VoterException(VoterErrorCode voterErrorCode) {
+        super(voterErrorCode.getMessage());
+        this.voterErrorCode = voterErrorCode;
     }
 
-    public VoterErrorCode getErrorCode() {
-        return errorCode;
+    public HttpStatus getStatus() {
+        return voterErrorCode.getHttpStatus();
+    }
+
+    public String getCode() {
+        return voterErrorCode.getCode();
     }
 }
