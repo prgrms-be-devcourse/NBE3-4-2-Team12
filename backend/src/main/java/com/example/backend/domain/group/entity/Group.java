@@ -32,7 +32,7 @@ public class Group extends BaseEntity {
     private Member member;
 
     @Column
-    @Enumerated(EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     private GroupStatus status = GroupStatus.RECRUITING;
 
     @Column

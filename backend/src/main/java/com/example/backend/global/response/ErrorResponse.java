@@ -1,9 +1,9 @@
 package com.example.backend.global.response;
 
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.Builder;
+
+import java.util.List;
 
 /**
  * ErrorResponse
@@ -13,7 +13,8 @@ import lombok.Builder;
 @Builder(access = AccessLevel.PRIVATE)
 public record ErrorResponse(
 	String message,
-	String status,
+	String code,
+	String requestUri,
 	List<ValidationError> errors
 ) {
 
@@ -32,13 +33,14 @@ public record ErrorResponse(
 	/**
 	 * Validation 예외 발생 시 응답 때 사용할 팩토리 메서드
 	 * @param message    // 예외 메세지
-	 * @param status    // 예외 상태 코드
+	 * @param code    // 예외 상태 코드
 	 * @param errors    // 필드별 에러 메세지
 	 */
-	public static ErrorResponse of(String message, String status, List<ValidationError> errors) {
+	public static ErrorResponse of(String message, String code, String requestUri, List<ValidationError> errors) {
 		return ErrorResponse.builder()
 			.message(message)
-			.status(status)
+			.code(code)
+			.requestUri(requestUri)
 			.errors(errors)
 			.build();
 	}
@@ -46,12 +48,13 @@ public record ErrorResponse(
 	/**
 	 * 이외에 FieldError를 포함하지 않는 예외 발생 시 사용할 팩토리 메서드
 	 * @param message    // 예외 메세지
-	 * @param status    // 예외 상태 코드
+	 * @param code    // 예외 상태 코드
 	 */
-	public static ErrorResponse of(String message, String status) {
+	public static ErrorResponse of(String message, String code, String requestUri) {
 		return ErrorResponse.builder()
 			.message(message)
-			.status(status)
+			.code(code)
+			.requestUri(requestUri)
 			.build();
 	}
 
