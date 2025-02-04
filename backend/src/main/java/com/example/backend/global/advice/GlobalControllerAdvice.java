@@ -87,4 +87,10 @@ public class GlobalControllerAdvice {
 		return ResponseEntity.status(ex.getStatus())
 				.body(ErrorResponse.of(ex.getMessage(), ex.getCode(), request.getRequestURI()));
 	}
+
+	@ExceptionHandler(GlobalException.class)
+	public ResponseEntity<ErrorResponse> handleCategoryException(GlobalException ex, HttpServletRequest request) {
+		return ResponseEntity.status(ex.getStatus())
+				.body(ErrorResponse.of(ex.getMessage(), ex.getCode(), request.getRequestURI()));
+	}
 }
