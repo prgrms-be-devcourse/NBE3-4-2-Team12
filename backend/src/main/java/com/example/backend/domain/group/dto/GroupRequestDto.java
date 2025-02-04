@@ -20,7 +20,7 @@ public class GroupRequestDto {
     @NotNull(message = "인원은 필수 항목입니다.")
     private Integer maxParticipants;
 
-    private Long ownerId;
+    private Long memberId;
 
     private List<Long> categoryIds;
 }

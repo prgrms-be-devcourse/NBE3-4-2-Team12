@@ -1,7 +1,6 @@
 spring:
-  config:
-    activate:
-      on-profile: local
+  profiles:
+    active: local
   application:
     name: backend
   jpa:
