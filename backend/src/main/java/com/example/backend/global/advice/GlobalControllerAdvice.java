@@ -1,6 +1,7 @@
 package com.example.backend.global.advice;
 
 import com.example.backend.domain.admin.exception.AdminException;
+import com.example.backend.domain.category.exception.CategoryException;
 import com.example.backend.domain.group.exception.GroupException;
 import com.example.backend.global.exception.GlobalErrorCode;
 import com.example.backend.global.exception.GlobalException;
@@ -88,8 +89,8 @@ public class GlobalControllerAdvice {
 				.body(ErrorResponse.of(ex.getMessage(), ex.getCode(), request.getRequestURI()));
 	}
 
-	@ExceptionHandler(GlobalException.class)
-	public ResponseEntity<ErrorResponse> handleCategoryException(GlobalException ex, HttpServletRequest request) {
+	@ExceptionHandler(CategoryException.class)
+	public ResponseEntity<ErrorResponse> handleCategoryException(CategoryException ex, HttpServletRequest request) {
 		return ResponseEntity.status(ex.getStatus())
 				.body(ErrorResponse.of(ex.getMessage(), ex.getCode(), request.getRequestURI()));
 	}
