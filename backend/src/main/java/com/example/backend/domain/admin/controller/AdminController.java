@@ -2,6 +2,7 @@ package com.example.backend.domain.admin.controller;
 
 import com.example.backend.domain.admin.dto.AdminLoginRequest;
 import com.example.backend.domain.admin.dto.AdminLoginResponseDto;
+import com.example.backend.domain.admin.entity.Admin;
 import com.example.backend.domain.admin.service.AdminService;
 import com.example.backend.global.auth.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
@@ -21,8 +22,11 @@ public class AdminController {
     // 관리자 로그인
     @PostMapping("/login")
     public ResponseEntity<AdminLoginResponseDto> login(@RequestBody AdminLoginRequest request) {
-        String token = adminService.login(request.getAdminName(), request.getPassword());
-        return ResponseEntity.ok(new AdminLoginResponseDto(token));
+        Admin admin = adminService.getAdmin(request.getAdminName(), request.getPassword());
+
+        String accessToken = this.jwtProvider.generateToken(admin);
+
+        return ResponseEntity.ok(new AdminLoginResponseDto(accessToken));
     }
 
     // 관리자 정보 조회

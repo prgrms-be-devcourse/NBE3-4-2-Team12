@@ -18,7 +18,7 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    public String login(String adminName, String password) {
+    public Admin getAdmin(String adminName, String password) {
         // 아이디로 관리자 조회
         Admin admin = adminRepository.findByAdminName(adminName)
                 .orElseThrow(() -> new AdminException(AdminErrorCode.NOT_FOUND_ADMIN));
@@ -28,7 +28,7 @@ public class AdminService {
             throw new AdminException(AdminErrorCode.INVALID_CREDENTIALS);
         }
 
-        // JWT  토큰 발급
-        return jwtProvider.generateToken(admin);
+        return admin;
     }
+
 }
