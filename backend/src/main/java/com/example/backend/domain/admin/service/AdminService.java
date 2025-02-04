@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +31,18 @@ public class AdminService {
         }
 
         return admin;
+    }
+
+    // 리프레시토큰 저장 및 반환
+    public String generateAndSaveRefreshToken(Admin admin) {
+        String refreshToken = this.jwtProvider.generateRefreshToken();
+        LocalDateTime expiryDate = this.jwtProvider.getRefreshTokenExpiryDate();
+
+        admin.setRefreshToken(refreshToken);
+        admin.setRefreshTokenExpiryDate(expiryDate);
+        this.adminRepository.save(admin);
+
+        return refreshToken;
     }
 
 }
