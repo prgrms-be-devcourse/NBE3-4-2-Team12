@@ -21,8 +21,8 @@ import com.example.backend.global.auth.jwt.MemberAuthFilter;
 
 /**
  * SecurityConfig
- * <p></p>
- * @author 100mi
+ * 시큐리티 관련 설정 클래스
+ * @author 100minha
  */
 @RequiredArgsConstructor
 @Configuration
@@ -37,7 +37,7 @@ public class SecurityConfig {
 	public SecurityFilterChain memberFilterChain(HttpSecurity http) throws Exception {
 		http
 			.securityMatchers(sm -> sm
-				.requestMatchers(""))
+				.requestMatchers("/members/"))
 			.addFilterBefore(memberAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
@@ -53,6 +53,7 @@ public class SecurityConfig {
 			.logout(AbstractHttpConfigurer::disable)
 			.addFilter(corsConfig.corsFilter())
 			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/groups").permitAll()
 				.anyRequest().permitAll()    //TODO: 백엔드 로직 작성 단계에서 테스트용 api별 권한 설정이므로 추후 올바르게 설정 필요
 			)
 			.addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class)     // JWT 필터 추가
