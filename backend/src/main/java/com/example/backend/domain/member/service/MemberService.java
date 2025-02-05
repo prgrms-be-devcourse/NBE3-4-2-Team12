@@ -3,6 +3,7 @@ package com.example.backend.domain.member.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.backend.domain.member.dto.MemberResponseDto;
 import com.example.backend.domain.member.entity.Member;
 import com.example.backend.domain.member.exception.MemberErrorCode;
 import com.example.backend.domain.member.exception.MemberException;
@@ -35,6 +36,13 @@ public class MemberService {
 	public boolean existsByKakaoId(Long kakaoId) {
 
 		return memberRepository.existsByKakaoId(kakaoId);
+	}
+
+	@Transactional(readOnly = true)
+	public MemberResponseDto findMemberResponseDtoById(Long id) {
+
+		return memberRepository.findMemberResponseDtoById(id).orElseThrow(() ->
+			new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 	}
 
 	@Transactional
