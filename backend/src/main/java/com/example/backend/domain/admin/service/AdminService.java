@@ -33,7 +33,12 @@ public class AdminService {
         return admin;
     }
 
-    // 리프레시토큰 저장 및 반환
+    // 엑세스 토큰 생성
+    public String generateToken(Admin admin) {
+        return this.jwtProvider.generateToken(admin);
+    }
+
+    // 리프레시 토큰 저장 및 반환
     public String generateAndSaveRefreshToken(Admin admin) {
         String refreshToken = this.jwtProvider.generateRefreshToken();
         LocalDateTime expiryDate = this.jwtProvider.getRefreshTokenExpiryDate();
@@ -44,5 +49,4 @@ public class AdminService {
 
         return refreshToken;
     }
-
 }

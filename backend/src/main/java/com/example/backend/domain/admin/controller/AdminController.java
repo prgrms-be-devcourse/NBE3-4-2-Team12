@@ -1,16 +1,16 @@
 package com.example.backend.domain.admin.controller;
 
 import com.example.backend.domain.admin.dto.AdminLoginRequest;
-import com.example.backend.domain.admin.dto.AdminLoginResponseDto;
 import com.example.backend.domain.admin.entity.Admin;
 import com.example.backend.domain.admin.service.AdminService;
-import com.example.backend.global.auth.util.JwtUtil;
-import com.example.backend.global.auth.util.TokenProvider;
-import io.jsonwebtoken.Claims;
+import com.example.backend.global.auth.service.CookieService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -18,48 +18,20 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
-    private final TokenProvider tokenProvider;
-    private final JwtUtil jwtUtil;
+    private final CookieService cookieService;
 
     // 관리자 로그인
     @PostMapping("/login")
-    public ResponseEntity<AdminLoginResponseDto> login(@RequestBody AdminLoginRequest request) {
+    public ResponseEntity<String> login(@RequestBody AdminLoginRequest request, HttpServletResponse response) {
         Admin admin = adminService.getAdmin(request.getAdminName(), request.getPassword());
 
-        String accessToken = this.tokenProvider.generateToken(admin);
+        String accessToken = this.adminService.generateToken(admin);
         String refreshToken = this.adminService.generateAndSaveRefreshToken(admin);
 
-        return ResponseEntity.ok(new AdminLoginResponseDto(accessToken));
-    }
+        cookieService.addAccessTokenToCookie(accessToken, response);
+        cookieService.addRefreshTokenToCookie(refreshToken, response);
 
-    // 관리자 정보 조회
-    @GetMapping("/info")
-    public ResponseEntity<String> getAdminInfo(@RequestHeader("Authorization") String token) {
-        if(token == null || !token.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("JWT 토큰이 필요합니다.");
-        }
-
-        // Bearer 제거 후 순수 토큰 추출
-        token = token.substring(7).trim();
-
-        // JWT 검증 후 관리자 정보 추출
-        Claims claims;
-        try {
-            claims = this.jwtUtil.parseToken(token);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
-        }
-
-        String adminName = claims.getSubject();
-        String role = claims.get("role", String.class);
-
-        // 관리자 권한 체크
-        if(!"ADMIN".equals(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
-        }
-
-        // 정상 인증되면 관리자 정보 반환
-        return ResponseEntity.ok("관리자 계정: " + adminName);
+        return ResponseEntity.ok("로그인 성공");
     }
 
 }

@@ -1,7 +1,10 @@
 package com.example.backend.global.auth.jwt;
 
 
+import com.example.backend.domain.admin.entity.Admin;
+import com.example.backend.domain.admin.repository.AdminRepository;
 import com.example.backend.global.auth.util.JwtUtil;
+import com.example.backend.global.auth.util.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +24,7 @@ public class AdminAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final TokenProvider tokenProvider;
     private final AdminRepository adminRepository;
+    private final CookieService cookieService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -45,9 +49,8 @@ public class AdminAuthFilter extends OncePerRequestFilter {
 
             if (refreshToken != null && jwtUtil.isRefreshTokenValid(refreshToken)) {
                 Admin admin = adminRepository.findByRefreshToken(refreshToken);
-
-                String newAccessToken = tokenProvider.generateToken(admin);
-                response.setHeader("Authorization", "Bearer " + newAccessToken);
+                String newAccessToken = this.tokenProvider.generateToken(admin);
+                this.cookieService.addAccessTokenToCookie(newAccessToken, response);
             } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Invalid or expired refresh token");

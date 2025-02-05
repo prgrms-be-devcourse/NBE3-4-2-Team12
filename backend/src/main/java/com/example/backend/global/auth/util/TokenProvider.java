@@ -1,11 +1,5 @@
 package com.example.backend.global.auth.util;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.UUID;
-
-import org.springframework.stereotype.Component;
-
 import com.example.backend.domain.admin.entity.Admin;
 
 import io.jsonwebtoken.Jwts;
@@ -17,8 +11,9 @@ import lombok.RequiredArgsConstructor;
 public class TokenProvider {
 
 	private final JwtUtil jwtUtil;
+	private final CookieService cookieService;
 
-	// JWT 생성
+	// JWT 토큰 생성
 	public String generateToken(Admin admin) {
 		return Jwts.builder()
 			.setSubject(admin.getId().toString())  // 사용자 이름 (관리자 ID)
@@ -47,7 +42,7 @@ public class TokenProvider {
 
 	// 리프레시 토큰 만료 시간 계산
 	public LocalDateTime getRefreshTokenExpiryDate() {
-		return LocalDateTime.now().plusDays(jwtUtil.getRefreshTokenExpirationTime());
+		return LocalDateTime.now().plus(Duration.ofMillis(jwtUtil.getRefreshTokenExpirationTime()));
 	}
 
 }
