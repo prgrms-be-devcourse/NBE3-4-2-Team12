@@ -6,12 +6,15 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.example.backend.domain.member.entity.Member;
 import com.example.backend.domain.member.service.MemberService;
 import com.example.backend.global.auth.dto.KakaoTokenResponseDto;
 import com.example.backend.global.auth.dto.KakaoUserInfoResponseDto;
+import com.example.backend.global.auth.dto.LoginResponseDto;
 import com.example.backend.global.auth.exception.KakaoAuthErrorCode;
 import com.example.backend.global.auth.exception.KakaoAuthException;
 import com.example.backend.global.auth.util.KakaoAuthUtil;
+import com.example.backend.global.auth.util.TokenProvider;
 
 import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ public class KakaoAuthService {
 
 	private final KakaoAuthUtil kakaoAuthUtil;
 	private final WebClient webClient;
+	private final TokenProvider tokenProvider;
 	private final MemberService memberService;
 
 	public String getKakaoAuthorizationUrl() {
@@ -82,14 +86,27 @@ public class KakaoAuthService {
 		return kakaoUserInfoDto;
 	}
 
-	public boolean existsMemberByKakaoId(Long kakaoId) {
+	public LoginResponseDto login(Long kakaoId, KakaoTokenResponseDto kakaoTokenDto) {
 
+		Member member = memberService.findByKakaoId(kakaoId);
+		member.updateAccessToken(kakaoTokenDto.accessToken());
+		member.updateRefreshToken(kakaoTokenDto.refreshToken());
+
+		String accessToken = tokenProvider.generateMemberAccessToken(
+			member.getId(), member.getNickname(), member.getEmail());
+
+		return LoginResponseDto.builder()
+			.nickname(member.getNickname())
+			.accessToken(accessToken)
+			.refreshToken(kakaoTokenDto.refreshToken())
+			.build();
+	}
+
+	public boolean existsMemberByKakaoId(Long kakaoId) {
 		return memberService.existsByKakaoId(kakaoId);
 	}
 
-	public void join(KakaoUserInfoResponseDto kakaoUserInfoDto,
-		String kakaoAccessToken, String kakaoRefreshToken) {
-
-		memberService.join(kakaoUserInfoDto, kakaoAccessToken, kakaoRefreshToken);
+	public void join(KakaoUserInfoResponseDto kakaoUserInfoDto) {
+		memberService.join(kakaoUserInfoDto);
 	}
 }
