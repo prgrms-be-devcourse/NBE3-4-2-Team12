@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.backend.global.auth.jwt.MemberAuthFilter;
+
 
 /**
  * SecurityConfig
@@ -27,8 +29,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+	private final MemberAuthFilter memberAuthFilter;
 	private final AdminAuthFilter adminAuthFilter;
 	private final CorsConfig corsConfig;
+
+	@Bean
+	public SecurityFilterChain memberFilterChain(HttpSecurity http) throws Exception {
+		http
+			.securityMatchers(sm -> sm
+				.requestMatchers(""))
+			.addFilterBefore(memberAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+	}
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
