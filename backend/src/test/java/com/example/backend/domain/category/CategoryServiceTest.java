@@ -83,8 +83,8 @@ public class CategoryServiceTest {
         Long wrongId = 100L;
 
         assertThatThrownBy(() -> categoryService.modify(wrongId, categoryRequestDto))
-                .isInstanceOf(CategoryException.class)  // 예외 타입 확인
-                .hasMessageContaining("카테고리를 찾을 수 없습니다.");
+                .isInstanceOf(CategoryException.class)
+                .hasMessageContaining("해당 카테고리는 존재하지 않습니다.");
 
         verify(categoryRepository, times(1)).findById(wrongId);
 
@@ -134,9 +134,9 @@ public class CategoryServiceTest {
 
         assertThatThrownBy(() -> categoryService.delete(category1.getId()))
                 .isInstanceOf(CategoryException.class)
-                .hasMessageContaining("해당 카테고리는 존재하지 않습니다.");  // 예외 메시지 확인
+                .hasMessageContaining("해당 카테고리는 존재하지 않습니다.");
         verify(categoryRepository, times(1)).findById(category1.getId());
-        verify(categoryRepository, times(0)).delete(any(Category.class));  // delete 호출되지 않아야 함
+        verify(categoryRepository, times(0)).delete(any(Category.class));
     }
 
 }
