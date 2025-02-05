@@ -1,6 +1,7 @@
 package com.example.backend.global.auth.jwt;
 
 
+import com.example.backend.global.auth.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,9 +16,9 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class adminAuthFilter extends OncePerRequestFilter {
 
-    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -25,15 +26,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // 요청 헤더에서 JWT 토큰 가져오기
         String token = resolveToken(request);
+        String refreshToken = request.getHeader("Refresh-Token");
 
         // 토큰이 유효하면 SecurityContext 에 인증 정보 저장
-        if(token != null && jwtProvider.validateToken(token)) {
-            Authentication authentication = jwtProvider.getAuthentication(token);
+        if(token != null && jwtUtil.validateToken(token)) {
+            Authentication authentication = jwtUtil.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else if (token != null && jwtUtil.isRefreshTokenValid(refreshToken)) {
+
         }
-//        else if (token != null && jwtProvider.isTokenExpired(token)) {
-//            String refreshToken = request.getHeader("Refresh-Token");
-//        }
 
         // 다음 필터에 요청 전달
         chain.doFilter(request, response);
