@@ -4,7 +4,7 @@ import com.example.backend.domain.admin.entity.Admin;
 import com.example.backend.domain.admin.exception.AdminErrorCode;
 import com.example.backend.domain.admin.exception.AdminException;
 import com.example.backend.domain.admin.repository.AdminRepository;
-import com.example.backend.global.auth.jwt.JwtProvider;
+import com.example.backend.global.auth.util.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
+    private final TokenProvider jwtProvider;
 
     public Admin getAdmin(String adminName, String password) {
         // 아이디로 관리자 조회

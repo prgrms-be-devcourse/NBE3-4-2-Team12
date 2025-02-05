@@ -4,7 +4,8 @@ import com.example.backend.domain.admin.dto.AdminLoginRequest;
 import com.example.backend.domain.admin.dto.AdminLoginResponseDto;
 import com.example.backend.domain.admin.entity.Admin;
 import com.example.backend.domain.admin.service.AdminService;
-import com.example.backend.global.auth.jwt.JwtProvider;
+import com.example.backend.global.auth.util.JwtUtil;
+import com.example.backend.global.auth.util.TokenProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,14 +18,15 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
-    private final JwtProvider jwtProvider;
+    private final TokenProvider tokenProvider;
+    private final JwtUtil jwtUtil;
 
     // 관리자 로그인
     @PostMapping("/login")
     public ResponseEntity<AdminLoginResponseDto> login(@RequestBody AdminLoginRequest request) {
         Admin admin = adminService.getAdmin(request.getAdminName(), request.getPassword());
 
-        String accessToken = this.jwtProvider.generateToken(admin);
+        String accessToken = this.tokenProvider.generateToken(admin);
         String refreshToken = this.adminService.generateAndSaveRefreshToken(admin);
 
         return ResponseEntity.ok(new AdminLoginResponseDto(accessToken));
@@ -43,7 +45,7 @@ public class AdminController {
         // JWT 검증 후 관리자 정보 추출
         Claims claims;
         try {
-            claims = jwtProvider.parseToken(token);
+            claims = this.jwtUtil.parseToken(token);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
         }
