@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -67,7 +67,15 @@ public class GroupControllerTest {
 
     @Test
     @DisplayName("모임 전체 조회")
-    void t2() {
-        groupService.findAllGroups();
+    void t2() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                get("/groups")
+                        .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+        ).andDo(print());
+
+        resultActions.andExpect(handler().handlerType(GroupController.class))
+                .andExpect(handler().methodName("listGroups"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(Matchers.greaterThan(0)));
     }
 }
