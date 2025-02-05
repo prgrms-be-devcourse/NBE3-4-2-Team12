@@ -1,9 +1,12 @@
 package com.example.backend.global.auth.util;
 
+import com.example.backend.domain.admin.entity.Admin;
+import com.example.backend.domain.admin.repository.AdminRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,7 +15,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,8 +25,11 @@ import java.util.List;
  * jwt 관련 유틸 클래스
  * @author 100minha
  */
+@RequiredArgsConstructor
 @Component
 public class JwtUtil {
+
+	private final AdminRepository adminRepository;
 
 	@Value("${spring.security.jwt.secret-key}")
 	private String SECRET_KEY;
@@ -51,7 +59,7 @@ public class JwtUtil {
 		return key;
 	}
 
-	// 토큰 검증 메서드
+	// 엑세스 토큰 검증 메서드
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parserBuilder()
@@ -62,6 +70,37 @@ public class JwtUtil {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	// 엑세스 토큰 현재 시간과 비교하여 만료 여부 확인
+	public boolean isTokenExpired(String accessToken) {
+			try {
+				Date expiration = Jwts.parserBuilder()
+						.setSigningKey(key)
+						.build()
+						.parseClaimsJws(accessToken)
+						.getBody()
+						.getExpiration();
+
+				return expiration.before(new Date());
+			} catch (Exception e) {
+				return true;
+			}
+	}
+
+	// 리프레시 토큰 유효성 검사
+	public boolean isRefreshTokenValid(String refreshToken) {
+		Admin admin = this.adminRepository.findByRefreshToken(refreshToken);
+
+		if(admin == null) {
+			return false;
+		}
+
+		if(admin.getRefreshTokenExpiryDate().isBefore(LocalDateTime.now())) {
+			return false;
+		}
+
+		return true;
 	}
 
 	// JWT 에서 사용자 정보 추출
@@ -104,17 +143,4 @@ public class JwtUtil {
 		return parseToken(token).get("role", String.class);
 	}
 
-	// 리프레시 토큰 유효성 검사
-	public boolean isRefreshTokenValid(String refreshToken) {
-		try {
-			Jwts.parserBuilder()
-					.setSigningKey(key)
-					.build()
-					.parseClaimsJws(refreshToken);
-
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
 }

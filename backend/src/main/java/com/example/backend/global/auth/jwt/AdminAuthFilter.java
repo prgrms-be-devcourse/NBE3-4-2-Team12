@@ -1,7 +1,10 @@
 package com.example.backend.global.auth.jwt;
 
 
+import com.example.backend.domain.admin.entity.Admin;
+import com.example.backend.domain.admin.repository.AdminRepository;
 import com.example.backend.global.auth.util.JwtUtil;
+import com.example.backend.global.auth.util.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,21 +22,40 @@ import java.io.IOException;
 public class AdminAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final TokenProvider tokenProvider;
+    private final AdminRepository adminRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
     throws ServletException, IOException {
 
         // 요청 헤더에서 JWT 토큰 가져오기
-        String token = resolveToken(request);
-        String refreshToken = request.getHeader("Refresh-Token");
+        String accessToken = resolveToken(request);
 
         // 토큰이 유효하면 SecurityContext 에 인증 정보 저장
-        if(token != null && jwtUtil.validateToken(token)) {
-            Authentication authentication = jwtUtil.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else if (token != null && jwtUtil.isRefreshTokenValid(refreshToken)) {
+        if (accessToken == null) {
+            chain.doFilter(request, response);
+            return;
+        }
 
+        if (jwtUtil.validateToken(accessToken)) {
+            Authentication authentication = jwtUtil.getAuthentication(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            chain.doFilter(request, response);
+            return;
+        } else if (jwtUtil.isTokenExpired(accessToken)) {
+            String refreshToken = request.getHeader("Refresh-Token");
+
+            if (refreshToken != null && jwtUtil.isRefreshTokenValid(refreshToken)) {
+                Admin admin = adminRepository.findByRefreshToken(refreshToken);
+
+                String newAccessToken = tokenProvider.generateToken(admin);
+                response.setHeader("Authorization", "Bearer " + newAccessToken);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid or expired refresh token");
+                return;
+            }
         }
 
         // 다음 필터에 요청 전달
