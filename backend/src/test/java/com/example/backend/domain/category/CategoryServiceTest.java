@@ -34,6 +34,8 @@ public class CategoryServiceTest {
     private CategoryService categoryService;
 
     private CategoryRequestDto categoryRequestDto;
+    private Category category1;
+    private Category category2;
 
     @BeforeEach
     void setUp() {
@@ -41,12 +43,13 @@ public class CategoryServiceTest {
                 CategoryType.STUDY,
                 "category1"
         );
+        category1 = new Category("Category 1", CategoryType.EXERCISE);
+        category2 = new Category("Category 2", CategoryType.HOBBY);
     }
 
     @Test
     @DisplayName("카테고리 생성 테스트")
     void createCategoryTest() {
-        // Given
         Category category = Category.builder()
                 .name(categoryRequestDto.getName())
                 .categoryType(categoryRequestDto.getType())
@@ -54,10 +57,8 @@ public class CategoryServiceTest {
 
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
 
-        // When
         CategoryResponseDto response = categoryService.create(categoryRequestDto);
 
-        // Then
         assertThat(response).isNotNull();
         assertThat(response.getName()).isEqualTo(category.getName());
         assertThat(response.getType()).isEqualTo(category.getCategoryType());
@@ -68,15 +69,29 @@ public class CategoryServiceTest {
     @Test
     @DisplayName("카테고리 수정 테스트")
     void modifyCategoryTest() {
-        Category oldCategory = new Category("oldCategory",CategoryType.EXERCISE);
-        when(categoryRepository.findById(oldCategory.getId())).thenReturn(Optional.of(oldCategory));
-        CategoryResponseDto response = categoryService.modify(oldCategory.getId(), categoryRequestDto);
+        when(categoryRepository.findById(category1.getId())).thenReturn(Optional.of(category1));
+
+        CategoryResponseDto response = categoryService.modify(category1.getId(), categoryRequestDto);
 
         assertThat(response).isNotNull();
         assertThat(response.getName()).isEqualTo(categoryRequestDto.getName());
         assertThat(response.getType()).isEqualTo(categoryRequestDto.getType());
 
-        verify(categoryRepository, times(1)).findById(oldCategory.getId());
+        verify(categoryRepository, times(1)).findById(category1.getId());
+    }
+
+    @Test
+    @DisplayName("카테고리 전체 조회 테스트")
+    void ListCategoryTest() {
+        List<Category> categories = Arrays.asList(category1, category2);
+        when(categoryRepository.findAll()).thenReturn(categories);
+
+        List<CategoryResponseDto> response = categoryService.getAllCategories();
+
+        assertThat(response).hasSize(2);
+        assertThat(response.get(0).getName()).isEqualTo(category1.getName());
+        assertThat(response.get(1).getName()).isEqualTo(category2.getName());
+        verify(categoryRepository, times(1)).findAll();
     }
 
 
