@@ -31,7 +31,7 @@ public class AdminAuthFilter extends OncePerRequestFilter {
     throws ServletException, IOException {
 
         // 요청 헤더에서 JWT 토큰 가져오기
-        String accessToken = resolveToken(request);
+        String accessToken = this.cookieService.getAccessTokenFromCookie(request);
 
         // 토큰이 유효하면 SecurityContext 에 인증 정보 저장
         if (accessToken == null) {
@@ -45,7 +45,7 @@ public class AdminAuthFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         } else if (jwtUtil.isTokenExpired(accessToken)) {
-            String refreshToken = request.getHeader("Refresh-Token");
+            String refreshToken = this.cookieService.getRefreshTokenFromCookie(request);
 
             if (refreshToken != null && jwtUtil.isRefreshTokenValid(refreshToken)) {
                 Admin admin = adminRepository.findByRefreshToken(refreshToken);
@@ -62,12 +62,4 @@ public class AdminAuthFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    // 요청 헤더에서 Authorization 값 가져오기
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if(bearerToken != null && bearerToken.startsWith("Bearer")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
 }

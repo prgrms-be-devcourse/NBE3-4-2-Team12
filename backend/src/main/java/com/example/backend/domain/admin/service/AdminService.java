@@ -4,7 +4,9 @@ import com.example.backend.domain.admin.entity.Admin;
 import com.example.backend.domain.admin.exception.AdminErrorCode;
 import com.example.backend.domain.admin.exception.AdminException;
 import com.example.backend.domain.admin.repository.AdminRepository;
+import com.example.backend.global.auth.service.CookieService;
 import com.example.backend.global.auth.util.TokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CookieService cookieService;
     private final TokenProvider jwtProvider;
 
     public Admin getAdmin(String adminName, String password) {
@@ -48,5 +51,20 @@ public class AdminService {
         this.adminRepository.save(admin);
 
         return refreshToken;
+    }
+
+    // admin 객체에 리프레시 토큰 만료
+    public void clearRefreshToken(HttpServletRequest request) {
+        String refreshToken = cookieService.getRefreshTokenFromCookie(request);
+
+        if(refreshToken != null) {
+            Admin admin = this.adminRepository.findByRefreshToken(refreshToken);
+            if(admin != null) {
+                admin.setRefreshToken(null);
+                admin.setRefreshTokenExpiryDate(null);
+                this.adminRepository.save(admin);
+            }
+        }
+
     }
 }

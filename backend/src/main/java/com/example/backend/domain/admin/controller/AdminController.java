@@ -4,6 +4,7 @@ import com.example.backend.domain.admin.dto.AdminLoginRequest;
 import com.example.backend.domain.admin.entity.Admin;
 import com.example.backend.domain.admin.service.AdminService;
 import com.example.backend.global.auth.service.CookieService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,15 @@ public class AdminController {
         cookieService.addRefreshTokenToCookie(refreshToken, response);
 
         return ResponseEntity.ok("로그인 성공");
+    }
+
+    // 관리자 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response, HttpServletRequest request) {
+        this.cookieService.clearTokenFromCookie(response);
+        this.adminService.clearRefreshToken(request);
+
+        return ResponseEntity.ok("로그아웃 성공");
     }
 
 }
