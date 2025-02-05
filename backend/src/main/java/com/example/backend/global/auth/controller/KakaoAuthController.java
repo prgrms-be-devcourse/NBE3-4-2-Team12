@@ -1,5 +1,6 @@
 package com.example.backend.global.auth.controller;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.global.auth.dto.KakaoTokenResponseDto;
 import com.example.backend.global.auth.dto.KakaoUserInfoResponseDto;
+import com.example.backend.global.auth.dto.LoginResponseDto;
 import com.example.backend.global.auth.service.CookieService;
 import com.example.backend.global.auth.service.KakaoAuthService;
 import com.example.backend.global.response.ApiResponse;
@@ -42,12 +44,13 @@ public class KakaoAuthController {
 	 * @return
 	 */
 	@GetMapping("/login")
-	public ResponseEntity<Void> kakaoLogin() {
+	public ResponseEntity<Object> kakaoLogin() {
 
+		System.out.println("kakaoLogin Controller Active");
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Location", kakaoAuthService.getKakaoAuthorizationUrl());
+		headers.setLocation(URI.create(kakaoAuthService.getKakaoAuthorizationUrl()));
 
-		return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
+		return ResponseEntity.status(HttpStatus.FOUND).headers(headers).body(null);
 	}
 
 	/**
@@ -79,17 +82,21 @@ public class KakaoAuthController {
 		KakaoTokenResponseDto kakaoTokenDto = kakaoAuthService.getTokenFromKakao(authorizationCode);
 		KakaoUserInfoResponseDto kakaoUserInfoDto = kakaoAuthService.getUserInfo(kakaoTokenDto.accessToken());
 
-		// 기존 사용자 인지 검증 후 신규 사용자일 시 회원가입 진행
-		if (!kakaoAuthService.existsMemberByKakaoId(kakaoUserInfoDto.id())) {
-			kakaoAuthService.join(kakaoUserInfoDto, kakaoTokenDto.accessToken(), kakaoTokenDto.refreshToken());
+		Long kakaoId = kakaoUserInfoDto.id();
+
+		// 기존 사용인지 검증 후 신규 사용자일 시 회원가입 진행
+		if (!kakaoAuthService.existsMemberByKakaoId(kakaoId)) {
+			kakaoAuthService.join(kakaoUserInfoDto);
 		}
 
-		cookieService.addAccessTokenToCookie(kakaoTokenDto.accessToken(), response);
-		cookieService.addRefreshTokenToCookie(kakaoTokenDto.refreshToken(), response);
+		LoginResponseDto loginDto = kakaoAuthService.login(kakaoId, kakaoTokenDto);
+
+		cookieService.addAccessTokenToCookie(loginDto.accessToken(), response);
+		cookieService.addRefreshTokenToCookie(loginDto.refreshToken(), response);
 
 		return ResponseEntity.ok()
 			.headers(headers)
-			.body(ApiResponse.of("성공적으로 로그인 되었습니다."));
+			.body(ApiResponse.of("성공적으로 로그인 되었습니다. nickname : " + loginDto.nickname()));
 	}
 
 }
