@@ -123,4 +123,17 @@ public class GroupControllerTest {
                 .andExpect(jsonPath("$.description").value("내용3"))
                 .andExpect(jsonPath("$.maxParticipants").value(6));
     }
+
+    @Test
+    @DisplayName("그룹 삭제")
+    void t5() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                delete("/groups/{id}",3)
+                        .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+        ).andDo(print());
+
+        resultActions.andExpect(handler().handlerType(GroupController.class))
+                .andExpect(handler().methodName("deleteGroup"))
+                .andExpect(status().isOk());
+    }
 }
