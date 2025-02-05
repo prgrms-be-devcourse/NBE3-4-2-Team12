@@ -1,7 +1,7 @@
 package com.example.backend.global.config;
 
 
-import com.example.backend.global.auth.jwt.JwtAuthFilter;
+import com.example.backend.global.auth.jwt.AdminAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

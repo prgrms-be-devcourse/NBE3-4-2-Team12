@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class adminAuthFilter extends OncePerRequestFilter {
+public class AdminAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
