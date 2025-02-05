@@ -7,6 +7,7 @@ import com.example.backend.domain.category.dto.CategoryRequestDto;
 import com.example.backend.domain.category.dto.CategoryResponseDto;
 import com.example.backend.domain.category.entity.Category;
 import com.example.backend.domain.category.entity.CategoryType;
+import com.example.backend.domain.category.exception.CategoryException;
 import com.example.backend.domain.category.repository.CategoryRepository;
 import com.example.backend.domain.category.service.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,5 +95,27 @@ public class CategoryServiceTest {
         verify(categoryRepository, times(1)).findAll();
     }
 
+    @Test
+    @DisplayName("카테고리 삭제 성공 테스트")
+    void deleteCategoryTest() {
+        when(categoryRepository.findById(category1.getId())).thenReturn(Optional.of(category1));
+
+        categoryService.delete(category1.getId());
+
+        verify(categoryRepository, times(1)).findById(category1.getId());
+        verify(categoryRepository, times(1)).delete(category1);
+    }
+
+    @Test
+    @DisplayName("카테고리 삭제 실패 테스트")
+    void deleteCategoryFailureTest(){
+        when(categoryRepository.findById(category1.getId())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> categoryService.delete(category1.getId()))
+                .isInstanceOf(CategoryException.class)
+                .hasMessageContaining("해당 카테고리는 존재하지 않습니다.");  // 예외 메시지 확인
+        verify(categoryRepository, times(1)).findById(category1.getId());
+        verify(categoryRepository, times(0)).delete(any(Category.class));  // delete 호출되지 않아야 함
+    }
 
 }
