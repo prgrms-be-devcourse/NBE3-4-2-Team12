@@ -1,18 +1,29 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
+type Category = {
+  id: number;
+  type: string;
+  name: string;
+};
+
 type CardProps = {
+  id: string;
   title: string;
-  categoryNames: string;
+  category: Category[];
   status: string;
 };
 
 const categoryColors: Record<string, string> = {
-  self_development: "bg-blue-200",
-  hobby: "bg-yellow-200",
-  exercise: "bg-purple-200",
+  STUDY: "bg-blue-200",
+  HOBBY: "bg-yellow-200",
+  EXERCISE: "bg-purple-200",
 };
 
 const statusMapping: Record<string, string> = {
   RECRUITING: "모집중",
-  CLOSED: "마감",
+  COMPLETED: "마감",
 };
 
 const statusColors: Record<string, string> = {
@@ -21,25 +32,34 @@ const statusColors: Record<string, string> = {
 };
 
 const categoryMapping: Record<string, string> = {
-  self_development: "자기 개발",
-  hobby: "취미",
-  exercise: "운동",
+  STUDY: "자기 개발",
+  HOBBY: "취미",
+  EXERCISE: "운동",
 };
 
-const Card = ({ title, categoryNames, status }: CardProps) => {
-  console.log("Category:", categoryNames);
+const Card = ({ id, title, category, status }: CardProps) => {
+  const router = useRouter();
   const displayedStatus = statusMapping[status] || status;
-  const displayedCategory = categoryMapping[categoryNames] || categoryNames;
+  const displayedCategory =
+    category.length > 0
+      ? categoryMapping[category[0].name] || category[0].name
+      : "미정"; // 첫 번째 카테고리만 표시, 기본값 "미정"
+  const handleClick = () => {
+    router.push(`/groups/${id}`);
+  };
 
   return (
-    <div className="border p-4 rounded shadow-md w-64 bg-white flex flex-col justify-between">
+    <div
+      className="border p-4 rounded shadow-md w-64 bg-white flex flex-col justify-between"
+      onClick={handleClick}
+    >
       {/* 제목 */}
       <h2 className="text-md font-semibold">{title}</h2>
 
       {/* 카테고리 */}
       <span
         className={`text-sm px-3 py-1 rounded-md mt-2 inline-block w-fit ${
-          categoryColors[categoryNames] || "bg-gray-200"
+          categoryColors[displayedCategory] || "bg-gray-200"
         }`}
       >
         {displayedCategory}
