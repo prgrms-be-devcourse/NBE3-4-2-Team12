@@ -19,10 +19,12 @@ public class MemberService {
 		return memberRepository.existsByKakaoId(kakaoId);
 	}
 
-	public void join(KakaoUserInfoResponseDto kakaoUserInfoDto, String refreshToken) {
+	public void join(KakaoUserInfoResponseDto kakaoUserInfoDto,
+		String kakaoAccessToken, String kakaoRefreshToken) {
 
 		Member member = Member.of(kakaoUserInfoDto);
-		member.updateRefreshToken(refreshToken);
+		member.updateAccessToken(kakaoAccessToken);
+		member.updateRefreshToken(kakaoRefreshToken);
 		memberRepository.save(member);
 	}
 }

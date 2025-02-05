@@ -81,7 +81,7 @@ public class KakaoAuthController {
 
 		// 기존 사용자 인지 검증 후 신규 사용자일 시 회원가입 진행
 		if (!kakaoAuthService.existsMemberByKakaoId(kakaoUserInfoDto.id())) {
-			kakaoAuthService.join(kakaoUserInfoDto, kakaoTokenDto.refreshToken());
+			kakaoAuthService.join(kakaoUserInfoDto, kakaoTokenDto.accessToken(), kakaoTokenDto.refreshToken());
 		}
 
 		cookieService.addAccessTokenToCookie(kakaoTokenDto.accessToken(), response);
