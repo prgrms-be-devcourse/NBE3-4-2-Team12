@@ -1,12 +1,13 @@
 package com.example.backend.domain.category;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
-
 import com.example.backend.domain.category.dto.CategoryRequestDto;
 import com.example.backend.domain.category.dto.CategoryResponseDto;
 import com.example.backend.domain.category.entity.Category;
 import com.example.backend.domain.category.entity.CategoryType;
+import com.example.backend.domain.category.exception.CategoryErrorCode;
 import com.example.backend.domain.category.exception.CategoryException;
 import com.example.backend.domain.category.repository.CategoryRepository;
 import com.example.backend.domain.category.service.CategoryService;
@@ -17,11 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,8 +80,21 @@ public class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("카테고리 전체 조회 테스트")
-    void ListCategoryTest() {
+    @DisplayName("카테고리 수정시 잘못된 id로 실패 테스트")
+    void modifyFailureExceptionTest() {
+        Long wrongId = 100L;
+
+        assertThatThrownBy(() -> categoryService.modify(wrongId, categoryRequestDto))
+                .isInstanceOf(CategoryException.class)  // 예외 타입 확인
+                .hasMessageContaining("카테고리를 찾을 수 없습니다.");
+
+        verify(categoryRepository, times(1)).findById(wrongId);
+
+    }
+
+    @Test
+    @DisplayName("카테고리 전체 조회 성공 테스트")
+    void listCategoryTest() {
         List<Category> categories = Arrays.asList(category1, category2);
         when(categoryRepository.findAll()).thenReturn(categories);
 
@@ -92,6 +103,18 @@ public class CategoryServiceTest {
         assertThat(response).hasSize(2);
         assertThat(response.get(0).getName()).isEqualTo(category1.getName());
         assertThat(response.get(1).getName()).isEqualTo(category2.getName());
+        verify(categoryRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("카테고리가 하나도 존재하지 않을때 조회 실패 테스트")
+    void emptyListCategoryTest(){
+        when(categoryRepository.findAll()).thenReturn(Collections.emptyList());
+
+        assertThatThrownBy(() -> categoryService.getAllCategories())
+                .isInstanceOf(CategoryException.class)  // 예외 타입 확인
+                .hasMessageContaining("카테고리 목록이 존재하지 않습니다.");
+
         verify(categoryRepository, times(1)).findAll();
     }
 
@@ -107,7 +130,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("카테고리 삭제 실패 테스트")
+    @DisplayName("카테고리 삭제 시 잘못된 id로 실패 테스트")
     void deleteCategoryFailureTest(){
         when(categoryRepository.findById(category1.getId())).thenReturn(Optional.empty());
 
