@@ -1,5 +1,7 @@
 package com.example.backend.global.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -20,7 +22,7 @@ public class CorsConfig {
 
 		CorsConfiguration corsConfig = new CorsConfiguration();
 		corsConfig.setAllowCredentials(true);
-		corsConfig.addAllowedOrigin("https://localhost:3000");
+		corsConfig.setAllowedOrigins(List.of("http://localhost:3000", "https://localhost:3000"));
 		corsConfig.addAllowedHeader("*");
 		corsConfig.addExposedHeader("Authorization");
 		corsConfig.addAllowedMethod("*");
