@@ -1,13 +1,11 @@
 package com.example.backend.domain.category;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 import com.example.backend.domain.category.dto.CategoryRequestDto;
 import com.example.backend.domain.category.dto.CategoryResponseDto;
 import com.example.backend.domain.category.entity.Category;
 import com.example.backend.domain.category.entity.CategoryType;
-import com.example.backend.domain.category.exception.CategoryErrorCode;
 import com.example.backend.domain.category.exception.CategoryException;
 import com.example.backend.domain.category.repository.CategoryRepository;
 import com.example.backend.domain.category.service.CategoryService;
