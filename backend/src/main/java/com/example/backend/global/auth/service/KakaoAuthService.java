@@ -87,8 +87,9 @@ public class KakaoAuthService {
 		return memberService.existsByKakaoId(kakaoId);
 	}
 
-	public void join(KakaoUserInfoResponseDto kakaoUserInfoDto, String refreshToken) {
+	public void join(KakaoUserInfoResponseDto kakaoUserInfoDto,
+		String kakaoAccessToken, String kakaoRefreshToken) {
 
-		memberService.join(kakaoUserInfoDto, refreshToken);
+		memberService.join(kakaoUserInfoDto, kakaoAccessToken, kakaoRefreshToken);
 	}
 }
