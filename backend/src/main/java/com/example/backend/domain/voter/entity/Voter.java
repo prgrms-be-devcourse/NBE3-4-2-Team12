@@ -10,22 +10,29 @@ import java.io.Serializable;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Builder
 public class Voter extends BaseEntity {
 
     @EmbeddedId
     private VoterId id; // 키 정의
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("memberId") // 키의 memberId를 FK로 매핑
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("voteId") // 키의 voteId를 FK로 매핑
     @JoinColumn(name = "vote_id", nullable = false)
     private Vote vote;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("memberId") // 키의 userId를 FK로 매핑
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    // 생성자 추가
+    public Voter(VoterId id, Member member, Vote vote) {
+        this.id = id;
+        this.member = member;
+        this.vote = vote;
+    }
 
     @Embeddable
     @Getter
