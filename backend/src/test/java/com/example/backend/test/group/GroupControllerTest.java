@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class GroupControllerTest {
 
     @Autowired
@@ -51,7 +53,6 @@ public class GroupControllerTest {
         ).andDo(print());
 
         GroupResponseDto groupResponseDto = groupService.create(new GroupRequestDto("제목1","내용1",5,1L, Arrays.asList(1L), GroupStatus.RECRUITING));
-        System.out.println("Generated Group ID: " + groupResponseDto.getId());
         resultActions.andExpect(handler().handlerType(GroupController.class))
                 .andExpect(handler().methodName("createGroup"))
                 .andExpect(status().isOk())
@@ -97,5 +98,29 @@ public class GroupControllerTest {
                 .andExpect(jsonPath("$.maxParticipants").isNotEmpty())
                 .andExpect(jsonPath("$.category").isNotEmpty())
                 .andExpect(jsonPath("$.status").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("그룹 수정")
+    void t4() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                put("/groups/{id}",1L)
+                        .content("""
+                                {
+                                  "title": "제목2",
+                                  "description": "내용3",
+                                  "maxParticipants":6
+                                }
+                                """)
+                        .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+        ).andDo(print());
+
+        resultActions.andExpect(handler().handlerType(GroupController.class))
+                .andExpect(handler().methodName("modifyGroup"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.title").value("제목2"))
+                .andExpect(jsonPath("$.description").value("내용3"))
+                .andExpect(jsonPath("$.maxParticipants").value(6));
     }
 }
