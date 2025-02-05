@@ -1,5 +1,6 @@
 package com.example.backend.domain.group.dto;
 
+import com.example.backend.domain.category.dto.CategoryResponseDto;
 import com.example.backend.domain.group.entity.Group;
 import com.example.backend.domain.group.entity.GroupStatus;
 import lombok.Getter;
@@ -14,9 +15,10 @@ public class GroupResponseDto {
     private String title;
     private String description;
     private Long memberId;
+    private String author;
     private Integer maxParticipants;
     private GroupStatus status;
-    private List<String> categoryNames;
+    private List<CategoryResponseDto> category;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -24,11 +26,12 @@ public class GroupResponseDto {
         this.id = group.getId();
         this.title = group.getTitle();
         this.description = group.getDescription();
+        this.author = group.getMember().getNickname();
         this.memberId = group.getMember().getId();
         this.maxParticipants = group.getMaxParticipants();
         this.status = group.getStatus();
-        this.categoryNames = group.getGroupCategories().stream()
-                .map(gc->gc.getCategory().getName())
+        this.category = group.getGroupCategories().stream()
+                .map(gc -> new CategoryResponseDto(gc.getCategory()))
                 .collect(Collectors.toList());
         this.createdAt = group.getCreatedAt();
         this.modifiedAt = group.getModifiedAt();
