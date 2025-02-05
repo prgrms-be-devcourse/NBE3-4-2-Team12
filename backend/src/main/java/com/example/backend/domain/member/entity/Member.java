@@ -29,14 +29,21 @@ public class Member extends BaseEntity {
 
 	private String nickname;
 
-	private String refreshToken;
+	@Column(name = "kakao_access_token")
+	private String kakaoAccessToken;        // 카카오에서 발급한 액세스 토큰
+
+	@Column(name = "kakao_refresh_token")
+	private String kakaoRefreshToken;    // 카카오에서 발급한 리프레시 토큰
 
 	@Builder
-	public Member(Long kakaoId, String email, String nickname) {
+	public Member(Long kakaoId, String email, String nickname,
+		String kakaoAccessToken, String kakaoRefreshToken) {
 
 		this.kakaoId = kakaoId;
 		this.email = email;
 		this.nickname = nickname;
+		this.kakaoAccessToken = kakaoAccessToken;
+		this.kakaoRefreshToken = kakaoRefreshToken;
 	}
 
 	public static Member of(KakaoUserInfoResponseDto kakaoUserInfoDto) {
@@ -48,7 +55,11 @@ public class Member extends BaseEntity {
 			.build();
 	}
 
+	public void updateAccessToken(String accessToken) {
+		this.kakaoAccessToken = accessToken;
+	}
+
 	public void updateRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
+		this.kakaoRefreshToken = refreshToken;
 	}
 }

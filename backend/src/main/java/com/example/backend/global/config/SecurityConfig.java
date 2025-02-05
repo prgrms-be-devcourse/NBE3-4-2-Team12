@@ -1,10 +1,9 @@
 package com.example.backend.global.config;
 
-
-import com.example.backend.global.auth.jwt.AdminAuthFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,21 +15,46 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.backend.global.auth.jwt.AdminAuthFilter;
+import com.example.backend.global.auth.jwt.MemberAuthFilter;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * SecurityConfig
- * <p></p>
- * @author 100mi
+ * 시큐리티 관련 설정 클래스
+ * @author 100minha
  */
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+	private final MemberAuthFilter memberAuthFilter;
 	private final AdminAuthFilter adminAuthFilter;
 	private final CorsConfig corsConfig;
 
 	@Bean
+	@Order(1)
+	public SecurityFilterChain memberFilterChain(HttpSecurity http) throws Exception {
+		http
+			.securityMatchers(sm -> sm
+				.requestMatchers("/members/**")
+				.requestMatchers(HttpMethod.POST, "/groups", "/groups/**")
+				.requestMatchers(HttpMethod.PUT, "/groups/**")
+				.requestMatchers(HttpMethod.DELETE, "/groups/**")
+				.requestMatchers("/votes", "/votes/**")
+				.requestMatchers("/voters", "voters/**"))
+			.addFilter(corsConfig.corsFilter())
+			.authorizeHttpRequests(auth -> auth
+				.anyRequest().authenticated())
+			.addFilterBefore(memberAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+	}
+
+	@Bean
+	@Order(2)
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf(AbstractHttpConfigurer::disable)
@@ -40,6 +64,7 @@ public class SecurityConfig {
 			.logout(AbstractHttpConfigurer::disable)
 			.addFilter(corsConfig.corsFilter())
 			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/groups").permitAll()
 				.anyRequest().permitAll()    //TODO: 백엔드 로직 작성 단계에서 테스트용 api별 권한 설정이므로 추후 올바르게 설정 필요
 			)
 			.addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class)     // JWT 필터 추가
