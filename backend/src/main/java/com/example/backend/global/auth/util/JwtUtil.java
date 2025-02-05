@@ -119,17 +119,35 @@ public class JwtUtil {
 			.build();
 	}
 
-	// 리프레시 토큰 유효성 검사
-	public boolean isRefreshTokenValid(String refreshToken) {
-		try {
-			Jwts.parserBuilder()
-				.setSigningKey(key)
-				.build()
-				.parseClaimsJws(refreshToken);
 
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
+    // 엑세스 토큰 현재 시간과 비교하여 만료 여부 확인
+    public boolean isTokenExpired(String accessToken) {
+        try {
+            Date expiration = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody()
+                    .getExpiration();
+
+            return expiration.before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    // 리프레시 토큰 유효성 검사
+    public boolean isRefreshTokenValid(String refreshToken) {
+        Admin admin = this.adminRepository.findByRefreshToken(refreshToken);
+
+        if(admin == null) {
+            return false;
+        }
+
+        if(admin.getRefreshTokenExpiryDate().isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+        return true;
+    }
 }
