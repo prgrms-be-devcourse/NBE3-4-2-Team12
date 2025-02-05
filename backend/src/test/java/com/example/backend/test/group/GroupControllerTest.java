@@ -66,7 +66,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    @DisplayName("모임 전체 조회")
+    @DisplayName("그룹 전체 조회")
     void t2() throws Exception {
         ResultActions resultActions = mvc.perform(
                 get("/groups")
@@ -77,5 +77,25 @@ public class GroupControllerTest {
                 .andExpect(handler().methodName("listGroups"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(Matchers.greaterThan(0)));
+    }
+
+    @Test
+    @DisplayName("그룹 특정 조회")
+    void t3() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                get("/groups/{id}",1)
+                        .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+        ).andDo(print());
+
+        resultActions.andExpect(handler().handlerType(GroupController.class))
+                .andExpect(handler().methodName("getGroup"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.title").isNotEmpty())
+                .andExpect(jsonPath("$.description").isNotEmpty())
+                .andExpect(jsonPath("$.memberId").isNotEmpty())
+                .andExpect(jsonPath("$.maxParticipants").isNotEmpty())
+                .andExpect(jsonPath("$.category").isNotEmpty())
+                .andExpect(jsonPath("$.status").isNotEmpty());
     }
 }
