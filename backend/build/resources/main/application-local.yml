@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 4e76269fc93f47cfaba96f380ddbcf67
+#            client-secret: ${KAKAO_CLIENT_SECRET} # 필요한 경우 추가
+            redirect-uri: http://localhost:8080/auth/kakao/callback
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post  # 이 부분 추가
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+    jwt:
+      secret-key: q_W?DNW;gK"[S8k}q{J>!8lDvH<SL#p8E;f&SA7:^p9rJPQ"`CaSM_vfyynbq8I
+      access-token:
+        expiration: 21600000
+      refresh-token:
+        expiration: 5184000000

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.backend.test.vote.VoteServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-01-31T08:12:19" hostname="DESKTOP-OEROB9D" time="1.085">
+  <properties/>
+  <testcase name="투표 수정 테스트" classname="com.example.backend.test.vote.VoteServiceTest" time="1.058"/>
+  <testcase name="투표 생성 테스트" classname="com.example.backend.test.vote.VoteServiceTest" time="0.005"/>
+  <testcase name="존재하지 않는 투표 조회시 예외 발생 테스트" classname="com.example.backend.test.vote.VoteServiceTest" time="0.006"/>
+  <testcase name="투표 삭제 테스트" classname="com.example.backend.test.vote.VoteServiceTest" time="0.005"/>
+  <testcase name="투표 조회 테스트" classname="com.example.backend.test.vote.VoteServiceTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\zetto\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.15.11\a38b16385e867f59a641330f0362ebe742788ed8\byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

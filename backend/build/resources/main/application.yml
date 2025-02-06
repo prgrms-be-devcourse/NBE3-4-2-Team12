@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: backend
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
