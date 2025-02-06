@@ -65,5 +65,34 @@ public class VoterService {
         Voter voter = new Voter(voterId, member, vote);
         return voterRepository.save(voter);
     }
+
+    @Transactional
+    public void removeVoter(Long groupId, Long voteId, Long memberId) {
+        // 투표 및 사용자 조회
+        Vote vote = voteRepository.findByIdAndGroupId(voteId, groupId)
+                .orElseThrow(() -> new VoterException(VoterErrorCode.NOT_FOUND_VOTE));
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new VoterException(VoterErrorCode.NOT_FOUND_MEMBER));
+
+        // 사용자가 해당 모임에 속해 있는지 확인
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new VoterException(VoterErrorCode.NOT_FOUND_GROUP));
+
+        boolean isMemberInGroup = groupMemberRepository.existsByGroupAndMember(group, member);
+        if (!isMemberInGroup) {
+            throw new VoterException(VoterErrorCode.NOT_GROUP_MEMBER);
+        }
+
+        // 투표 참여 여부 확인
+        Voter.VoterId voterId = new Voter.VoterId(memberId, voteId);
+        if (!voterRepository.existsById(voterId)) {
+            throw new VoterException(VoterErrorCode.NOT_VOTED);
+        }
+
+        // 투표 취소 처리
+        voterRepository.deleteById(voterId);
+    }
+
 }
 
