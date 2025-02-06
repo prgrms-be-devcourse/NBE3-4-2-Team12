@@ -4,6 +4,13 @@ import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.backend.domain.admin.entity.Admin;
+import com.example.backend.domain.admin.repository.AdminRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,8 +33,11 @@ import jakarta.annotation.PostConstruct;
  * jwt 관련 유틸 클래스
  * @author 100minha
  */
+@RequiredArgsConstructor
 @Component
 public class JwtUtil {
+
+	private final AdminRepository adminRepository;
 
 	@Value("${spring.security.jwt.secret-key}")
 	private String SECRET_KEY;

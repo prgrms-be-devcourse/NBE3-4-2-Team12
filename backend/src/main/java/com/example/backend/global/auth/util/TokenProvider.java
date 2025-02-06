@@ -1,10 +1,16 @@
 package com.example.backend.global.auth.util;
 
 import com.example.backend.domain.admin.entity.Admin;
-
+import com.example.backend.global.auth.service.CookieService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
