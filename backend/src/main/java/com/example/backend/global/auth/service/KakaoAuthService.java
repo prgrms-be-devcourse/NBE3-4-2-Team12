@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.backend.domain.member.entity.Member;
@@ -86,6 +87,7 @@ public class KakaoAuthService {
 		return kakaoUserInfoDto;
 	}
 
+	@Transactional
 	public LoginResponseDto login(Long kakaoId, KakaoTokenResponseDto kakaoTokenDto) {
 
 		Member member = memberService.findByKakaoId(kakaoId);
