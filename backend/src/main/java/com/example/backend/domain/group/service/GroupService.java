@@ -136,5 +136,17 @@ public class GroupService {
         List<Group> groups = groupRepository.findGroupByMemberId(memberId);
         return groups.stream().map(GroupResponseDto::new).collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<GroupResponseDto> findNotDeletedAllGroups() {
+        List<GroupResponseDto> groups = groupRepository.findAll().stream()
+                .filter(group -> !group.getStatus().equals(GroupStatus.DELETED))  // "deleted" 상태 제외
+                .map(GroupResponseDto::new)
+                .collect(Collectors.toList());
+        if (groups.isEmpty()) {
+            throw new GroupException(GroupErrorCode.NOT_FOUND_LIST);
+        }
+        return groups;
+    }
 }
 

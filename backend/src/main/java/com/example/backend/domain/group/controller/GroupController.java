@@ -36,7 +36,7 @@ public class GroupController {
     @GetMapping
     public ResponseEntity<List<GroupResponseDto>> listGroups(){
         log.info("Listing all groups are requested");
-        List<GroupResponseDto> response = groupService.findAllGroups();
+        List<GroupResponseDto> response = groupService.findNotDeletedAllGroups();
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
