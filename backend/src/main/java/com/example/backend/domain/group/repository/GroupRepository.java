@@ -4,9 +4,9 @@ import com.example.backend.domain.group.entity.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group,Long> {
-    Optional<Group> findByMemberId(Long memberId);
+    List<Group> findGroupByMemberId(Long memberId);
 }
