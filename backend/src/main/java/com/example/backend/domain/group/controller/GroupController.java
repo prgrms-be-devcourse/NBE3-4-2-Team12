@@ -25,9 +25,11 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping
-    public ResponseEntity<GroupResponseDto>createGroup(@RequestBody @Valid GroupRequestDto requestDto) {
+    public ResponseEntity<GroupResponseDto> createGroup(@RequestBody @Valid GroupRequestDto requestDto,
+                                                        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         log.info("New group creation requested");
-        GroupResponseDto response = groupService.create(requestDto);
+        Long memberId = customUserDetails.getUserId();
+        GroupResponseDto response = groupService.create(requestDto, memberId);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
@@ -74,9 +76,9 @@ public class GroupController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("member/{MemberId}")
-    public ResponseEntity<List<GroupResponseDto>> getGroupByMember(){
-        List<GroupResponseDto> response =  groupService.getGroupByMemberId();
+    @GetMapping("member")
+    public ResponseEntity<List<GroupResponseDto>> getGroupByMember(@AuthenticationPrincipal CustomUserDetails userDetails){
+        List<GroupResponseDto> response =  groupService.getGroupByMemberId(userDetails.getUserId());
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 }

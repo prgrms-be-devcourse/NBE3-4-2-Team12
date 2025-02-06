@@ -15,7 +15,6 @@ import com.example.backend.domain.groupmember.entity.GroupMember;
 import com.example.backend.domain.groupmember.repository.GroupMemberRepository;
 import com.example.backend.domain.member.entity.Member;
 import com.example.backend.domain.member.repository.MemberRepository;
-import com.example.backend.global.auth.model.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +29,12 @@ public class GroupService {
     private final MemberRepository memberRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final CategoryRepository categoryRepository;
-    private final CustomUserDetails customUserDetails;
 
     @Transactional
-    public GroupResponseDto create(GroupRequestDto groupRequestDto){
-        Member member = memberRepository.findById(groupRequestDto.getMemberId()).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND_MEMBER));
+    public GroupResponseDto create(GroupRequestDto groupRequestDto, Long id){
+
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new GroupException(GroupErrorCode.NOT_FOUND_MEMBER));
 
         List<Category> categories = categoryRepository.findAllById(groupRequestDto.getCategoryIds());
         Group group = Group.builder()
@@ -132,8 +132,7 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupResponseDto> getGroupByMemberId(){
-        Long memberId = customUserDetails.getUserId();
+    public List<GroupResponseDto> getGroupByMemberId(Long memberId){
         List<Group> groups = groupRepository.findGroupByMemberId(memberId);
         return groups.stream().map(GroupResponseDto::new).collect(Collectors.toList());
     }
