@@ -47,7 +47,7 @@ public class SecurityConfig {
 				.requestMatchers("/voters", "voters/**"))
 			.addFilter(corsConfig.corsFilter())
 			.authorizeHttpRequests(auth -> auth
-				.anyRequest().authenticated())
+				.anyRequest().permitAll())
 			.addFilterBefore(memberAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();

@@ -39,6 +39,7 @@ public class MemberAuthFilter extends OncePerRequestFilter {
 		if (accessToken == null) {
 			String refreshToken = cookieService.getRefreshTokenFromCookie(request);
 			if (refreshToken == null) {
+				filterChain.doFilter(request, response);
 				return;
 			}
 			return;
