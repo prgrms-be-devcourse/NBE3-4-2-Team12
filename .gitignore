@@ -41,3 +41,18 @@ application-local.yml
 
 #OS
 .DS_Store
+
+#Next.js
+.next/
+node_modules/
+.log
+.env.local
+
+#OS generated files
+.DS_Store
+.DSStore?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
