@@ -38,6 +38,7 @@ public class SecurityConfig {
 	@Order(1)
 	public SecurityFilterChain memberFilterChain(HttpSecurity http) throws Exception {
 		http
+			.csrf(AbstractHttpConfigurer::disable)
 			.securityMatchers(sm -> sm
 				.requestMatchers("/members/**")
 				.requestMatchers(HttpMethod.POST, "/groups", "/groups/**")
@@ -64,7 +65,7 @@ public class SecurityConfig {
 			.logout(AbstractHttpConfigurer::disable)
 			.addFilter(corsConfig.corsFilter())
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/groups").permitAll()
+				.requestMatchers(HttpMethod.GET, "/groups").permitAll()
 				.anyRequest().permitAll()    //TODO: 백엔드 로직 작성 단계에서 테스트용 api별 권한 설정이므로 추후 올바르게 설정 필요
 			)
 			.addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class)     // JWT 필터 추가
@@ -84,6 +85,3 @@ public class SecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 }
-
-
-
