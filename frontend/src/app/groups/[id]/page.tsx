@@ -12,6 +12,7 @@ type Category = {
 };
 
 type GroupDetail = {
+  id: number;
   title: string;
   author: string;
   status: string;
@@ -88,7 +89,7 @@ export default function GroupDetailPage() {
             <span className="text-gray-700 font-bold">{group.author}</span>
             <span
               className={`ml-2 px-2 py-1 text-sm rounded-full ${
-                group.status === "active"
+                group.status === "RECRUITING"
                   ? "bg-green-500 text-white"
                   : "bg-red-500 text-white"
               }`}
@@ -149,7 +150,7 @@ export default function GroupDetailPage() {
                 <button 
                 onClick={handleDelete}
                 className="bg-red-500 hover:bg-red-600 text-white font-medium px-6 py-2 rounded-lg">
-                  취소
+                  삭제
                 </button>
               </>
             )}

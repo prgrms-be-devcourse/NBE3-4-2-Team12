@@ -11,3 +11,8 @@ export const getCurrentUser = async () => {
         throw error;
     }
 };
+
+//카카오 로그인
+export const kakaoLogin = async () => {
+    window.location.href = "http://localhost:8080/auth/kakao/login";
+};
