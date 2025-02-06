@@ -35,4 +35,13 @@ public class VoterController {
         List<VoterDTO> response = voterService.getVotersByVoteId(voteId);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
+    // 투표한 것을 취소할 수 있는 취소 API
+    @DeleteMapping("/{groupId}/{voteId}/{memberId}")
+    public ResponseEntity<Void> removeVoter(@PathVariable Long groupId,
+                                            @PathVariable Long voteId,
+                                            @PathVariable Long memberId) {
+        log.info("Voter removal requested: groupId={}, voteId={}, memberId={}", groupId, voteId, memberId);
+        voterService.removeVoter(groupId, voteId, memberId);
+        return ResponseEntity.ok().build();
+    }
 }

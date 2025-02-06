@@ -16,4 +16,6 @@ public interface VoterRepository extends JpaRepository<Voter, VoterId> {
     // 특정 투표(voteId)에 참여한 Voter 목록 조회
     List<Voter> findByIdVoteId(Long voteId);
 
+    // 특정 사용자의 투표 기록 삭제 (투표 취소)
+    void deleteById(VoterId voterId);
 }
