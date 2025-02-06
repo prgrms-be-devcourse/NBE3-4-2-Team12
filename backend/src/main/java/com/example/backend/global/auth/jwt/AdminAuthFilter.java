@@ -30,6 +30,14 @@ public class AdminAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
     throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        // 로그인 요청은 필터 통과
+        if (path.equals("/admin/login")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         // 요청 헤더에서 JWT 토큰 가져오기
         String accessToken = this.cookieService.getAccessTokenFromCookie(request);
 

@@ -21,6 +21,7 @@ public class TokenProvider {
 
 	// JWT 토큰 생성
 	public String generateToken(Admin admin) {
+		System.out.println("현재 서버 시간: " + new Date(System.currentTimeMillis()));
 		return Jwts.builder()
 			.setSubject(admin.getId().toString())  // 사용자 이름 (관리자 ID)
 			.claim("role", admin.getRole())  // 역할 (권한 정보)
