@@ -24,8 +24,6 @@ public class MemberController {
 	public ResponseEntity<ApiResponse<MemberResponseDto>> findMember(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 		Long id = customUserDetails.getUserId();
-		System.out.println("customUserDetails.getUsername() = " + customUserDetails.getUsername());
-		System.out.println("customUserDetails = " + customUserDetails.getEmail());
 
 		MemberResponseDto memberDto = memberService.findMemberResponseDtoById(id);
 		return ResponseEntity.ok().body(ApiResponse.of(memberDto));

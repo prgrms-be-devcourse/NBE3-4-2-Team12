@@ -44,3 +44,18 @@ export const joinGroup = async () => {
         throw error;
     }
 };
+
+//그룹 삭제
+export const deleteGroup = async (id: number) => {
+    try{
+        const response = await api.delete(`/groups/${id}`,{
+            headers:{
+                "Content-Type":"application/json",
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

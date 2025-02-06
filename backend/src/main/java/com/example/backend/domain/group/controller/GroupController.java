@@ -3,14 +3,16 @@ package com.example.backend.domain.group.controller;
 import com.example.backend.domain.group.dto.GroupModifyRequestDto;
 import com.example.backend.domain.group.dto.GroupRequestDto;
 import com.example.backend.domain.group.dto.GroupResponseDto;
-import com.example.backend.domain.group.service.GroupService;
 import com.example.backend.domain.group.dto.JoinGroupRequestDto;
+import com.example.backend.domain.group.service.GroupService;
+import com.example.backend.global.auth.model.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,16 +25,18 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping
-    public ResponseEntity<GroupResponseDto>createGroup(@RequestBody @Valid GroupRequestDto requestDto) {
+    public ResponseEntity<GroupResponseDto> createGroup(@RequestBody @Valid GroupRequestDto requestDto,
+                                                        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         log.info("New group creation requested");
-        GroupResponseDto response = groupService.create(requestDto);
+        Long memberId = customUserDetails.getUserId();
+        GroupResponseDto response = groupService.create(requestDto, memberId);
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
     @GetMapping
     public ResponseEntity<List<GroupResponseDto>> listGroups(){
         log.info("Listing all groups are requested");
-        List<GroupResponseDto> response = groupService.findAllGroups();
+        List<GroupResponseDto> response = groupService.findNotDeletedAllGroups();
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
@@ -58,9 +62,10 @@ public class GroupController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> joinGroup(@RequestBody @Valid JoinGroupRequestDto joinGroupRequestDto){
+    public ResponseEntity<String> joinGroup(@RequestBody @Valid JoinGroupRequestDto joinGroupRequestDto,
+                                            @AuthenticationPrincipal CustomUserDetails userDetails){
         Long groupId = joinGroupRequestDto.getGroupId();
-        Long memberId = joinGroupRequestDto.getMemberId();
+        Long memberId = userDetails.getUserId();
 
         if (memberId == null || groupId == null) {
             return ResponseEntity.badRequest().body("그룹 또는 회원의 데이터가 없습니다.");
@@ -71,9 +76,9 @@ public class GroupController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("member/{MemberId}")
-    public ResponseEntity<List<GroupResponseDto>> getGroupByMember(@PathVariable("MemberId") Long id){
-        List<GroupResponseDto> response =  groupService.getGroupByMemberId(id);
+    @GetMapping("member")
+    public ResponseEntity<List<GroupResponseDto>> getGroupByMember(@AuthenticationPrincipal CustomUserDetails userDetails){
+        List<GroupResponseDto> response =  groupService.getGroupByMemberId(userDetails.getUserId());
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 }

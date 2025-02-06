@@ -2,7 +2,8 @@
 import MainMenu from "@/app/components/MainMenu";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getGroup } from "../../api/group";
+import { getGroup, deleteGroup } from "../../api/group";
+import { getCurrentUser } from "../../api/auth";
 
 type Category = {
   id: number;
@@ -14,6 +15,7 @@ type GroupDetail = {
   title: string;
   author: string;
   status: string;
+  memberId: number;
   description: string;
   field: Category[];
 };
@@ -21,6 +23,20 @@ type GroupDetail = {
 export default function GroupDetailPage() {
   const { id } = useParams();
   const [group, setGroup] = useState<GroupDetail | null>(null);
+  const [currentUser, setCurrentUser] = useState<{ username: string, id: number } | null>(null);
+
+  const handleDelete = async () => {
+    if (group) {
+      try {
+        await deleteGroup(group.id);
+        alert("그룹이 삭제되었습니다.");
+        window.location.href = "/";
+      } catch (error) {
+        console.error("그룹 삭제 중 오류 발생:", error);
+        alert("그룹 삭제 중 오류가 발생했습니다.");
+      }
+    }
+  }
 
   useEffect(() => {
     async function fetchGroup() {
@@ -40,12 +56,26 @@ export default function GroupDetailPage() {
       }
     }
 
+    async function fetchCurrentUser() {
+      try {
+        const currentUser = await getCurrentUser();
+        setCurrentUser(currentUser.data);
+        console.log("현재 사용자 정보:", currentUser.data);
+      } catch (error) {
+        console.error("현재 사용자 정보를 불러오는 중 오류 발생:", error);
+      }
+    }
+
     if (id) {
       fetchGroup();
+      fetchCurrentUser();
     }
   }, [id]);
 
   if (!group) return <p className="text-center text-gray-500">로딩 중...</p>;
+
+  const isGroupOwner = currentUser && currentUser.id && group.memberId === currentUser.id;
+  console.log("그룹 소유자 여부:", isGroupOwner);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -111,6 +141,18 @@ export default function GroupDetailPage() {
 
           {/* 하단 버튼 */}
           <div className="flex justify-end mt-8 space-x-4">
+          {isGroupOwner && (
+              <>
+                <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-6 py-2 rounded-lg">
+                  수정
+                </button>
+                <button 
+                onClick={handleDelete}
+                className="bg-red-500 hover:bg-red-600 text-white font-medium px-6 py-2 rounded-lg">
+                  취소
+                </button>
+              </>
+            )}
             <button className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium px-6 py-2 rounded-lg">
               돌아가기
             </button>

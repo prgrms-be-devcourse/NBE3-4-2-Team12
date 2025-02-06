@@ -31,8 +31,10 @@ public class GroupService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public GroupResponseDto create(GroupRequestDto groupRequestDto){
-        Member member = memberRepository.findById(groupRequestDto.getMemberId()).orElseThrow(()->new GroupException(GroupErrorCode.NOT_FOUND_MEMBER));
+    public GroupResponseDto create(GroupRequestDto groupRequestDto, Long id){
+
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new GroupException(GroupErrorCode.NOT_FOUND_MEMBER));
 
         List<Category> categories = categoryRepository.findAllById(groupRequestDto.getCategoryIds());
         Group group = Group.builder()
@@ -130,15 +132,21 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupResponseDto> getGroupByMemberId(Long id){
-        Member member = memberRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
+    public List<GroupResponseDto> getGroupByMemberId(Long memberId){
+        List<Group> groups = groupRepository.findGroupByMemberId(memberId);
+        return groups.stream().map(GroupResponseDto::new).collect(Collectors.toList());
+    }
 
-        List<GroupMember> groupMembers = groupMemberRepository.findByMember(member);
-
-        if (groupMembers.isEmpty()) {
+    @Transactional(readOnly = true)
+    public List<GroupResponseDto> findNotDeletedAllGroups() {
+        List<GroupResponseDto> groups = groupRepository.findAll().stream()
+                .filter(group -> !group.getStatus().equals(GroupStatus.DELETED))  // "deleted" 상태 제외
+                .map(GroupResponseDto::new)
+                .collect(Collectors.toList());
+        if (groups.isEmpty()) {
             throw new GroupException(GroupErrorCode.NOT_FOUND_LIST);
         }
-        return groupMembers.stream().map(groupMember -> new GroupResponseDto(groupMember.getGroup())).collect(Collectors.toList());
+        return groups;
     }
 }
 

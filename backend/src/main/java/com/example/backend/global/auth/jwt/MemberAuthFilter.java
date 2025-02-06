@@ -35,9 +35,10 @@ public class MemberAuthFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
 
-		String accessToken = cookieService.getAccessTokenFromCookie(request);
+		final String accessToken = cookieService.getAccessTokenFromCookie(request);
+		final String refreshToken = cookieService.getRefreshTokenFromCookie(request);
+
 		if (accessToken == null) {
-			String refreshToken = cookieService.getRefreshTokenFromCookie(request);
 			if (refreshToken == null) {
 				filterChain.doFilter(request, response);
 				return;
@@ -45,14 +46,29 @@ public class MemberAuthFilter extends OncePerRequestFilter {
 			return;
 		}
 
-		// TODO: 토큰 검증 로직 추가
-		CustomUserDetails customUserDetails = customUserDetailService.loadUserByUsername(
-			jwtUtil.getId(accessToken));
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-			customUserDetails, null, customUserDetails.getAuthorities()
-		);
+		TokenStatus tokenStatus = jwtUtil.validateToken(accessToken);
 
-		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+		switch (tokenStatus) {
+			case VALID:
+				//유효한 토큰일 시 SecurityContext에 사용자 인증 정보 등록
+				CustomUserDetails customUserDetails = customUserDetailService.loadUserByUsername(
+					jwtUtil.getId(accessToken));
+				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+					customUserDetails, null, customUserDetails.getAuthorities()
+				);
+
+				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+				break;
+			case EXPIRED:
+				System.out.println("토큰이 만료되었습니다.");
+				break;
+			case MALFORMED:
+				System.out.println("잘못된 형식의 토큰입니다.");
+				break;
+			case INVALID:
+				System.out.println("토큰이 비어있거나 올바르지 않습니다.");
+				break;
+		}
 
 		filterChain.doFilter(request, response);
 	}
