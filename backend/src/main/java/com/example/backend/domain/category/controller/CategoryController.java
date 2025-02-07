@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -28,7 +28,7 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(200));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<CategoryResponseDto>modifyCategory(@PathVariable("id") Long id, @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
         log.info("Modify category requested");
         CategoryResponseDto response = categoryService.modify(id,categoryRequestDto);
@@ -41,8 +41,7 @@ public class CategoryController {
         List<CategoryResponseDto> categoryList = categoryService.getAllCategories();
         return new ResponseEntity<>(categoryList, HttpStatusCode.valueOf(200));
     }
-
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CategoryResponseDto> getCategory(@PathVariable("id") Long id) {
         log.info("Get category requested");
         CategoryResponseDto response = categoryService.getCategory(id);
