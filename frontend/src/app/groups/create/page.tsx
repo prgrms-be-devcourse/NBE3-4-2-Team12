@@ -97,7 +97,7 @@ export default function CreateGroupPage() {
             const response = await createGroup(requestData);
             console.log("모임 생성 성공:", response);
             alert("모임이 성공적으로 생성되었습니다!");
-            router.push("/groups");
+            router.push("/");
         } catch (error) {
             setErrorMessage("모임 생성 중 오류가 발생했습니다. 다시 시도해주세요.");
         } finally {
@@ -247,7 +247,7 @@ export default function CreateGroupPage() {
                     <div className="flex justify-end space-x-4 mt-6">
                         <button
                             type="button"
-                            onClick={() => router.push("/groups")}
+                            onClick={() => router.back()}
                             className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md"
                         >
                             돌아가기
