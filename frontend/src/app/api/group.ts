@@ -55,6 +55,20 @@ export const joinGroup = async () => {
     }
 };
 
+//그룹 수정
+export const updateGroup = async (id: number, updateData: any) => {
+    try {
+        const response = await api.put(`/groups/update/${id}`, updateData, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("그룹 수정 중 오류 발생:", error);
+        throw error;
+    }
+};
 //그룹 삭제
 export const deleteGroup = async (id: number) => {
     try{
