@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getGroup, deleteGroup } from "../../api/group";
 import { getCurrentUser } from "../../api/auth";
+import { useRouter } from "next/navigation";
 
 type Category = {
   id: number;
@@ -23,6 +24,7 @@ type GroupDetail = {
 
 export default function GroupDetailPage() {
   const { id } = useParams();
+  const router = useRouter();
   const [group, setGroup] = useState<GroupDetail | null>(null);
   const [currentUser, setCurrentUser] = useState<{ username: string, id: number } | null>(null);
 
@@ -102,25 +104,35 @@ export default function GroupDetailPage() {
 
           {/* 모집 정보 */}
           <div className="mt-4 space-y-4">
-            {group.field.map((field) => (
-              <div key={field.id} className="space-y-1">
                 {/* 모집 구분 */}
-                <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-gray-900">모집 구분</span>
-                  <span className="px-3 py-1 text-sm font-medium bg-blue-200 text-blue-700 rounded-full">
+            <div className="flex items-center space-x-2">
+              <span className="font-semibold text-gray-900">모집 구분</span>
+              <div className="flex flex-wrap gap-2">
+                {group.field.map((field) => (
+                    <span
+                        key={field.id}
+                      className="px-3 py-1 text-sm font-medium bg-blue-200 text-blue-700 rounded-full"
+                    >
                     {field.type}
                   </span>
-                </div>
+                ))}
+              </div>
+            </div>
 
-                {/* 모집 분야 */}
-                <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-gray-900">모집 분야</span>
-                  <span className="px-3 py-1 text-sm font-medium border border-gray-400 text-gray-700 rounded-full">
+              {/* 모집 분야 */}
+            <div className="flex items-center space-x-2">
+              <span className="font-semibold text-gray-900">모집 분야</span>
+              <div className="flex flex-wrap gap-2">
+                {group.field.map((field) => (
+                    <span
+                        key={field.id}
+                        className="px-3 py-1 text-sm font-medium border border-gray-400 text-gray-700 rounded-full"
+                    >
                     {field.name}
                   </span>
-                </div>
-              </div>
-            ))}
+                ))}
+            </div>
+            </div>
           </div>
 
           {/* 프로젝트 설명 */}
@@ -154,7 +166,7 @@ export default function GroupDetailPage() {
                 </button>
               </>
             )}
-            <button className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium px-6 py-2 rounded-lg">
+            <button onClick={() => router.back()}className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium px-6 py-2 rounded-lg">
               돌아가기
             </button>
             <button className="bg-gray-800 hover:bg-black text-white font-medium px-6 py-2 rounded-lg">
