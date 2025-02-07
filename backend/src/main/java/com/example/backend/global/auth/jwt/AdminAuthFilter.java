@@ -76,9 +76,10 @@ public class AdminAuthFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         String method = request.getMethod();
-
-        return !((method.equals("POST") && path.startsWith("/admin/")) ||
-                (method.equals("GET") && path.startsWith("/admin/")) ||
-                (method.equals("DELETE") && path.startsWith("/admin/")));
+        return !((method.equals("POST") && path.startsWith("/admin/**")) ||
+               (method.equals("DELETE") && path.startsWith("/admin/")) ||
+               (method.equals("POST") && path.startsWith("/categories")) ||
+               (method.equals("PUT") && path.startsWith("/categories/{id}")) ||
+               (method.equals("DELETE") && path.startsWith("/categories/{id}")));
     }
 }
