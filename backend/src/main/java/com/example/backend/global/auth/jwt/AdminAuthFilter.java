@@ -30,17 +30,16 @@ public class AdminAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
     throws ServletException, IOException {
-
         // 요청 헤더에서 JWT 토큰 가져오기
         String accessToken = this.cookieService.getAccessTokenFromCookie(request);
         String refreshToken = this.cookieService.getRefreshTokenFromCookie(request);
 
         // 토큰이 유효하면 SecurityContext 에 인증 정보 저장
-        if (accessToken == null) {
-            if (refreshToken == null) {
-                chain.doFilter(request, response);
-                return;
-            }
+        if (accessToken == null || refreshToken == null || accessToken.isEmpty() || refreshToken.isEmpty()) {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/plain;charset=UTF-8");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("토큰이 비어있습니다.");
             return;
         }
 
@@ -62,13 +61,13 @@ public class AdminAuthFilter extends OncePerRequestFilter {
                         response.getWriter().write("토큰이 만료되었습니다.");
                         return;
                     }
-                break;
             case MALFORMED:
-                System.out.println("잘못된 형식의 토큰입니다.");
-                break;
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("잘못된 형식의 토큰입니다.");
+                    return;
             case INVALID:
-                System.out.println("토큰이 비어있거나 올바르지 않습니다.");
-                break;
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("토큰이 비어있거나 올바르지 않습니다.");
         }
     }
 
@@ -76,10 +75,9 @@ public class AdminAuthFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         String method = request.getMethod();
-        return !((method.equals("POST") && path.startsWith("/admin/**")) ||
-               (method.equals("DELETE") && path.startsWith("/admin/")) ||
-               (method.equals("POST") && path.startsWith("/categories")) ||
-               (method.equals("PUT") && path.startsWith("/categories/{id}")) ||
-               (method.equals("DELETE") && path.startsWith("/categories/{id}")));
+        return !((method.equals("DELETE") && path.startsWith("/admin/")) ||
+                (method.equals("POST") && path.startsWith("/categories")) ||
+                (method.equals("PUT") && path.startsWith("/categories/")) ||
+                (method.equals("DELETE") && path.startsWith("/categories/")));
     }
 }

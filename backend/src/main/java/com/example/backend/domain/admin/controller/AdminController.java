@@ -3,15 +3,14 @@ package com.example.backend.domain.admin.controller;
 import com.example.backend.domain.admin.dto.AdminLoginRequest;
 import com.example.backend.domain.admin.entity.Admin;
 import com.example.backend.domain.admin.service.AdminService;
+import com.example.backend.domain.group.service.GroupService;
 import com.example.backend.global.auth.service.CookieService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -20,6 +19,7 @@ public class AdminController {
 
     private final AdminService adminService;
     private final CookieService cookieService;
+    private final GroupService groupService;
 
     // 관리자 로그인
     @PostMapping("/login")
@@ -44,4 +44,10 @@ public class AdminController {
         return ResponseEntity.ok("로그아웃 성공");
     }
 
+    // 게시물 삭제
+    @DeleteMapping("/group/{groupId}")
+    public ResponseEntity<String> deleteGroup(HttpServletResponse response, @PathVariable("groupId") Long id) {
+        this.groupService.deleteGroup(id);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 }
