@@ -17,7 +17,6 @@ import com.example.backend.global.auth.exception.KakaoAuthException;
 import com.example.backend.global.auth.util.KakaoAuthUtil;
 import com.example.backend.global.auth.util.TokenProvider;
 
-import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -48,7 +47,6 @@ public class KakaoAuthService {
 
 		KakaoTokenResponseDto kakaoTokenResponseDto = webClient.post()
 			.uri(kakaoAuthUtil.getKakaoTokenUrl(authorizationCode))
-			.header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
 			.retrieve()
 			//TODO : 더 상세한 예외 처리 필요
 			.onStatus(HttpStatusCode::is4xxClientError,
@@ -102,6 +100,11 @@ public class KakaoAuthService {
 			.accessToken(accessToken)
 			.refreshToken(kakaoTokenDto.refreshToken())
 			.build();
+	}
+
+	public String getKakaoLogoutUrl(Long userId) {
+
+		return kakaoAuthUtil.getLogoutUrl(userId);
 	}
 
 	public boolean existsMemberByKakaoId(Long kakaoId) {
