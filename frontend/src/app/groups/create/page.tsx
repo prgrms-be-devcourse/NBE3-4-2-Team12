@@ -122,30 +122,33 @@ export default function CreateGroupPage() {
                         />
                     </div>
 
-                    {/* 모집 구분 / 모집 분야 선택 */}
+                    {/* 모집 구분 선택 */}
                     <div>
                         <label className="block text-gray-700 font-semibold">모집 구분</label>
                         <select
                             className="w-full px-4 py-2 border border-gray-300 rounded-md"
                             onChange={(e) => {
                                 const selectedType = e.target.value;
-                                if (selectedType) {
-                                    const filtered = filteredCategories(selectedType);
-                                    if (filtered.length > 0) {
-                                        handleCategorySelect(filtered[0]);
-                                    }
-                                }
+                                if (!selectedType) return;
+
+                                // 중복 추가 방지
+                                const newCategories = filteredCategories(selectedType).filter(
+                                    (c) => !categories.some((existing) => existing.id === c.id)
+                                );
+
+                                setCategories((prev) => [...prev, ...newCategories]);
                             }}
                         >
                             <option value="">선택하세요</option>
                             {categoryTypes.map((type, index) => (
-                                <option key={index} value={type}>
+                                <option key={`type-${index}`} value={type}>
                                     {type}
                                 </option>
                             ))}
                         </select>
                     </div>
 
+                    {/* 모집 분야 선택 */}
                     <div>
                         <label className="block text-gray-700 font-semibold">모집 분야</label>
                         <select
@@ -154,30 +157,32 @@ export default function CreateGroupPage() {
                                 const selectedCategory = categories.find(
                                     (c) => c.name === e.target.value
                                 );
-                                if (selectedCategory) {
-                                    handleCategorySelect(selectedCategory);
+                                if (selectedCategory && !selectedCategories.some((c) => c.id === selectedCategory.id)) {
+                                    setSelectedCategories([...selectedCategories, selectedCategory]);
+                                    setCategoryIds([...categoryIds, selectedCategory.id]);
                                 }
                             }}
                         >
                             <option value="">모집 분야 선택</option>
                             {categories.map((category) => (
-                                <option key={category.id} value={category.name}>
+                                <option key={`category-${category.id}-${category.type}`} value={category.name}>
                                     {category.name}
                                 </option>
                             ))}
                         </select>
 
+                        {/* 선택된 모집 분야를 라벨로 표시 */}
                         <div className="mt-3 flex flex-wrap gap-2">
                             {selectedCategories.map((category) => (
-                                <span key={category.id} className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
-                  {category.type} - {category.name}
+                                <span key={`selected-${category.id}-${category.type}`} className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
+                        {category.type} - {category.name}
                                     <button
                                         onClick={() => handleCategoryRemove(category.id)}
                                         className="ml-2 text-red-600 font-bold"
                                     >
-                    ✕
-                  </button>
-                </span>
+                            ✕
+                        </button>
+                    </span>
                             ))}
                         </div>
                     </div>
