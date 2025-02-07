@@ -72,4 +72,18 @@ public class MemberAuthFilter extends OncePerRequestFilter {
 
 		filterChain.doFilter(request, response);
 	}
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) {
+		String path = request.getRequestURI();
+		String method = request.getMethod();
+
+		return !((method.equals("POST") && (path.equals("/groups") || path.startsWith("/groups/"))) ||
+			(method.equals("PUT") && path.startsWith("/groups/")) ||
+			(method.equals("DELETE") && path.startsWith("/groups/")) ||
+			path.equals("/members") || path.startsWith("/members/") ||
+			path.equals("/votes") || path.startsWith("/votes/") ||
+			path.equals("/voters") || path.startsWith("/voters/") ||
+			path.equals("/auth/kakao/logout"));
+	}
 }

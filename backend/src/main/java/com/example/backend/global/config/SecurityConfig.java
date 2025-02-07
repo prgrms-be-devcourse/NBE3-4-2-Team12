@@ -2,8 +2,6 @@ package com.example.backend.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,27 +33,6 @@ public class SecurityConfig {
 	private final CorsConfig corsConfig;
 
 	@Bean
-	@Order(1)
-	public SecurityFilterChain memberFilterChain(HttpSecurity http) throws Exception {
-		http
-			.csrf(AbstractHttpConfigurer::disable)
-			.securityMatchers(sm -> sm
-				.requestMatchers("/members/**")
-				.requestMatchers(HttpMethod.POST, "/groups", "/groups/**")
-				.requestMatchers(HttpMethod.PUT, "/groups/**")
-				.requestMatchers(HttpMethod.DELETE, "/groups/**")
-				.requestMatchers("/votes", "/votes/**")
-				.requestMatchers("/voters", "voters/**"))
-			.addFilter(corsConfig.corsFilter())
-			.authorizeHttpRequests(auth -> auth
-				.anyRequest().permitAll())
-			.addFilterBefore(memberAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-		return http.build();
-	}
-
-	@Bean
-	@Order(2)
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf(AbstractHttpConfigurer::disable)
@@ -65,9 +42,9 @@ public class SecurityConfig {
 			.logout(AbstractHttpConfigurer::disable)
 			.addFilter(corsConfig.corsFilter())
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers(HttpMethod.GET, "/groups").permitAll()
 				.anyRequest().permitAll()    //TODO: 백엔드 로직 작성 단계에서 테스트용 api별 권한 설정이므로 추후 올바르게 설정 필요
 			)
+			.addFilterBefore(memberAuthFilter, UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class)     // JWT 필터 추가
 		;
 
