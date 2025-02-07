@@ -156,7 +156,9 @@ export default function GroupDetailPage() {
           <div className="flex justify-end mt-8 space-x-4">
           {isGroupOwner && (
               <>
-                <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-6 py-2 rounded-lg">
+                <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-6 py-2 rounded-lg"
+                        onClick={() => router.push(`/groups/update/${id}`)}
+                >
                   수정
                 </button>
                 <button 
