@@ -47,20 +47,7 @@ public class MemberService {
 
 	@Transactional
 	public void join(KakaoUserInfoResponseDto kakaoUserInfoDto) {
-
-		Member member = Member.of(kakaoUserInfoDto);
-		Member savedMember = memberRepository.save(member);
-	}
-
-	@Transactional
-	public void updateAccessToken(Member member, String accessToken) {
-
-		member.updateAccessToken(accessToken);
-	}
-
-	@Transactional
-	public void updateRefreshToken(Member member, String refreshToken) {
-
-		member.updateRefreshToken(refreshToken);
+		
+		memberRepository.save(Member.of(kakaoUserInfoDto));
 	}
 }

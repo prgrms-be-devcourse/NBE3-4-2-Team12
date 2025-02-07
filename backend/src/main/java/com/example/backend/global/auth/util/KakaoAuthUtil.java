@@ -30,6 +30,12 @@ public class KakaoAuthUtil {
 	@Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
 	private String USER_INFO_URI;
 
+	@Value("${KAKAO_LOGOUT_URL}")
+	private String KAKAO_LOGOUT_URL;
+
+	@Value("${KAKAO_LOGOUT_REDIRECT_URI}")
+	private String KAKAO_LOGOUT_REDIRECT_URI;
+
 	public String getKakaoAuthorizationUrl() {
 
 		return UriComponentsBuilder.fromUriString(AUTHORIZATION_URI)
@@ -51,5 +57,14 @@ public class KakaoAuthUtil {
 
 	public String getUserInfoUrl() {
 		return USER_INFO_URI;
+	}
+
+	public String getLogoutUrl(Long userId) {
+
+		return UriComponentsBuilder.fromUriString(KAKAO_LOGOUT_URL)
+			.queryParam("client_id", CLIENT_ID)
+			.queryParam("logout_redirect_uri", KAKAO_LOGOUT_REDIRECT_URI)
+			.queryParam("state", userId)
+			.toUriString();
 	}
 }
