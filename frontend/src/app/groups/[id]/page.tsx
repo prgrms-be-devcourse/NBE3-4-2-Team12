@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getGroup, deleteGroup } from "../../api/group";
 import { getCurrentUser } from "../../api/auth";
+import { useRouter } from "next/navigation";
 
 type Category = {
   id: number;
@@ -23,6 +24,7 @@ type GroupDetail = {
 
 export default function GroupDetailPage() {
   const { id } = useParams();
+  const router = useRouter();
   const [group, setGroup] = useState<GroupDetail | null>(null);
   const [currentUser, setCurrentUser] = useState<{ username: string, id: number } | null>(null);
 
@@ -129,7 +131,7 @@ export default function GroupDetailPage() {
                     {field.name}
                   </span>
                 ))}
-              </div>
+            </div>
             </div>
           </div>
 
@@ -164,7 +166,7 @@ export default function GroupDetailPage() {
                 </button>
               </>
             )}
-            <button className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium px-6 py-2 rounded-lg">
+            <button onClick={() => router.back()}className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium px-6 py-2 rounded-lg">
               돌아가기
             </button>
             <button className="bg-gray-800 hover:bg-black text-white font-medium px-6 py-2 rounded-lg">
