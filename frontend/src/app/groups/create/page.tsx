@@ -262,7 +262,7 @@ export default function CreateGroupPage() {
                                         className="w-full px-4 py-2 border border-gray-300 rounded-md"
                                         placeholder="장소 입력"
                                     />
-                                    <button onClick={handleAddLocation}
+                                    <button type="button" onClick={handleAddLocation}
                                             className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md">추가
                                     </button>
                                     <ul className="mt-4">
