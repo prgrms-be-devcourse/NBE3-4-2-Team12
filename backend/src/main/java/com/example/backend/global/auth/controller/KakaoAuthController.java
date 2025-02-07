@@ -1,8 +1,6 @@
 package com.example.backend.global.auth.controller;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +19,7 @@ import com.example.backend.global.auth.model.CustomUserDetails;
 import com.example.backend.global.auth.service.CookieService;
 import com.example.backend.global.auth.service.KakaoAuthService;
 import com.example.backend.global.response.ApiResponse;
+import com.example.backend.global.response.ErrorResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -68,7 +67,7 @@ public class KakaoAuthController {
 	 * @return
 	 */
 	@GetMapping("/callback")
-	public ResponseEntity<Object> getTokenFromKakao(
+	public ResponseEntity<Object> authorizeAndLoginWithKakao(
 		@RequestParam(value = "code", required = false) String authorizationCode,
 		@RequestParam(value = "error", required = false) String error,
 		@RequestParam(value = "error-description", required = false) String errorDescription,
@@ -79,10 +78,8 @@ public class KakaoAuthController {
 
 		// 카카오에서 인가 토큰이 아닌 에러를 반환할 시 홈페이지로 리다이렉트 및 에러 메세지 응답
 		if (error != null) {
-
-			Map<String, String> errorResponse = new HashMap<>();
-			errorResponse.put("error", error);
-			errorResponse.put("error-description", errorDescription);
+			ErrorResponse errorResponse = ErrorResponse.of(
+				errorDescription, "400-" + error, request.getRequestURI());
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers)
 				.body(errorResponse);
@@ -94,10 +91,22 @@ public class KakaoAuthController {
 		Long kakaoId = kakaoUserInfoDto.id();
 
 		// 기존 사용인지 검증 후 신규 사용자일 시 회원가입 진행
+		checkNewMemberAndJoin(kakaoId, kakaoUserInfoDto);
+
+		// 로그인 진행
+		return login(kakaoTokenDto, kakaoId, response, headers);
+	}
+
+	private void checkNewMemberAndJoin(Long kakaoId, KakaoUserInfoResponseDto kakaoUserInfoDto) {
 		if (!kakaoAuthService.existsMemberByKakaoId(kakaoId)) {
 			kakaoAuthService.join(kakaoUserInfoDto);
 		}
+	}
 
+	private ResponseEntity<Object> login(
+		KakaoTokenResponseDto kakaoTokenDto, Long kakaoId,
+		HttpServletResponse response, HttpHeaders headers
+	) {
 		LoginResponseDto loginDto = kakaoAuthService.login(kakaoId, kakaoTokenDto);
 
 		cookieService.addAccessTokenToCookie(loginDto.accessToken(), response);
