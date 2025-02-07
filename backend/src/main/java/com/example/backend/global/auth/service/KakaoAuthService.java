@@ -3,6 +3,7 @@ package com.example.backend.global.auth.service;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,6 +18,7 @@ import com.example.backend.global.auth.exception.KakaoAuthException;
 import com.example.backend.global.auth.util.KakaoAuthUtil;
 import com.example.backend.global.auth.util.TokenProvider;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -33,6 +35,7 @@ public class KakaoAuthService {
 	private final WebClient webClient;
 	private final TokenProvider tokenProvider;
 	private final MemberService memberService;
+	private final CookieService cookieService;
 
 	public String getKakaoAuthorizationUrl() {
 		return kakaoAuthUtil.getKakaoAuthorizationUrl();
@@ -113,5 +116,16 @@ public class KakaoAuthService {
 
 	public void join(KakaoUserInfoResponseDto kakaoUserInfoDto) {
 		memberService.join(kakaoUserInfoDto);
+	}
+
+	@Transactional
+	public void logout(Long userId, HttpServletResponse response) {
+
+		cookieService.clearTokenFromCookie(response);
+		Member member = memberService.findById(userId);
+		member.updateAccessToken(null);
+		member.updateRefreshToken(null);
+
+		SecurityContextHolder.clearContext();
 	}
 }
