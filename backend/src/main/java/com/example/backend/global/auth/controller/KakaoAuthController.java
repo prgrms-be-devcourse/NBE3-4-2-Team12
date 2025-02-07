@@ -124,7 +124,7 @@ public class KakaoAuthController {
 	 * @return
 	 */
 	@GetMapping("/logout")
-	public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response,
+	public ResponseEntity<Void> logout(HttpServletResponse response,
 		@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -132,6 +132,19 @@ public class KakaoAuthController {
 
 		return ResponseEntity.status(HttpStatus.FOUND)
 			.headers(headers).body(null);
+	}
+
+	@GetMapping("/logout/callback")
+	public ResponseEntity<ApiResponse<String>> handleKakaoLogoutCallback(HttpServletResponse response,
+		@RequestParam("state") Long userId) {
+
+		kakaoAuthService.logout(userId, response);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setLocation(URI.create(clientBaseUrl));
+
+		return ResponseEntity.status(HttpStatus.FOUND)
+			.headers(headers).body(ApiResponse.of("성공적으로 로그아웃 되었습니다."));
 	}
 
 }
