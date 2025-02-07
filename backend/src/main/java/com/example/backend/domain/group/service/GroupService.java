@@ -90,7 +90,8 @@ public class GroupService {
         group.update(
                 groupModifyRequestDto.getTitle(),
                 groupModifyRequestDto.getDescription(),
-                groupModifyRequestDto.getMaxParticipants()
+                groupModifyRequestDto.getMaxParticipants(),
+                groupModifyRequestDto.getGroupStatus()
         );
         groupRepository.save(group);
         return new GroupResponseDto(group);
