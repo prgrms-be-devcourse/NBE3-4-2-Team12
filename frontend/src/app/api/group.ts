@@ -3,7 +3,7 @@ import { api } from "./axiosInstance";
 //그룹 생성
 export async function createGroup(requestData: any) {
     try {
-        const response = await api.post("/api/groups", requestData);
+        const response = await api.post("/groups", requestData);
         return response.data;
     } catch (error) {
         console.error("모임 생성 중 오류 발생:", error);
