@@ -52,4 +52,13 @@ public class KakaoAuthUtil {
 	public String getUserInfoUrl() {
 		return USER_INFO_URI;
 	}
+
+	public String getLogoutUrl(Long userId) {
+
+		return UriComponentsBuilder.fromUriString("https://kauth.kakao.com/oauth/logout")
+			.queryParam("client_id", CLIENT_ID)
+			.queryParam("logout_redirect_uri", "http://localhost:8080/members/callback")
+			.queryParam("state", userId)
+			.toUriString();
+	}
 }
