@@ -47,7 +47,14 @@ public class MemberService {
 
 	@Transactional
 	public void join(KakaoUserInfoResponseDto kakaoUserInfoDto) {
-		
+
 		memberRepository.save(Member.of(kakaoUserInfoDto));
+	}
+
+	@Transactional(readOnly = true)
+	public Member findByKakaoRefreshToken(String refreshToken) {
+
+		return memberRepository.findByKakaoRefreshToken(refreshToken).orElseThrow(() ->
+			new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 	}
 }
