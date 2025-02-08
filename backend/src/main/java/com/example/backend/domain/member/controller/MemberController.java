@@ -23,9 +23,12 @@ public class MemberController {
 	@GetMapping
 	public ResponseEntity<ApiResponse<MemberResponseDto>> findMember(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-		Long id = customUserDetails.getUserId();
 
-		MemberResponseDto memberDto = memberService.findMemberResponseDtoById(id);
+		MemberResponseDto memberDto = MemberResponseDto.builder()
+			.id(customUserDetails.getUserId())
+			.nickname(customUserDetails.getUsername())
+			.email(customUserDetails.getEmail())
+			.build();
 		return ResponseEntity.ok().body(ApiResponse.of(memberDto));
 	}
 }
