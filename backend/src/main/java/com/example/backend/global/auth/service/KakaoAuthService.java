@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.example.backend.domain.member.dto.MemberTokenReissueDto;
 import com.example.backend.domain.member.entity.Member;
 import com.example.backend.domain.member.service.MemberService;
 import com.example.backend.global.auth.dto.KakaoTokenResponseDto;
@@ -49,7 +50,7 @@ public class KakaoAuthService {
 	public KakaoTokenResponseDto getTokenFromKakao(String authorizationCode) {
 
 		KakaoTokenResponseDto kakaoTokenResponseDto = webClient.post()
-			.uri(kakaoAuthUtil.getKakaoTokenUrl(authorizationCode))
+			.uri(kakaoAuthUtil.getKakaoLoginTokenUrl(authorizationCode))
 			.retrieve()
 			//TODO : 더 상세한 예외 처리 필요
 			.onStatus(HttpStatusCode::is4xxClientError,
@@ -127,5 +128,39 @@ public class KakaoAuthService {
 		member.updateRefreshToken(null);
 
 		SecurityContextHolder.clearContext();
+	}
+
+	@Transactional
+	public MemberTokenReissueDto reissueTokens(String refreshToken) {
+
+		Member member = memberService.findByKakaoRefreshToken(refreshToken);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.valueOf("application/x-www-form-urlencoded;charset=utf-8"));
+
+		KakaoTokenResponseDto kakaoTokenDto = webClient.post()
+			.uri(kakaoAuthUtil.getKakaoTokenReissueUrl(refreshToken))
+			.headers(httpHeaders -> httpHeaders.addAll(headers))
+			.retrieve()
+			//TODO : 더 상세한 예외 처리 필요
+			.onStatus(HttpStatusCode::is4xxClientError,
+				clientResponse -> Mono.error(new KakaoAuthException(KakaoAuthErrorCode.INVALID_PARAMETER)))
+			.onStatus(HttpStatusCode::is5xxServerError,
+				clientResponse -> Mono.error(new KakaoAuthException(KakaoAuthErrorCode.KAKAO_SERVER_ERROR)))
+			.bodyToMono(KakaoTokenResponseDto.class)
+			.block();
+
+		// dto에 토큰정보가 담겨있지 않을 시 예외 반환 및 리프레시 토큰은 body에 있을 경우에만 갱신
+		if (kakaoTokenDto != null) {
+
+			member.updateAccessToken(kakaoTokenDto.accessToken());
+			if (kakaoTokenDto.refreshToken() != null) {
+				member.updateRefreshToken(kakaoTokenDto.refreshToken());
+			}
+		} else {
+			throw new KakaoAuthException(KakaoAuthErrorCode.TOKEN_REISSUE_FAILED);
+		}
+
+		return MemberTokenReissueDto.of(member);
 	}
 }
