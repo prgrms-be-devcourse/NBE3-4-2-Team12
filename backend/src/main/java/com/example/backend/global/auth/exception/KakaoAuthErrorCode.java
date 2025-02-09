@@ -16,8 +16,7 @@ public enum KakaoAuthErrorCode {
 
 	KAKAO_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "카카오 서버에서 알 수 없는 오류가 발생했습니다."),
 	INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "400-1", "잘못된 쿼리 파라미터가 설정되었습니다."),
-	AUTHORIZATION_FAILED(HttpStatus.UNAUTHORIZED, "401-1", "인증에 실패했습니다."),
-	TOKEN_REISSUE_FAILED(HttpStatus.UNAUTHORIZED, "401-2", "토큰 갱신에 실패했습니다.");
+	TOKEN_REISSUE_FAILED(HttpStatus.UNAUTHORIZED, "401-1", "토큰 갱신에 실패했습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String code;
