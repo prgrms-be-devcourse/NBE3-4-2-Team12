@@ -110,6 +110,12 @@ public class GlobalControllerAdvice {
 	@ExceptionHandler(VoterException.class)
 	public ResponseEntity<ErrorResponse> handleVoterException(VoterException ex, HttpServletRequest request) {
 		return ResponseEntity.status(ex.getStatus())
-				.body(ErrorResponse.of(ex.getMessage(), ex.getCode(), request.getRequestURI()));
+			.body(ErrorResponse.of(ex.getMessage(), ex.getCode(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorResponse> handleVoterException(Exception ex, HttpServletRequest request) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			.body(ErrorResponse.of(ex.getMessage(), "500", request.getRequestURI()));
 	}
 }
