@@ -120,8 +120,7 @@ public class MemberAuthFilter extends OncePerRequestFilter {
 	 */
 	private void setAuthenticationInContext(String accessToken) {
 
-		CustomUserDetails customUserDetails = customUserDetailService.loadUserByUsername(
-			jwtUtil.getId(accessToken));
+		CustomUserDetails customUserDetails = customUserDetailService.loadUserByAccessToken(accessToken);
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 			customUserDetails, null, customUserDetails.getAuthorities()
 		);
