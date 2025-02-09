@@ -7,6 +7,7 @@ import com.example.backend.domain.admin.repository.AdminRepository;
 import com.example.backend.global.auth.service.CookieService;
 import com.example.backend.global.auth.util.TokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,27 +37,28 @@ public class AdminService {
         return admin;
     }
 
-    // 엑세스 토큰 생성
-    public String generateToken(Admin admin) {
-        return this.jwtProvider.generateToken(admin);
+    // 엑세스 토큰 쿠키 저장
+    public void generateToken(Admin admin, HttpServletResponse response) {
+        String accessToken = this.jwtProvider.generateToken(admin);
+        this.cookieService.addAccessTokenToCookie(accessToken, response);
     }
 
-    // 리프레시 토큰 저장 및 반환
-    public String generateAndSaveRefreshToken(Admin admin) {
+    // 리프레시 토큰 저장
+    public void generateAndSaveRefreshToken(Admin admin, HttpServletResponse response) {
         String refreshToken = this.jwtProvider.generateRefreshToken();
         LocalDateTime expiryDate = this.jwtProvider.getRefreshTokenExpiryDate();
 
         admin.setRefreshToken(refreshToken);
         admin.setRefreshTokenExpiryDate(expiryDate);
         this.adminRepository.save(admin);
-
-        return refreshToken;
+        this.cookieService.addRefreshTokenToCookie(refreshToken, response);
     }
 
     // admin 객체에 리프레시 토큰 만료
-    public void clearRefreshToken(HttpServletRequest request) {
-        String refreshToken = cookieService.getRefreshTokenFromCookie(request);
+    public void logout(HttpServletResponse response, HttpServletRequest request) {
+        this.cookieService.clearTokenFromCookie(response);
 
+        String refreshToken = cookieService.getRefreshTokenFromCookie(request);
         if(refreshToken != null) {
             Admin admin = this.adminRepository.findByRefreshToken(refreshToken);
             if(admin != null) {
@@ -65,6 +67,5 @@ public class AdminService {
                 this.adminRepository.save(admin);
             }
         }
-
     }
 }

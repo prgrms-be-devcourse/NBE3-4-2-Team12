@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
-    private final CookieService cookieService;
     private final GroupService groupService;
 
     // 관리자 로그인
@@ -26,11 +25,8 @@ public class AdminController {
     public ResponseEntity<String> login(@RequestBody AdminLoginRequest request, HttpServletResponse response) {
         Admin admin = adminService.getAdmin(request.getAdminName(), request.getPassword());
 
-        String accessToken = this.adminService.generateToken(admin);
-        String refreshToken = this.adminService.generateAndSaveRefreshToken(admin);
-
-        cookieService.addAccessTokenToCookie(accessToken, response);
-        cookieService.addRefreshTokenToCookie(refreshToken, response);
+        this.adminService.generateToken(admin, response);
+        this.adminService.generateAndSaveRefreshToken(admin, response);
 
         return ResponseEntity.ok("로그인 성공");
     }
@@ -38,9 +34,7 @@ public class AdminController {
     // 관리자 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response, HttpServletRequest request) {
-        this.cookieService.clearTokenFromCookie(response);
-        this.adminService.clearRefreshToken(request);
-
+        this.adminService.logout(response, request);
         return ResponseEntity.ok("로그아웃 성공");
     }
 
