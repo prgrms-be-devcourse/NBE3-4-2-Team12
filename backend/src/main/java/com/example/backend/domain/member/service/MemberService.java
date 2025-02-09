@@ -39,9 +39,9 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public MemberInfoDto findMemberResponseDtoById(Long id) {
+	public MemberInfoDto findMemberInfoDtoById(Long id) {
 
-		return memberRepository.findMemberResponseDtoById(id).orElseThrow(() ->
+		return memberRepository.findMemberInfoDtoById(id).orElseThrow(() ->
 			new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 	}
 

@@ -5,8 +5,8 @@ import com.example.backend.domain.member.entity.Member;
 import lombok.Builder;
 
 /**
- * MemberResponseDto
- * <p></p>
+ * MemberInfoDto
+ * 사용자 기본 정보만 담는 dto
  * @author 100minha
  */
 @Builder

@@ -18,7 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	@Query("SELECT new com.example.backend.domain.member.dto.MemberInfoDto(m.id, m.nickname, m.email) " +
 		"FROM Member m WHERE m.id = :id")
-	Optional<MemberInfoDto> findMemberResponseDtoById(Long id);
+	Optional<MemberInfoDto> findMemberInfoDtoById(Long id);
 
 	Optional<Member> findByKakaoRefreshToken(String kakaoRefreshToken);
 }
