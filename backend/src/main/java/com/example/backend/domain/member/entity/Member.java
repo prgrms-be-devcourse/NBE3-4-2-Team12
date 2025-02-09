@@ -1,5 +1,6 @@
 package com.example.backend.domain.member.entity;
 
+import com.example.backend.domain.member.dto.MemberModifyRequestDto;
 import com.example.backend.global.auth.dto.KakaoUserInfoResponseDto;
 import com.example.backend.global.base.BaseEntity;
 
@@ -61,5 +62,9 @@ public class Member extends BaseEntity {
 
 	public void updateRefreshToken(String refreshToken) {
 		this.kakaoRefreshToken = refreshToken;
+	}
+
+	public void modify(MemberModifyRequestDto memberModifyDto) {
+		this.nickname = memberModifyDto.nickname();
 	}
 }
