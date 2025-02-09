@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.domain.member.dto.MemberResponseDto;
+import com.example.backend.domain.member.dto.MemberInfoDto;
 import com.example.backend.domain.member.service.MemberService;
 import com.example.backend.global.auth.model.CustomUserDetails;
 import com.example.backend.global.response.ApiResponse;
@@ -21,10 +21,10 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@GetMapping
-	public ResponseEntity<ApiResponse<MemberResponseDto>> findMember(
+	public ResponseEntity<ApiResponse<MemberInfoDto>> findMember(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-		MemberResponseDto memberDto = MemberResponseDto.builder()
+		MemberInfoDto memberDto = MemberInfoDto.builder()
 			.id(customUserDetails.getUserId())
 			.nickname(customUserDetails.getUsername())
 			.email(customUserDetails.getEmail())

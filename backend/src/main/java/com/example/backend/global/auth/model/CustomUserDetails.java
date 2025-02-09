@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.backend.domain.member.entity.Member;
+import com.example.backend.domain.member.dto.MemberInfoDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-	private final Member member;
+	private final MemberInfoDto memberInfoDto;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -33,15 +33,15 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return member.getNickname();
+		return memberInfoDto.nickname();
 	}
 
 	public Long getUserId() {
-		return member.getId();
+		return memberInfoDto.id();
 	}
 
 	public String getEmail() {
-		return member.getEmail();
+		return memberInfoDto.email();
 	}
 
 	@Override
