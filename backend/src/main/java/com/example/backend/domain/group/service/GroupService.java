@@ -141,7 +141,7 @@ public class GroupService {
     @Transactional(readOnly = true)
     public List<GroupResponseDto> findNotDeletedAllGroups() {
         List<GroupResponseDto> groups = groupRepository.findAll().stream()
-                .filter(group -> !group.getStatus().equals(GroupStatus.DELETED))  // "deleted" 상태 제외
+                .filter(group -> group.getStatus() != GroupStatus.DELETED && group.getStatus() != GroupStatus.NOT_RECRUITING)  // "deleted"와 "not recruiting" 상태 제외
                 .map(GroupResponseDto::new)
                 .collect(Collectors.toList());
         if (groups.isEmpty()) {
