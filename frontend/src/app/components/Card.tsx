@@ -52,8 +52,9 @@ const Card = ({ id, title, category, status }: CardProps) => {
       await joinGroup(Number(id));
       alert("그룹 참가 성공!");
       router.push("/");
-    } catch (error) {
-      alert("그룹 참가에 실패했습니다.");
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || "그룹 참가에 실패했습니다.";
+      alert(errorMessage);
     }
   }
 
