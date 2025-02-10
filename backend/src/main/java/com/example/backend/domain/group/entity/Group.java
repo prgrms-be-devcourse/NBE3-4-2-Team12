@@ -52,10 +52,11 @@ public class Group extends BaseEntity {
         this.groupCategories = groupCategories;
     }
 
-    public void update(String title, String description, Integer maxParticipants) {
+    public void update(String title, String description, Integer maxParticipants, GroupStatus status) {
         this.title = title;
         this.description = description;
         this.maxParticipants = maxParticipants;
+        this.status = status;
     }
 
     public void updateStatus(GroupStatus status) {

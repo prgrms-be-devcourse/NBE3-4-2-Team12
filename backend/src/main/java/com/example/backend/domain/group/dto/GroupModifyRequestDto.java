@@ -1,5 +1,6 @@
 package com.example.backend.domain.group.dto;
 
+import com.example.backend.domain.group.entity.GroupStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,4 +16,6 @@ public class GroupModifyRequestDto {
     private String description;
     @NotNull(message = "인원은 필수 항목입니다.")
     private Integer maxParticipants;
+    @NotNull(message = "모집상태는 필수 항목입니다.")
+    private GroupStatus groupStatus;
 }
