@@ -12,7 +12,7 @@ export default function RootLayout({
         <html lang="ko">
         <head>
             <Script
-                src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_APP_KEY&libraries=services,clusterer&autoload=false`}
+                src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=5fedf93f4bdc2137d805357d9ab6f15b&libraries=services,clusterer&autoload=false`}
                 strategy="beforeInteractive"
             />
         </head>
