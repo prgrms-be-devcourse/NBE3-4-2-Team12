@@ -90,7 +90,8 @@ public class GroupService {
         group.update(
                 groupModifyRequestDto.getTitle(),
                 groupModifyRequestDto.getDescription(),
-                groupModifyRequestDto.getMaxParticipants()
+                groupModifyRequestDto.getMaxParticipants(),
+                groupModifyRequestDto.getGroupStatus()
         );
         groupRepository.save(group);
         return new GroupResponseDto(group);
@@ -99,11 +100,11 @@ public class GroupService {
     public void checkValidity(GroupStatus groupStatus){
         if (groupStatus == GroupStatus.DELETED){
             throw new GroupException(GroupErrorCode.ALREADY_DELETED);
-        } else if (groupStatus == GroupStatus.NOT_RECRUITING){
-            throw new GroupException(GroupErrorCode.NOT_RECRUITING);
-        } else if (groupStatus == GroupStatus.COMPLETED) {
+        }
+        if(groupStatus == GroupStatus.COMPLETED) {
             throw new GroupException(GroupErrorCode.COMPLETED);
-        } else if (groupStatus == GroupStatus.VOTING) {
+        }
+        if (groupStatus == GroupStatus.VOTING) {
             throw new GroupException(GroupErrorCode.VOTING);
         }
     }
