@@ -104,7 +104,8 @@ public class MemberAuthFilter extends OncePerRequestFilter {
 		String method = request.getMethod();
 
 		return !(
-			(method.equals("POST") && path.startsWith("/groups")) ||
+			(method.equals("GET") && path.equals("/groups/member")) ||
+				(method.equals("POST") && path.startsWith("/groups")) ||
 				(method.equals("PUT") && path.startsWith("/groups")) ||
 				(method.equals("DELETE") && path.startsWith("/groups")) ||
 				path.startsWith("/members") ||
