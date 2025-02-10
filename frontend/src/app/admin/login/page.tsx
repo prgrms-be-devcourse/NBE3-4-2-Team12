@@ -5,7 +5,7 @@ import {useRouter} from "next/navigation";
 import {adminLogin} from "@/app/api";
 
 const AdminLoginPage = () => {
-    const [id, setId] = useState("");
+    const [adminName, setAdminName] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const AdminLoginPage = () => {
         setLoading(true);
 
         try {
-            await adminLogin({id, password});
+            await adminLogin({adminName, password});
             alert("관리자 로그인 성공!");
             router.push("/admin"); // 로그인 성공 시 대시보드로 이동
         } catch (err) {
@@ -43,8 +43,8 @@ const AdminLoginPage = () => {
                         <label className="block text-gray-700 mb-2">아이디</label>
                         <input
                             type="text"
-                            value={id}
-                            onChange={handleChange(setId)}
+                            value={adminName}
+                            onChange={handleChange(setAdminName)}
                             className="w-full p-3 border rounded-lg"
                             placeholder="아이디를 입력하세요"
                             required
