@@ -86,3 +86,18 @@ export const deleteGroup = async (id: number) => {
         throw error;
     }
 }
+
+// 로그인된 사용자가 참가 중인 모임 목록 조회
+export const getUserGroups = async () => {
+    try {
+        const response = await api.get("/groups/member", {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("사용자 참가 중인 모임 목록 조회 중 오류 발생:", error);
+        throw error;
+    }
+};
