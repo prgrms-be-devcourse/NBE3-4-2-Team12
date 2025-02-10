@@ -3,6 +3,8 @@ package com.example.backend.global.auth.jwt;
 
 import com.example.backend.domain.admin.entity.Admin;
 import com.example.backend.domain.admin.repository.AdminRepository;
+import com.example.backend.domain.admin.service.AdminGetService;
+import com.example.backend.domain.admin.service.AdminService;
 import com.example.backend.global.auth.exception.AuthErrorCode;
 import com.example.backend.global.auth.service.CookieService;
 import com.example.backend.global.auth.util.JwtUtil;
@@ -30,7 +32,7 @@ public class AdminAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final TokenProvider tokenProvider;
-    private final AdminRepository adminRepository;
+    private final AdminGetService adminGetService;
     private final CookieService cookieService;
     private final ObjectMapper objectMapper;
 
@@ -57,15 +59,13 @@ public class AdminAuthFilter extends OncePerRequestFilter {
                 return;
             case EXPIRED:
                     if (jwtUtil.isRefreshTokenValid(refreshToken)) {
-                        Admin admin = adminRepository.findByRefreshToken(refreshToken);
-                        if(admin != null) {
+                        Admin admin = this.adminGetService.getAdminByRefreshToken(refreshToken);
                             String newAccessToken = this.tokenProvider.generateToken(admin);
                             this.cookieService.addAccessTokenToCookie(newAccessToken, response);
                             Authentication newAuthentication = jwtUtil.getAuthentication(newAccessToken);
                             SecurityContextHolder.getContext().setAuthentication(newAuthentication);
                             chain.doFilter(request, response);
                             return;
-                        }
                     }
                     handleException(TOKEN_REISSUE_FAILED, request, response);
             case MALFORMED:

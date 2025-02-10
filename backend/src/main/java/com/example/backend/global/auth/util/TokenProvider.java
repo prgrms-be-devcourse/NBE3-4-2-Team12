@@ -1,7 +1,6 @@
 package com.example.backend.global.auth.util;
 
 import com.example.backend.domain.admin.entity.Admin;
-import com.example.backend.global.auth.service.CookieService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import java.util.UUID;
 public class TokenProvider {
 
 	private final JwtUtil jwtUtil;
-	private final CookieService cookieService;
 
 	// JWT 토큰 생성
 	public String generateToken(Admin admin) {

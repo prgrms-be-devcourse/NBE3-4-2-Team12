@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.example.backend.domain.admin.entity.Admin;
 import com.example.backend.domain.admin.repository.AdminRepository;
+import com.example.backend.domain.admin.service.AdminGetService;
+import com.example.backend.domain.admin.service.AdminService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -35,7 +37,7 @@ import io.jsonwebtoken.MalformedJwtException;
 @Component
 public class JwtUtil {
 
-	private final AdminRepository adminRepository;
+	private  final AdminGetService adminGetService;
 
 	@Value("${spring.security.jwt.secret-key}")
 	private String SECRET_KEY;
@@ -129,11 +131,7 @@ public class JwtUtil {
 
     // 리프레시 토큰 유효성 검사
     public boolean isRefreshTokenValid(String refreshToken) {
-        Admin admin = this.adminRepository.findByRefreshToken(refreshToken);
-
-        if(admin == null) {
-            return false;
-        }
+		Admin admin = this.adminGetService.getAdminByRefreshToken(refreshToken);
 
         if(admin.getRefreshTokenExpiryDate().isBefore(LocalDateTime.now())) {
             return false;
