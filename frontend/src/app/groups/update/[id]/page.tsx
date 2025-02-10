@@ -55,7 +55,7 @@ export default function EditGroupPage() {
         console.log("보내는 데이터:", requestData); // 백엔드로 보내기 전 확인
 
         try {
-            const response = await updateGroup(id, requestData); // PUT 요청
+            const response = await updateGroup(id, requestData); // PUT 요청 24, 58 stringdmfh emfdj
             console.log("그룹 수정 성공:", response);
             alert("그룹 정보가 성공적으로 수정되었습니다!");
             router.push("/");
