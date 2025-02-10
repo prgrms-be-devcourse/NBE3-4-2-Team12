@@ -45,7 +45,7 @@ public class KakaoAuthUtil {
 			.toUriString();
 	}
 
-	public String getKakaoTokenUrl(String authorizationCode) {
+	public String getKakaoLoginTokenUrl(String authorizationCode) {
 
 		return UriComponentsBuilder.fromUriString(TOKEN_URI)
 			.queryParam("grant_type", GRANT_TYPE)
@@ -65,6 +65,15 @@ public class KakaoAuthUtil {
 			.queryParam("client_id", CLIENT_ID)
 			.queryParam("logout_redirect_uri", KAKAO_LOGOUT_REDIRECT_URI)
 			.queryParam("state", userId)
+			.toUriString();
+	}
+
+	public String getKakaoTokenReissueUrl(String refreshToken) {
+
+		return UriComponentsBuilder.fromUriString(TOKEN_URI)
+			.queryParam("grant_type", "refresh_token")
+			.queryParam("client_id", CLIENT_ID)
+			.queryParam("refresh_token", refreshToken)
 			.toUriString();
 	}
 }

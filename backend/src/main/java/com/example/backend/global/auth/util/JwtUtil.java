@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import com.example.backend.domain.member.dto.MemberInfoDto;
 import com.example.backend.global.auth.jwt.TokenStatus;
 
 import io.jsonwebtoken.Claims;
@@ -105,16 +106,17 @@ public class JwtUtil {
 	}
 
 	// JWT 에서 유저 정보 가져오기
-	public String getUserName(String token) {
-		return parseToken(token).getSubject();
-	}
-
 	public String getAdminRole(String token) {
 		return parseToken(token).get("role", String.class);
 	}
 
-	public String getId(String token) {
-		return String.valueOf(parseToken(token).get("id"));
+	public MemberInfoDto getMemberInfoDto(String token) {
+		Claims claims = parseToken(token);
+		return MemberInfoDto.builder()
+			.id(claims.get("id", Long.class))
+			.nickname(claims.getSubject())
+			.email(claims.get("email", String.class))
+			.build();
 	}
 
 	// 리프레시 토큰 유효성 검사

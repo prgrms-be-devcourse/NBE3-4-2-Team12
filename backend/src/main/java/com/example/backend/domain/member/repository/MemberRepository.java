@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.example.backend.domain.member.dto.MemberResponseDto;
+import com.example.backend.domain.member.dto.MemberInfoDto;
 import com.example.backend.domain.member.entity.Member;
 
 @Repository
@@ -16,7 +16,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	Optional<Member> findByKakaoId(Long kakaoId);
 
-	@Query("SELECT new com.example.backend.domain.member.dto.MemberResponseDto(m.id, m.nickname, m.email) " +
+	@Query("SELECT new com.example.backend.domain.member.dto.MemberInfoDto(m.id, m.nickname, m.email) " +
 		"FROM Member m WHERE m.id = :id")
-	Optional<MemberResponseDto> findMemberResponseDtoById(Long id);
+	Optional<MemberInfoDto> findMemberInfoDtoById(Long id);
+
+	Optional<Member> findByKakaoRefreshToken(String kakaoRefreshToken);
 }
