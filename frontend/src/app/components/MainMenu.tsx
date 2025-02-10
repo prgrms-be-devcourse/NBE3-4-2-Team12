@@ -1,13 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { kakaoLogin } from "../api/auth";
+import { kakaoLogin, kakaoLogout } from "@/app/api";
+import { useState, useEffect} from "react";
+import { getCurrentUser} from "@/app/api";
 
-const handleKakaoLogin = async () => {
-  kakaoLogin();
-};
+
 
 const MainMenu = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            try {
+                const user = await getCurrentUser();
+                if (user){
+                    setIsLoggedIn(true);
+                }
+            }catch (error){
+                setIsLoggedIn(false);
+            }
+        };
+
+        checkLoginStatus()
+    }, []);
+
+    const handleKakaoLogin = async () => {
+        kakaoLogin();
+        setIsLoggedIn(true);
+    };
+
+    const handleKakaoLogout = async () => {
+        kakaoLogout();
+        setIsLoggedIn(false);
+    }
   return (
     <nav className="flex justify-between items-center p-4 bg-gray-100 shadow-md">
       <Link href="/">
@@ -25,9 +51,15 @@ const MainMenu = () => {
         <Link href="/signup" className="text-gray-700">
           회원가입
         </Link>
-        <button onClick={handleKakaoLogin} className="text-gray-700">
-          로그인
-        </button>
+          {isLoggedIn ? (
+              <button onClick={handleKakaoLogout} className="text-gray-700">
+                  로그아웃
+              </button>
+          ) : (
+              <button onClick={handleKakaoLogin} className="text-gray-700">
+                  로그인
+              </button>
+          )}
       </div>
     </nav>
   );
