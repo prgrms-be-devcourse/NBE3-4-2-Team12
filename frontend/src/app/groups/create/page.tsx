@@ -32,8 +32,8 @@ export default function CreateGroupPage() {
 
     //  모달 관련 상태 추가
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newLocation, setNewLocation] = useState("");
-    const [locations, setLocations] = useState<LocationVote[]>([]);
+    // const [newLocation, setNewLocation] = useState("");
+    // const [locations, setLocations] = useState<LocationVote[]>([]);
 
     useEffect(() => {
         async function fetchCategories() {
@@ -64,18 +64,18 @@ export default function CreateGroupPage() {
         setCategoryIds(categoryIds.filter((id) => id !== categoryId));
     };
 
-    // 장소 추가 기능
-    const handleAddLocation = () => {
-        if (newLocation.trim() !== "" && !locations.some(loc => loc.name === newLocation)) {
-            setLocations([...locations, { name: newLocation }]);
-            setNewLocation("");
-        }
-    };
-
-    //  장소 삭제 기능
-    const handleDeleteLocation = (index: number) => {
-        setLocations(locations.filter((_, i) => i !== index));
-    };
+    // // 장소 추가 기능
+    // const handleAddLocation = () => {
+    //     if (newLocation.trim() !== "" && !locations.some(loc => loc.name === newLocation)) {
+    //         setLocations([...locations, { name: newLocation }]);
+    //         setNewLocation("");
+    //     }
+    // };
+    //
+    // //  장소 삭제 기능
+    // const handleDeleteLocation = (index: number) => {
+    //     setLocations(locations.filter((_, i) => i !== index));
+    // };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -102,7 +102,7 @@ export default function CreateGroupPage() {
             alert("모임이 성공적으로 생성되었습니다!");
             router.push("/");
         } catch (error) {
-            setErrorMessage("모임 생성 중 오류가 발생했습니다. 다시 시도해주세요.");
+            setErrorMessage(error + "모임 생성 중 오류가 발생했습니다. 다시 시도해주세요.");
         } finally {
             setLoading(false);
         }
