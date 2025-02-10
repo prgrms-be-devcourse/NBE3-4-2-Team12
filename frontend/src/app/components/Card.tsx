@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import {joinGroup} from "@/app/api";
 
 type Category = {
   id: number;
@@ -44,14 +45,22 @@ const Card = ({ id, title, category, status }: CardProps) => {
     category.length > 0
       ? categoryMapping[category[0].name] || category[0].name
       : "미정"; // 첫 번째 카테고리만 표시, 기본값 "미정"
-  const handleClick = () => {
-    router.push(`/groups/${id}`);
-  };
+
+  const handleJoin = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+    try {
+      await joinGroup(Number(id));
+      alert("그룹 참가 성공!");
+      router.push("/");
+    } catch (error) {
+      alert("그룹 참가에 실패했습니다.");
+    }
+  }
 
   return (
     <div
       className="border p-4 rounded shadow-md w-64 bg-white flex flex-col justify-between"
-      onClick={handleClick}
+      onClick={()=>router.push(`/groups/${id}`)}
     >
       {/* 제목 */}
       <h2 className="text-md font-semibold">{title}</h2>
@@ -77,7 +86,9 @@ const Card = ({ id, title, category, status }: CardProps) => {
         </span>
 
         {/* 참가하기 버튼 */}
-        <button className="bg-gray-600 text-white px-4 py-1 rounded-md text-sm">
+        <button
+            onClick={handleJoin}
+            className="bg-gray-600 text-white px-4 py-1 rounded-md text-sm">
           참가하기
         </button>
       </div>

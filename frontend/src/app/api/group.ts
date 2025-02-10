@@ -41,9 +41,11 @@ export const getGroup = async (id: number) => {
 };
 
 //그룹 참가
-export const joinGroup = async () => {
+export const joinGroup = async (groupId : number) => {
     try{
-        const response = await api.post(`/groups/join`,{
+        const response = await api.post(`/groups/join`, {
+            groupId , // 요청 본문에 groupId 포함
+        },{
             headers:{
                 "Content-Type":"application/json",
             }

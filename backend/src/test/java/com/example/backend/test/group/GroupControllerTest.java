@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ public class GroupControllerTest {
 
     @Test
     @DisplayName("그룹 생성")
+    @WithMockUser(username = "김재민", roles = "USER")
     void t1() throws Exception {
         ResultActions resultActions = mvc.perform(
                 post("/groups")
@@ -43,7 +45,6 @@ public class GroupControllerTest {
                                 {
                                   "title": "제목1",
                                   "description": "내용1",
-                                  "memberId":1,
                                   "maxParticipants":5,
                                   "categoryIds": [1],
                                   "status":"RECRUITING"
@@ -52,7 +53,11 @@ public class GroupControllerTest {
                         .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
         ).andDo(print());
 
-        GroupResponseDto groupResponseDto = groupService.create(new GroupRequestDto("제목1","내용1",5,1L, Arrays.asList(1L), GroupStatus.RECRUITING));
+        GroupResponseDto groupResponseDto = groupService.create(new GroupRequestDto("제목1",
+                "내용1",
+                5,
+                Arrays.asList(1L),
+                GroupStatus.RECRUITING),1L);
         resultActions.andExpect(handler().handlerType(GroupController.class))
                 .andExpect(handler().methodName("createGroup"))
                 .andExpect(status().isOk())
