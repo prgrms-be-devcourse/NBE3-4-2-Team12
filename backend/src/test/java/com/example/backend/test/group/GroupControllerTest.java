@@ -5,10 +5,15 @@ import com.example.backend.domain.group.dto.GroupRequestDto;
 import com.example.backend.domain.group.dto.GroupResponseDto;
 import com.example.backend.domain.group.entity.GroupStatus;
 import com.example.backend.domain.group.service.GroupService;
+import com.example.backend.domain.member.entity.Member;
+import com.example.backend.domain.member.repository.MemberRepository;
+import jakarta.servlet.http.Cookie;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -19,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -34,13 +40,20 @@ public class GroupControllerTest {
 
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Value("${TEST_COOKIE}")
+    private String cookie;
 
     @Test
     @DisplayName("그룹 생성")
-    @WithMockUser(username = "김재민", roles = "USER")
     void t1() throws Exception {
+        Optional<Member> member = memberRepository.findById(1L);
+        String accessToken = member.map(Member::getKakaoAccessToken).orElseThrow();
         ResultActions resultActions = mvc.perform(
                 post("/groups")
+                        .cookie(new Cookie("accessToken",cookie))
                         .content("""
                                 {
                                   "title": "제목1",
@@ -110,11 +123,13 @@ public class GroupControllerTest {
     void t4() throws Exception {
         ResultActions resultActions = mvc.perform(
                 put("/groups/{id}",1L)
+                        .cookie(new Cookie("accessToken",cookie))
                         .content("""
                                 {
                                   "title": "제목2",
                                   "description": "내용3",
-                                  "maxParticipants":6
+                                  "maxParticipants":6,
+                                  "groupStatus":"RECRUITING"
                                 }
                                 """)
                         .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -126,14 +141,16 @@ public class GroupControllerTest {
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.title").value("제목2"))
                 .andExpect(jsonPath("$.description").value("내용3"))
-                .andExpect(jsonPath("$.maxParticipants").value(6));
+                .andExpect(jsonPath("$.maxParticipants").value(6))
+                .andExpect(jsonPath("$.status").value("RECRUITING"));
     }
 
     @Test
     @DisplayName("그룹 삭제")
     void t5() throws Exception {
         ResultActions resultActions = mvc.perform(
-                delete("/groups/{id}",3)
+                delete("/groups/{id}",1L)
+                        .cookie(new Cookie("accessToken",cookie))
                         .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
         ).andDo(print());
 
