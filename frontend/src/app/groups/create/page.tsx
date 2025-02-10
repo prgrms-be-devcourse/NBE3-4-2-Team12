@@ -194,7 +194,7 @@ export default function CreateGroupPage() {
                             {/* 감소 버튼 */}
                             <button
                                 type="button"
-                                onClick={() => setMaxParticipants((prev) => Math.max(1, prev - 1))}
+                                onClick={() => setMaxParticipants((prev) => Math.max(1, Number(prev) - 1))}
                                 className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-l-md"
                             >
                                 -
@@ -202,16 +202,19 @@ export default function CreateGroupPage() {
 
                             {/* 숫자 입력 (기본 버튼 제거 + 문자 입력 차단) */}
                             <input
-                                type="text" // 🔥 "number" 대신 "text"로 변경 (문자 강제 차단)
+                                type="number" // 🔥 "number" 대신 "text"로 변경 (문자 강제 차단)
                                 value={maxParticipants}
                                 onChange={(e) => {
-                                    const value = e.target.value.trim();
-                                    if (value === "" || (!isNaN(value) && /^\d+$/.test(value))) {
-                                        setMaxParticipants(value === "" ? "" : Math.max(1, Number(value)));
+                                    const value = e.target.value;
+                                    const numValue = Number(value);
+                                    // 최소값 1 이상으로 설정
+                                    if (value === "" || (!isNaN(numValue) && numValue > 0)) {
+                                        setMaxParticipants(value === "" ? "" : numValue);
                                     }
                                 }}
                                 className="w-16 px-2 text-center border-none focus:outline-none"
                                 inputMode="numeric"
+                                min={1}
                                 style={{
                                     appearance: "none", // 기본 UI 제거
                                     MozAppearance: "textfield", // 파이어폭스 대응
@@ -221,7 +224,7 @@ export default function CreateGroupPage() {
                             {/* 증가 버튼 */}
                             <button
                                 type="button"
-                                onClick={() => setMaxParticipants((prev) => prev + 1)}
+                                onClick={() => setMaxParticipants((prev) => Number(prev) + 1)}
                                 className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-r-md"
                             >
                                 +
