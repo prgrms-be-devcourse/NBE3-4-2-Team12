@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { getCategories } from "@/app/api/categories";
 import { createGroup } from "@/app/api/group";
 import MainMenu from "@/app/components/MainMenu";
+// votemodal 추가
+import VoteModal from "@/app/components/VoteModal";
+
 
 type Category = {
     id: number;
@@ -253,38 +256,16 @@ export default function CreateGroupPage() {
                             장소 투표 생성
                         </button>
 
-                        {/*  장소 투표 모달 */}
-                        {isModalOpen && (
-                            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                                <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                                    <h3 className="text-lg font-bold mb-4">장소 추가</h3>
-                                    <input
-                                        type="text"
-                                        value={newLocation}
-                                        onChange={(e) => setNewLocation(e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                                        placeholder="장소 입력"
-                                    />
-                                    <button type="button" onClick={handleAddLocation}
-                                            className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md">추가
-                                    </button>
-                                    <ul className="mt-4">
-                                        {locations.map((loc, index) => (
-                                            <li key={index}
-                                                className="flex justify-between items-center bg-gray-200 p-2 rounded-md">
-                                                {loc.name}
-                                                <button onClick={() => handleDeleteLocation(index)}
-                                                        className="text-red-500 font-bold">✕
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <button onClick={() => setIsModalOpen(false)}
-                                            className="mt-4 bg-gray-500 text-white px-4 py-2 rounded-md">닫기
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                    {/*  장소 투표 모달 VoteModal component로 대체*/}
+                    <VoteModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        onSubmit={(locations) => {
+                            // 투표 장소들을 처리하는 로직
+                            console.log('Selected locations:', locations);
+                            setIsModalOpen(false);
+                        }}
+                    />
 
                         {/*  내용 입력 칸 */}
                         <div>
