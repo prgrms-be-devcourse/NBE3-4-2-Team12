@@ -2,8 +2,8 @@
 import MainMenu from "@/app/components/MainMenu";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getGroup, deleteGroup, joinGroup } from "../../api/group";
-import { getCurrentUser } from "../../api/auth";
+import { getGroup, deleteGroup, joinGroup } from "@/app/api";
+import { getCurrentUser } from "@/app/api";
 import { useRouter } from "next/navigation";
 
 type Category = {
@@ -27,7 +27,6 @@ export default function GroupDetailPage() {
   const router = useRouter();
   const [group, setGroup] = useState<GroupDetail | null>(null);
   const [currentUser, setCurrentUser] = useState<{ username: string, id: number } | null>(null);
-  const [join, setJoin] = useState<boolean | null>(null);
 
   const handleDelete = async () => {
     if (group) {
@@ -50,8 +49,9 @@ export default function GroupDetailPage() {
     try {
       await joinGroup(group.id);
       alert("그룹 참가 성공!");
-    } catch (error) {
-      alert("그룹 참가에 실패하였습니다.")
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || "그룹 참가에 실패했습니다.";
+      alert(errorMessage);
     }
   }
 
@@ -182,7 +182,7 @@ export default function GroupDetailPage() {
                 </button>
               </>
             )}
-            <button onClick={() => router.back()}className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium px-6 py-2 rounded-lg">
+            <button onClick={() => router.back()} className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium px-6 py-2 rounded-lg">
               돌아가기
             </button>
             <button
