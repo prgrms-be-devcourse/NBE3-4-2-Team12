@@ -37,17 +37,26 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			.csrf(AbstractHttpConfigurer::disable)
-			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.httpBasic(AbstractHttpConfigurer::disable)
-			.formLogin(AbstractHttpConfigurer::disable)
-			.logout(AbstractHttpConfigurer::disable)
-			.addFilter(corsConfig.corsFilter())
-			.authorizeHttpRequests(auth -> auth
-				.anyRequest().permitAll()    //TODO: 백엔드 로직 작성 단계에서 테스트용 api별 권한 설정이므로 추후 올바르게 설정 필요
-			)
-			.addFilterBefore(memberAuthFilter, UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class)     // JWT 필터 추가
+				.csrf(csrf -> csrf
+						.ignoringRequestMatchers("/h2-console/**")  // H2 콘솔 사용을 위해 CSRF 비활성화
+						.disable()
+				)
+				.headers(headers -> headers
+						.frameOptions(
+								frameOptions -> frameOptions.disable()  // H2 콘솔 화면을 위해 필요
+						)
+				)
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.httpBasic(AbstractHttpConfigurer::disable)
+				.formLogin(AbstractHttpConfigurer::disable)
+				.logout(AbstractHttpConfigurer::disable)
+				.addFilter(corsConfig.corsFilter())
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/h2-console/**").permitAll()  // H2 콘솔 접근 허용
+						.anyRequest().permitAll()
+				)
+				.addFilterBefore(memberAuthFilter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class)
 		;
 
 		return http.build();
