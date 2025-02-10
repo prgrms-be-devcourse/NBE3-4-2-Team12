@@ -1,9 +1,20 @@
 package com.example.backend.global.auth.util;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.example.backend.domain.admin.entity.Admin;
+import com.example.backend.domain.admin.repository.AdminRepository;
+import com.example.backend.domain.admin.service.AdminGetService;
+import com.example.backend.domain.admin.service.AdminService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,20 +25,19 @@ import org.springframework.stereotype.Component;
 import com.example.backend.domain.member.dto.MemberInfoDto;
 import com.example.backend.global.auth.jwt.TokenStatus;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 
 /**
  * JwtUtil
  * jwt 관련 유틸 클래스
  * @author 100minha
  */
+@RequiredArgsConstructor
 @Component
 public class JwtUtil {
+
+	private  final AdminGetService adminGetService;
 
 	@Value("${spring.security.jwt.secret-key}")
 	private String SECRET_KEY;
@@ -119,17 +129,14 @@ public class JwtUtil {
 			.build();
 	}
 
-	// 리프레시 토큰 유효성 검사
-	public boolean isRefreshTokenValid(String refreshToken) {
-		try {
-			Jwts.parserBuilder()
-				.setSigningKey(key)
-				.build()
-				.parseClaimsJws(refreshToken);
+    // 리프레시 토큰 유효성 검사
+    public boolean isRefreshTokenValid(String refreshToken) {
+		Admin admin = this.adminGetService.getAdminByRefreshToken(refreshToken);
 
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
+        if(admin.getRefreshTokenExpiryDate().isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+        return true;
+    }
 }
