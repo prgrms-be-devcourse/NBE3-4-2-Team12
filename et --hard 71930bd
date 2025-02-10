@@ -1,0 +1,15 @@
+[33m820d12c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: rebase (finish): returning to refs/heads/main
+[33m820d12c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{1}: rebase (pick): feature: kaVoteModal 창 등록
+[33m52ee1bd[m HEAD@{2}: rebase (pick): fix: group.ts header fix
+[33m9a735ef[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{3}: rebase (start): checkout origin
+[33m71930bd[m HEAD@{4}: commit: feature: kaVoteModal 창 등록
+[33m5d1cccb[m HEAD@{5}: rebase (finish): returning to refs/heads/main
+[33m5d1cccb[m HEAD@{6}: rebase (pick): fix: group.ts header fix
+[33ma339d5b[m HEAD@{7}: rebase (start): checkout origin/main
+[33ma0ae40d[m HEAD@{8}: reset: moving to HEAD
+[33ma0ae40d[m HEAD@{9}: rebase (finish): returning to refs/heads/main
+[33ma0ae40d[m HEAD@{10}: rebase (pick): fix: group.ts header fix
+[33m25d6e28[m HEAD@{11}: rebase (start): checkout origin/main
+[33mca62381[m HEAD@{12}: reset: moving to HEAD
+[33mca62381[m HEAD@{13}: commit: fix: group.ts header fix
+[33m2ec4016[m HEAD@{14}: clone: from https://github.com/prgrms-be-devcourse/NBE3-4-2-Team12.git
