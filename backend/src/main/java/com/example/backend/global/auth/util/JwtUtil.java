@@ -1,7 +1,9 @@
 package com.example.backend.global.auth.util;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.example.backend.domain.admin.entity.Admin;
@@ -21,12 +23,8 @@ import org.springframework.stereotype.Component;
 import com.example.backend.domain.member.dto.MemberInfoDto;
 import com.example.backend.global.auth.jwt.TokenStatus;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 
 /**
  * JwtUtil
