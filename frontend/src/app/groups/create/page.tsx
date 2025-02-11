@@ -267,14 +267,7 @@ export default function CreateGroupPage() {
                     </style>
 
 
-                    {/*/!*  장소 투표 생성 버튼 *!/*/}
-                    {/*    <button*/}
-                    {/*        type="button"*/}
-                    {/*        onClick={() => setIsModalOpen(true)}*/}
-                    {/*        className="bg-gray-700 text-white px-4 py-2 rounded-md"*/}
-                    {/*    >*/}
-                    {/*        장소 투표 생성*/}
-                    {/*    </button>*/}
+                    {/*/!*  장소 투표 *!/*/}
                     <div>
                         <div className="flex items-center justify-between">
                             <label className="block text-gray-700 font-semibold">
@@ -289,19 +282,17 @@ export default function CreateGroupPage() {
                             </button>
                         </div>
                         <VoteLocationsList />
+
+                        <VoteModal
+                            isOpen={isModalOpen}
+                            onClose={() => setIsModalOpen(false)}
+                            groupId={0}
+                            onVoteCreated={(location: VoteLocation) => {
+                                setVoteLocations([...voteLocations, location]);
+                                setIsModalOpen(false);
+                            }}
+                        />
                     </div>
-
-
-                    {/*  장소 투표 모달 VoteModal component로 대체*/}
-                    <VoteModal
-                        isOpen={isModalOpen}
-                        onClose={() => setIsModalOpen(false)}
-                        groupId={0} // 그룹 생성 전이므로 임시값
-                        onVoteCreated={(location) => {
-                            setVoteLocations([...voteLocations, location]);
-                            setIsModalOpen(false);
-                        }}
-                    />
 
                         {/*  내용 입력 칸 */}
                         <div>

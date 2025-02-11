@@ -1,38 +1,34 @@
-// components/VoteModal.tsx
 import { useState } from 'react';
 import KakaoMap from './KakaoMap';
 import { createVote } from '@/app/api/vote';
 
-interface VoteModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    groupId: number;
-    onVoteCreated: () => void;  // 투표 생성 후 부모 컴포넌트 갱신용
-}
-
-interface LocationData {
+interface VoteLocation {
+    location: string;
     address: string;
     latitude: number;
     longitude: number;
 }
 
+interface VoteModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    groupId: number;
+    onVoteCreated: (location: VoteLocation) => void;
+}
+
 export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: VoteModalProps) {
-    // 상태 관리
-    const [location, setLocation] = useState<string>("");  // 장소명
-    const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null);
+    const [location, setLocation] = useState<string>("");
+    const [selectedLocation, setSelectedLocation] = useState<Omit<VoteLocation, 'location'> | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
-    // 지도에서 위치 선택 시 호출되는 함수
-    const handleLocationSelect = (locationData: LocationData) => {
+    const handleLocationSelect = (locationData: Omit<VoteLocation, 'location'>) => {
         setSelectedLocation(locationData);
-        setError("");  // 에러 메시지 초기화
+        setError("");
     };
 
-    // 폼 제출 처리
     const handleSubmit = async () => {
         try {
-            // 입력 검증
             if (!location.trim()) {
                 setError("장소명을 입력해주세요.");
                 return;
@@ -45,18 +41,16 @@ export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: V
             setLoading(true);
             setError("");
 
-            // 투표 생성 API 호출
-            await createVote(groupId, {
+            const voteLocation: VoteLocation = {
                 location: location.trim(),
                 address: selectedLocation.address,
                 latitude: selectedLocation.latitude,
                 longitude: selectedLocation.longitude
-            });
+            };
 
-            // 성공 처리
-            onVoteCreated();  // 부모 컴포넌트 갱신
-            onClose();        // 모달 닫기
-
+            await createVote(groupId, voteLocation);
+            onVoteCreated(voteLocation);
+            handleClose();
         } catch (error) {
             setError("투표 장소 생성 중 오류가 발생했습니다.");
             console.error("투표 생성 오류:", error);
@@ -65,7 +59,6 @@ export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: V
         }
     };
 
-    // 모달 초기화 함수
     const handleClose = () => {
         setLocation("");
         setSelectedLocation(null);
@@ -88,7 +81,6 @@ export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: V
                     </button>
                 </div>
 
-                {/* 장소명 입력 */}
                 <div className="mb-4">
                     <label className="block text-gray-700 font-medium mb-2">
                         장소명 *
@@ -102,7 +94,6 @@ export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: V
                     />
                 </div>
 
-                {/* 지도 */}
                 <div className="mb-4">
                     <label className="block text-gray-700 font-medium mb-2">
                         위치 선택 *
@@ -112,7 +103,6 @@ export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: V
                     </div>
                 </div>
 
-                {/* 선택된 주소 표시 */}
                 <div className="mb-6">
                     <label className="block text-gray-700 font-medium mb-2">
                         선택된 주소
@@ -126,14 +116,12 @@ export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: V
                     />
                 </div>
 
-                {/* 에러 메시지 */}
                 {error && (
                     <div className="mb-4 text-red-500 text-sm">
                         {error}
                     </div>
                 )}
 
-                {/* 버튼 영역 */}
                 <div className="flex justify-end gap-2">
                     <button
                         onClick={handleClose}
