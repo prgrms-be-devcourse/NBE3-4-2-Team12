@@ -1,151 +1,141 @@
 import { useState } from 'react';
 import KakaoMap from './KakaoMap';
+import { createVote } from '@/app/api/vote';
 
+interface VoteLocation {
+    location: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+}
 
-type VoteLocation = {
-    location: string;    // 장소명
-    address: string;     // 주소
-    latitude: number;    // 위도
-    longitude: number;   // 경도
-};
-
-type VoteModalProps = {
+interface VoteModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (locations: VoteLocation[]) => void;
-};
+    groupId: number;
+    onVoteCreated: (location: VoteLocation) => void;
+}
 
-export default function VoteModal({ isOpen, onClose, onSubmit }: VoteModalProps) {
-    const [newLocation, setNewLocation] = useState("");
-    const [address, setAddress] = useState("");
-    const [latitude, setLatitude] = useState<number | null>(null);
-    const [longitude, setLongitude] = useState<number | null>(null);
-    const [voteLocations, setVoteLocations] = useState<VoteLocation[]>([]);
+export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: VoteModalProps) {
+    const [location, setLocation] = useState<string>("");
+    const [selectedLocation, setSelectedLocation] = useState<Omit<VoteLocation, 'location'> | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
 
-    const handleAddVoteLocation = () => {
-        if (!newLocation || !address) {
-            alert("장소명과 주소를 입력해주세요.");
-            return;
-        }
-
-        const newVoteLocation: VoteLocation = {
-            location: newLocation,
-            address: address,
-            latitude: latitude || 0,
-            longitude: longitude || 0
-        };
-
-        setVoteLocations([...voteLocations, newVoteLocation]);
-        setNewLocation("");
-        setAddress("");
-        setLatitude(null);
-        setLongitude(null);
+    const handleLocationSelect = (locationData: Omit<VoteLocation, 'location'>) => {
+        setSelectedLocation(locationData);
+        setError("");
     };
 
-    const handleDeleteVoteLocation = (index: number) => {
-        setVoteLocations(voteLocations.filter((_, i) => i !== index));
+    const handleSubmit = async () => {
+        try {
+            if (!location.trim()) {
+                setError("장소명을 입력해주세요.");
+                return;
+            }
+            if (!selectedLocation) {
+                setError("지도에서 위치를 선택해주세요.");
+                return;
+            }
+
+            setLoading(true);
+            setError("");
+
+            const voteLocation: VoteLocation = {
+                location: location.trim(),
+                address: selectedLocation.address,
+                latitude: selectedLocation.latitude,
+                longitude: selectedLocation.longitude
+            };
+
+            await createVote(groupId, voteLocation);
+            onVoteCreated(voteLocation);
+            handleClose();
+        } catch (error) {
+            setError("투표 장소 생성 중 오류가 발생했습니다.");
+            console.error("투표 생성 오류:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleClose = () => {
+        setLocation("");
+        setSelectedLocation(null);
+        setError("");
+        onClose();
     };
 
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            {/* 모달 전체 컨테이너에 최대 높이 설정 */}
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[600px] max-h-[90vh] flex flex-col">
-                <h3 className="text-lg font-bold mb-4">모임 장소 투표</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-[600px] max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold">투표 장소 추가</h3>
+                    <button
+                        onClick={handleClose}
+                        className="text-gray-500 hover:text-gray-700"
+                    >
+                        ✕
+                    </button>
+                </div>
 
-                {/* 스크롤 가능한 내용 영역 */}
-                <div className="flex-1 overflow-y-auto">
-                    {/* 장소명 입력 */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700 font-semibold mb-2">장소명</label>
-                        <input
-                            type="text"
-                            value={newLocation}
-                            onChange={(e) => setNewLocation(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            placeholder="장소명을 입력하세요"
-                        />
-                    </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-2">
+                        장소명 *
+                    </label>
+                    <input
+                        type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="예) 스타벅스 강남점"
+                    />
+                </div>
 
-                    {/* 주소 입력 */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700 font-semibold mb-2">주소</label>
-                        <input
-                            type="text"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            placeholder="주소를 입력하세요"
-                        />
-                        <button
-                            type="button"
-                            onClick={handleAddVoteLocation}
-                            className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md"
-                        >
-                            장소 추가
-                        </button>
-                    </div>
-
-                    {/* 지도 영역 */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700 font-semibold mb-2">위치 선택</label>
-                        <div className="w-full h-96 rounded-md overflow-hidden">
-                            <KakaoMap
-                                onLocationSelect={({ address, latitude, longitude }) => {
-                                    setAddress(address);
-                                    setLatitude(latitude);
-                                    setLongitude(longitude);
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    {/* 위도/경도 표시 */}
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                        {/* ... 위도/경도 입력 필드 ... */}
-                    </div>
-
-                    {/* 추가된 투표 장소 목록 */}
-                    <div className="mt-4">
-                        <h4 className="font-semibold mb-2">추가된 투표 장소</h4>
-                        <ul className="space-y-2">
-                            {voteLocations.map((loc, index) => (
-                                <li key={index} className="flex justify-between items-center bg-gray-100 p-3 rounded-md">
-                                    <div>
-                                        <div className="font-semibold">{loc.location}</div>
-                                        <div className="text-sm text-gray-600">{loc.address}</div>
-                                    </div>
-                                    <button
-                                        onClick={() => handleDeleteVoteLocation(index)}
-                                        className="text-red-500"
-                                    >
-                                        ✕
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
+                <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-2">
+                        위치 선택 *
+                    </label>
+                    <div className="h-96 rounded-md overflow-hidden border">
+                        <KakaoMap onLocationSelect={handleLocationSelect} />
                     </div>
                 </div>
 
-                {/* 버튼 영역은 스크롤 영역 밖에 고정 */}
-                <div className="flex justify-end space-x-2 mt-4 pt-4 border-t">
+                <div className="mb-6">
+                    <label className="block text-gray-700 font-medium mb-2">
+                        선택된 주소
+                    </label>
+                    <input
+                        type="text"
+                        value={selectedLocation?.address || ''}
+                        readOnly
+                        className="w-full px-3 py-2 border rounded-md bg-gray-50"
+                        placeholder="지도에서 위치를 선택하세요"
+                    />
+                </div>
+
+                {error && (
+                    <div className="mb-4 text-red-500 text-sm">
+                        {error}
+                    </div>
+                )}
+
+                <div className="flex justify-end gap-2">
                     <button
-                        type="button"
-                        onClick={onClose}
-                        className="px-4 py-2 bg-gray-500 text-white rounded-md"
+                        onClick={handleClose}
+                        className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+                        disabled={loading}
                     >
                         취소
                     </button>
                     <button
-                        type="button"
-                        onClick={() => {
-                            onSubmit(voteLocations);
-                            onClose();
-                        }}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                        onClick={handleSubmit}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                        disabled={loading}
                     >
-                        확인
+                        {loading ? '처리 중...' : '추가하기'}
                     </button>
                 </div>
             </div>

@@ -15,9 +15,12 @@ type Category = {
     name: string;
 };
 
-type LocationVote = {
-    name: string;
-};
+interface VoteLocation {
+    location: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+}
 
 export default function CreateGroupPage() {
     const router = useRouter();
@@ -29,9 +32,9 @@ export default function CreateGroupPage() {
     const [description, setDescription] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
-
-    //  모달 관련 상태 추가
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [voteLocations, setVoteLocations] = useState<VoteLocation[]>([]);
+
     // const [newLocation, setNewLocation] = useState("");
     // const [locations, setLocations] = useState<LocationVote[]>([]);
 
@@ -64,19 +67,6 @@ export default function CreateGroupPage() {
         setCategoryIds(categoryIds.filter((id) => id !== categoryId));
     };
 
-    // // 장소 추가 기능
-    // const handleAddLocation = () => {
-    //     if (newLocation.trim() !== "" && !locations.some(loc => loc.name === newLocation)) {
-    //         setLocations([...locations, { name: newLocation }]);
-    //         setNewLocation("");
-    //     }
-    // };
-    //
-    // //  장소 삭제 기능
-    // const handleDeleteLocation = (index: number) => {
-    //     setLocations(locations.filter((_, i) => i !== index));
-    // };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!title.trim() || categoryIds.length === 0 || !maxParticipants) {
@@ -92,7 +82,8 @@ export default function CreateGroupPage() {
             description,
             maxParticipants: Number(maxParticipants),
             categoryIds,
-            locations: locations.map(loc => loc.name), // 추가된 장소 포함
+            // 투표 장소 정보 포함
+            voteLocations: voteLocations,
             status: "RECRUITING",
         };
 
@@ -107,6 +98,35 @@ export default function CreateGroupPage() {
             setLoading(false);
         }
     };
+
+    const VoteLocationsList = () => (
+        <div className="mt-4">
+            <h4 className="font-semibold mb-2">추가된 투표 장소</h4>
+            {voteLocations.length === 0 ? (
+                <p className="text-gray-500">아직 추가된 투표 장소가 없습니다.</p>
+            ) : (
+                <div className="space-y-2">
+                    {voteLocations.map((loc, index) => (
+                        <div key={index} className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
+                            <div>
+                                <div className="font-medium">{loc.location}</div>
+                                <div className="text-sm text-gray-600">{loc.address}</div>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setVoteLocations(voteLocations.filter((_, i) => i !== index));
+                                }}
+                                className="text-red-500 hover:text-red-700"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -247,25 +267,32 @@ export default function CreateGroupPage() {
                     </style>
 
 
-                    {/*  장소 투표 생성 버튼 */}
-                        <button
-                            type="button"
-                            onClick={() => setIsModalOpen(true)}
-                            className="bg-gray-700 text-white px-4 py-2 rounded-md"
-                        >
-                            장소 투표 생성
-                        </button>
+                    {/*/!*  장소 투표 *!/*/}
+                    <div>
+                        <div className="flex items-center justify-between">
+                            <label className="block text-gray-700 font-semibold">
+                                장소 투표 *
+                            </label>
+                            <button
+                                type="button"
+                                onClick={() => setIsModalOpen(true)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                            >
+                                장소 추가
+                            </button>
+                        </div>
+                        <VoteLocationsList />
 
-                    {/*  장소 투표 모달 VoteModal component로 대체*/}
-                    <VoteModal
-                        isOpen={isModalOpen}
-                        onClose={() => setIsModalOpen(false)}
-                        onSubmit={(locations) => {
-                            // 투표 장소들을 처리하는 로직
-                            console.log('Selected locations:', locations);
-                            setIsModalOpen(false);
-                        }}
-                    />
+                        <VoteModal
+                            isOpen={isModalOpen}
+                            onClose={() => setIsModalOpen(false)}
+                            groupId={0}
+                            onVoteCreated={(location: VoteLocation) => {
+                                setVoteLocations([...voteLocations, location]);
+                                setIsModalOpen(false);
+                            }}
+                        />
+                    </div>
 
                         {/*  내용 입력 칸 */}
                         <div>
