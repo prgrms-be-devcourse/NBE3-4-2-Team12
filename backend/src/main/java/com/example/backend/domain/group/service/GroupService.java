@@ -1,5 +1,11 @@
 package com.example.backend.domain.group.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.backend.domain.category.entity.Category;
 import com.example.backend.domain.category.repository.CategoryRepository;
 import com.example.backend.domain.group.dto.GroupModifyRequestDto;
@@ -15,20 +21,20 @@ import com.example.backend.domain.groupmember.entity.GroupMember;
 import com.example.backend.domain.groupmember.repository.GroupMemberRepository;
 import com.example.backend.domain.member.entity.Member;
 import com.example.backend.domain.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.example.backend.domain.vote.repository.VoteRepository;
+import com.example.backend.domain.voter.repository.VoterRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class GroupService {
-    private final GroupRepository groupRepository;
-    private final MemberRepository memberRepository;
-    private final GroupMemberRepository groupMemberRepository;
-    private final CategoryRepository categoryRepository;
+	private final GroupRepository groupRepository;
+	private final MemberRepository memberRepository;
+	private final GroupMemberRepository groupMemberRepository;
+	private final CategoryRepository categoryRepository;
+	private final VoteRepository voteRepository;
+	private final VoterRepository voterRepository;
 
     @Transactional
     public GroupResponseDto create(GroupRequestDto groupRequestDto, Long id){
@@ -79,10 +85,14 @@ public class GroupService {
     public void deleteGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
         checkValidity(group.getStatus());
-        if (group.getStatus() == GroupStatus.COMPLETED){
-            group.updateStatus(GroupStatus.DELETED);
-        }
+		if (group.getStatus() == GroupStatus.COMPLETED){
+			group.updateStatus(GroupStatus.DELETED);
+		}
         group.updateStatus(GroupStatus.DELETED);
+
+		List<Long> voteIds = voteRepository.findAllIdByGroupId(id);
+		voterRepository.deleteByVoteIdIn(voteIds);
+		voteRepository.deleteAllByGroupId(id);
         groupRepository.save(group);
     }
 
