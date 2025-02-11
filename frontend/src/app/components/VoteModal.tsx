@@ -39,7 +39,6 @@ export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: V
             }
 
             setLoading(true);
-            setError("");
 
             const voteLocation: VoteLocation = {
                 location: location.trim(),
@@ -47,8 +46,14 @@ export default function VoteModal({ isOpen, onClose, groupId, onVoteCreated }: V
                 latitude: selectedLocation.latitude,
                 longitude: selectedLocation.longitude
             };
+            //
+            // await createVote(groupId, {
+            //     location: location.trim(),
+            //     address: selectedLocation.address,
+            //     latitude: selectedLocation.latitude,
+            //     longitude: selectedLocation.longitude
+            // });
 
-            await createVote(groupId, voteLocation);
             onVoteCreated(voteLocation);
             handleClose();
         } catch (error) {
