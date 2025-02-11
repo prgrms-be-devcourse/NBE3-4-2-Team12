@@ -1,4 +1,6 @@
 "use client";
+
+import React from 'react';
 import MainMenu from "@/app/components/MainMenu";
 import {useEffect, useState} from "react";
 import {useParams, useRouter} from "next/navigation";
@@ -28,7 +30,11 @@ export default function GroupDetailPage() {
     const [group, setGroup] = useState<GroupDetail | null>(null);
     const [currentUser, setCurrentUser] = useState<{ username: string, id: number } | null>(null);
     const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
-    const [selectedLocation, setSelectedLocation] = useState<{address: string; latitude: number; longitude: number; }| null>(null);
+    const [selectedLocations, setSelectedLocations] = useState<{
+        address: string;
+        latitude: number;
+        longitude: number;
+    } | null>(null);
 
     const handleDelete = async () => {
         if (group) {
@@ -85,13 +91,14 @@ export default function GroupDetailPage() {
             }
         }
 
-        async function fetchVoteResult(){
+        async function fetchVoteResult() {
             try {
-                const result = await getVoteResult(Number(id));
-                if (result && result.mostVotedLocation){
-                    setSelectedLocation(result.mostVotedLocation);
+                const voteId = 4;
+                const result = await getVoteResult(Number(id),voteId);
+                if (result && result.mostVotedLocations) {
+                    setSelectedLocations(result.mostVotedLocations); // 여러 위치로 설정
                 }
-            }catch (error){
+            } catch (error) {
                 console.error(error);
             }
         }
@@ -180,7 +187,11 @@ export default function GroupDetailPage() {
                             투표 참가
                         </button>
                         {/* 지도 영역 */}
-                        <KakaoMap onLocationSelect={(location) => console.log(location)} selectedLocation={selectedLocation} />
+                        <KakaoMap
+                            onLocationSelect={(location) => console.log(location)}
+                            selectedLocations={selectedLocations}
+                        />
+                        결론
                     </div>
 
                     {/* 하단 버튼 */}

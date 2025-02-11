@@ -32,12 +32,20 @@ export const getVotes = async (groupId: number) => {
 
 export async function getVoteResult(groupId: number, voteId: number) {
     return new Promise(async (resolve, reject) => {
-        setTimeout(()=>{
+        setTimeout(() => {
             resolve({
-                mostVotedLocation: {
-                    address: "서울특별시 강남구 역삼동",
-                    latitude: 37.499920,
-                    longitude: 127.036350}
+                mostVotedLocations: [
+                    {
+                        address: "서울특별시 강남구 역삼동",
+                        latitude: 37.499920,
+                        longitude: 127.036350
+                    },
+                    {
+                        address: "서울특별시 종로구 세종로",
+                        latitude: 37.566535,
+                        longitude: 126.977969
+                    }
+                ]
             });
         }, 500);
     });

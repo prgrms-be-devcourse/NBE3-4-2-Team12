@@ -9,10 +9,10 @@ interface KakaoMapProps {
         latitude: number;
         longitude: number;
     }) => void;
-    selectedLocation?:{address:string; latitude:number; longitude:number;};
+    selectedLocations?:{address:string; latitude:number; longitude:number;}[];
 }
 
-export default function KakaoMap({ onLocationSelect, selectedLocation }: KakaoMapProps) {
+export default function KakaoMap({ onLocationSelect, selectedLocations }: KakaoMapProps) {
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -27,14 +27,27 @@ export default function KakaoMap({ onLocationSelect, selectedLocation }: KakaoMa
 
             const map = new window.kakao.maps.Map(mapRef.current, options);
             const geocoder = new window.kakao.maps.services.Geocoder();
-            let marker = new window.kakao.maps.Marker({map})
 
-            if (selectedLocation){
-                const position = new window.kakao.maps.LatLng(selectedLocation.latitude, selectedLocation.longitude);
-                marker.setPosition(position);
-                marker.setMap(map);
-                map.setCenter(position);
+            const markers = [];
+
+            // 여러 마커를 표시
+            if (selectedLocations && selectedLocations.length > 0) {
+                selectedLocations.forEach((location) => {
+                    const position = new window.kakao.maps.LatLng(location.latitude, location.longitude);
+                    const marker = new window.kakao.maps.Marker({
+                        position,
+                        map
+                    });
+
+                    markers.push(marker);
+                });
+
+                // 마지막 마커 위치로 지도 중심 설정
+                const lastLocation = selectedLocations[selectedLocations.length - 1];
+                const lastPosition = new window.kakao.maps.LatLng(lastLocation.latitude, lastLocation.longitude);
+                map.setCenter(lastPosition);
             }
+
 
             window.kakao.maps.event.addListener(map, 'click', (mouseEvent: any) => {
                 const latlng = mouseEvent.latLng;
@@ -55,7 +68,7 @@ export default function KakaoMap({ onLocationSelect, selectedLocation }: KakaoMa
                 );
             });
         });
-    }, [onLocationSelect, selectedLocation]);
+    }, [onLocationSelect, selectedLocations]);
 
     return <div ref={mapRef} className="w-full h-[400px] rounded-lg" />;
 }
