@@ -36,3 +36,16 @@ export const createVote = async (groupId: number, voteData: {
     }
 };
 
+export const getVotes = async (groupId: number) => {
+    try {
+        const response = await api.get(`votes/groups/${groupId}/votes`);
+        if (response.status !== 200) {
+            console.error("API 호출 실패:", response.data);
+            return [];
+        }
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
