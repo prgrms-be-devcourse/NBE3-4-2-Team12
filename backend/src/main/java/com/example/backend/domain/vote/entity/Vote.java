@@ -28,7 +28,4 @@ public class Vote extends BaseEntity {
     private Double latitude;
     private Double longitude;
 
-    @Column(name = "voter_count")
-    private Integer voterCount;
-
 }

@@ -27,32 +27,13 @@ git fetch origin
 # main 브랜치로 이동합니다
 git checkout main
 
-# 원격의 main 브랜치를 로컬에 반영합니다
-git merge origin/main
-
-# 새로운 기능 브랜치를 생성합니다
-git checkout -b feature/vote-1
 ```
 
 ## 작업 중 최신 변경사항 동기화하기
 
 다른 팀원의 변경사항을 받아올 때는 다음 두 가지 방법 중 하나를 선택합니다:
 
-### 1. merge 방식
-
-```bash
-# 원격의 변경사항을 가져옵니다
-git fetch origin develop
-
-# 현재 브랜치에 develop의 변경사항을 머지합니다
-git merge origin/develop
-
-# 충돌이 발생한 경우 해결 후 커밋합니다
-git add .
-git commit -m "merge: develop 브랜치 변경사항 반영"
-```
-
-### 2. rebase 방식 (권장)
+### rebase 방식 (권장)
 
 ```bash
 # 원격의 변경사항을 가져옵니다
@@ -85,8 +66,6 @@ git commit -m "feat: 투표 기능 구현"
 # 원격 저장소에 푸시합니다
 git push origin feature/vote-1
 
-# rebase 후에는 강제 푸시가 필요할 수 있습니다 - 파일손실 가능
-git push origin feature/vote-1 --force
 ```
 
 ## 커밋 메시지 컨벤션
@@ -115,8 +94,6 @@ feat: 회원가입 API 구현
 - 비밀번호 암호화 처리
 - 회원가입 성공시 환영 이메일 발송
 
-Resolves: #123
-See also: #456, #789
 ```
 
 ## Pull Request 생성하기

@@ -19,7 +19,7 @@ public class VoteRequestDto {
                 .address(this.address)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
-                .voterCount(0)
+//                .voterCount(0)
                 .build();
     }
 }
