@@ -7,6 +7,7 @@ import { createGroup } from "@/app/api/group";
 import MainMenu from "@/app/components/MainMenu";
 // votemodal 추가
 import VoteModal from "@/app/components/VoteModal";
+import {createVote} from "@/app/api/vote";
 
 
 type Category = {
@@ -69,8 +70,25 @@ export default function CreateGroupPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!title.trim() || categoryIds.length === 0 || !maxParticipants) {
-            setErrorMessage("모든 필수 항목을 입력하세요.");
+        //모든 필드 필수로 입력하도록 변경
+        if (!title.trim()) {
+            setErrorMessage("제목을 입력해주세요.");
+            return;
+        }
+        if (categoryIds.length === 0) {
+            setErrorMessage("모집 분야를 선택해주세요.");
+            return;
+        }
+        if (!maxParticipants || maxParticipants <= 0) {
+            setErrorMessage("최대 인원을 설정해주세요.");
+            return;
+        }
+        if (!description.trim()) {
+            setErrorMessage("내용을 입력해주세요.");
+            return;
+        }
+        if (voteLocations.length === 0) {
+            setErrorMessage("최소 1개 이상의 투표 장소를 추가해주세요.");
             return;
         }
 
@@ -88,14 +106,25 @@ export default function CreateGroupPage() {
         };
 
         try {
-            const response = await createGroup(requestData);
-            console.log("모임 생성 성공:", response);
+            // 1. 먼저 그룹을 생성
+            const groupResponse = await createGroup({
+                title,
+                description,
+                maxParticipants: Number(maxParticipants),
+                categoryIds,
+                status: "RECRUITING",
+            });
+
+            // 2. 생성된 그룹의 ID로 vote들 생성
+            const createdGroupId = groupResponse.id;
+            for (const voteLocation of voteLocations) {
+                await createVote(createdGroupId, voteLocation);
+            }
+
             alert("모임이 성공적으로 생성되었습니다!");
             router.push("/");
-        } catch (error) {
-            setErrorMessage(error + "모임 생성 중 오류가 발생했습니다. 다시 시도해주세요.");
-        } finally {
-            setLoading(false);
+        } catch (e) {
+            setErrorMessage( e + "모임 생성 중 오류가 발생했습니다.");
         }
     };
 
