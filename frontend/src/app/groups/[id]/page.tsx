@@ -1,8 +1,10 @@
 "use client";
+
+import React from 'react';
 import MainMenu from "@/app/components/MainMenu";
 import {useEffect, useState} from "react";
 import {useParams, useRouter} from "next/navigation";
-import {deleteGroup, getCurrentUser, getGroup, joinGroup} from "@/app/api";
+import {deleteGroup, getCurrentUser, getGroup, joinGroup, getVoteResult} from "@/app/api";
 import KakaoMap from "@/app/components/KakaoMap";
 import VoteProgressModal from "@/app/components/VoteProgressModal";
 
@@ -28,6 +30,11 @@ export default function GroupDetailPage() {
     const [group, setGroup] = useState<GroupDetail | null>(null);
     const [currentUser, setCurrentUser] = useState<{ username: string, id: number } | null>(null);
     const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
+    const [selectedLocations, setSelectedLocations] = useState<{
+        address: string;
+        latitude: number;
+        longitude: number;
+    } | null>(null);
 
     const handleDelete = async () => {
         if (group) {
@@ -84,15 +91,28 @@ export default function GroupDetailPage() {
             }
         }
 
+        async function fetchVoteResult() {
+            try {
+                const result = await getVoteResult(Number(id));
+                if (result && result.mostVotedLocations) {
+                    setSelectedLocations(result.mostVotedLocations); // 여러 위치로 설정
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
         if (id) {
             fetchGroup();
             fetchCurrentUser();
+            fetchVoteResult();
         }
     }, [id]);
 
     if (!group) return <p className="text-center text-gray-500">로딩 중...</p>;
 
     const isGroupOwner = currentUser && currentUser.id && group.memberId === currentUser.id;
+    const isVoteComplete = currentUser && currentUser.id && isVoteModalOpen;
     console.log("그룹 소유자 여부:", isGroupOwner);
 
     return (
@@ -160,14 +180,26 @@ export default function GroupDetailPage() {
                     {/* 장소 투표 */}
                     <div className="mt-8">
                         <h3 className="text-lg font-semibold">장소 투표</h3>
-                        <button
-                            className="bg-green-500 hover:bg-green-600 text-white font-medium px-4 py-2 rounded-lg mt-3"
-                            onClick={() => setIsVoteModalOpen(true)} // ✅ 모달 열기
-                        >
-                            투표 참가
-                        </button>
-                        {/* 지도 영역 */}
-                        <KakaoMap onLocationSelect={(location) => console.log(location)}/>
+
+                        {group.status === "RECRUITING" && (
+                            <button
+                                className="bg-green-500 hover:bg-green-600 text-white font-medium px-4 py-2 rounded-lg mt-3"
+                                onClick={() => setIsVoteModalOpen(true)} // ✅ 모달 열기
+                            >
+                                투표 참가
+                            </button>
+                        )}
+
+                        {group.status === "COMPLETED" && (
+                            <>
+                                {/* 지도 영역 */}
+                                <KakaoMap
+                                    onLocationSelect={(location) => console.log(location)}
+                                    selectedLocations={selectedLocations}
+                                />
+                                <p className="mt-2 text-gray-700">최종 투표 결과</p>
+                            </>
+                        )}
                     </div>
 
                     {/* 하단 버튼 */}

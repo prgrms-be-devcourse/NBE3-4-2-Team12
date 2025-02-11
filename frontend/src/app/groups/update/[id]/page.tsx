@@ -103,6 +103,7 @@ export default function EditGroupPage() {
                         >
                             <option value="RECRUITING">모집 중</option>
                             <option value="NOT_RECRUITING">모집 마감</option>
+                            <option value="COMPLETED">투표 완료</option>
                         </select>
 
                     </div>
