@@ -29,3 +29,16 @@ export const getVotes = async (groupId: number) => {
         throw error;
     }
 };
+
+export async function getVoteResult(groupId: number, voteId: number) {
+    return new Promise(async (resolve, reject) => {
+        setTimeout(()=>{
+            resolve({
+                mostVotedLocation: {
+                    address: "서울특별시 강남구 역삼동",
+                    latitude: 37.499920,
+                    longitude: 127.036350}
+            });
+        }, 500);
+    });
+}

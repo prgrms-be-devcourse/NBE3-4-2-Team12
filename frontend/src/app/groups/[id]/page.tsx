@@ -2,7 +2,7 @@
 import MainMenu from "@/app/components/MainMenu";
 import {useEffect, useState} from "react";
 import {useParams, useRouter} from "next/navigation";
-import {deleteGroup, getCurrentUser, getGroup, joinGroup} from "@/app/api";
+import {deleteGroup, getCurrentUser, getGroup, joinGroup, getVoteResult} from "@/app/api";
 import KakaoMap from "@/app/components/KakaoMap";
 import VoteProgressModal from "@/app/components/VoteProgressModal";
 
@@ -28,6 +28,7 @@ export default function GroupDetailPage() {
     const [group, setGroup] = useState<GroupDetail | null>(null);
     const [currentUser, setCurrentUser] = useState<{ username: string, id: number } | null>(null);
     const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
+    const [selectedLocation, setSelectedLocation] = useState<{address: string; latitude: number; longitude: number; }| null>(null);
 
     const handleDelete = async () => {
         if (group) {
@@ -84,9 +85,21 @@ export default function GroupDetailPage() {
             }
         }
 
+        async function fetchVoteResult(){
+            try {
+                const result = await getVoteResult(Number(id));
+                if (result && result.mostVotedLocation){
+                    setSelectedLocation(result.mostVotedLocation);
+                }
+            }catch (error){
+                console.error(error);
+            }
+        }
+
         if (id) {
             fetchGroup();
             fetchCurrentUser();
+            fetchVoteResult();
         }
     }, [id]);
 
@@ -167,7 +180,7 @@ export default function GroupDetailPage() {
                             투표 참가
                         </button>
                         {/* 지도 영역 */}
-                        <KakaoMap onLocationSelect={(location) => console.log(location)}/>
+                        <KakaoMap onLocationSelect={(location) => console.log(location)} selectedLocation={selectedLocation} />
                     </div>
 
                     {/* 하단 버튼 */}

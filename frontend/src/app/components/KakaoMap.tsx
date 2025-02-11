@@ -9,9 +9,10 @@ interface KakaoMapProps {
         latitude: number;
         longitude: number;
     }) => void;
+    selectedLocation?:{address:string; latitude:number; longitude:number;};
 }
 
-export default function KakaoMap({ onLocationSelect }: KakaoMapProps) {
+export default function KakaoMap({ onLocationSelect, selectedLocation }: KakaoMapProps) {
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -26,6 +27,14 @@ export default function KakaoMap({ onLocationSelect }: KakaoMapProps) {
 
             const map = new window.kakao.maps.Map(mapRef.current, options);
             const geocoder = new window.kakao.maps.services.Geocoder();
+            let marker = new window.kakao.maps.Marker({map})
+
+            if (selectedLocation){
+                const position = new window.kakao.maps.LatLng(selectedLocation.latitude, selectedLocation.longitude);
+                marker.setPosition(position);
+                marker.setMap(map);
+                map.setCenter(position);
+            }
 
             window.kakao.maps.event.addListener(map, 'click', (mouseEvent: any) => {
                 const latlng = mouseEvent.latLng;
@@ -46,7 +55,7 @@ export default function KakaoMap({ onLocationSelect }: KakaoMapProps) {
                 );
             });
         });
-    }, [onLocationSelect]);
+    }, [onLocationSelect, selectedLocation]);
 
     return <div ref={mapRef} className="w-full h-[400px] rounded-lg" />;
 }
