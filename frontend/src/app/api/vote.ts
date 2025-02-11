@@ -30,7 +30,7 @@ export const getVotes = async (groupId: number) => {
     }
 };
 
-export async function getVoteResult(groupId: number, voteId: number) {
+export async function getVoteResult(groupId: number) {
     return new Promise(async (resolve, reject) => {
         setTimeout(() => {
             resolve({
