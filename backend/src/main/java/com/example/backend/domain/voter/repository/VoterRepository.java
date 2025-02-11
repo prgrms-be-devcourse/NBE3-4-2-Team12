@@ -3,6 +3,7 @@ import com.example.backend.domain.voter.entity.Voter;
 
 import com.example.backend.domain.voter.entity.Voter.VoterId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +19,8 @@ public interface VoterRepository extends JpaRepository<Voter, VoterId> {
 
     // 특정 사용자의 투표 기록 삭제 (투표 취소)
     void deleteById(VoterId voterId);
+
+    // 새로 추가할 메서드
+    @Query("SELECT COUNT(v) FROM Voter v WHERE v.id.voteId = :voteId")
+    long countVoters(Long voteId);
 }

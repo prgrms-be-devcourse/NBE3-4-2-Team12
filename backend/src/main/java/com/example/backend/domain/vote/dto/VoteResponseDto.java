@@ -14,7 +14,7 @@ public class VoteResponseDto {
     private String address;
     private Double latitude;
     private Double longitude;
-    private Integer voterCount;
+//    private Integer voterCount;
     private LocalDateTime createdAt;
 
     public static VoteResponseDto toDto(Vote vote) {
@@ -24,7 +24,7 @@ public class VoteResponseDto {
                 .address(vote.getAddress())
                 .latitude(vote.getLatitude())
                 .longitude(vote.getLongitude())
-                .voterCount(vote.getVoterCount())
+//                .voterCount(vote.getVoterCount())
                 .createdAt(vote.getCreatedAt())
                 .build();
     }
