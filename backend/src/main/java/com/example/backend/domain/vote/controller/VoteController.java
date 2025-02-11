@@ -2,6 +2,7 @@ package com.example.backend.domain.vote.controller;
 
 import java.util.List;
 
+import com.example.backend.domain.vote.dto.VoteResultResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,5 +64,13 @@ public class VoteController {
 		@PathVariable Long voteId) {
 		voteService.deleteVote(groupId, voteId);
 		return ResponseEntity.ok().build();
+	}
+
+	//투표 결과 조회
+	@GetMapping("/groups/{groupId}/results")
+	public ResponseEntity<List<VoteResultResponseDto>> getVoteResults(
+			@PathVariable Long groupId
+	) {
+		return ResponseEntity.ok(voteService.getVoteResults(groupId));
 	}
 }

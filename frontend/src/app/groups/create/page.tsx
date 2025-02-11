@@ -8,6 +8,7 @@ import MainMenu from "@/app/components/MainMenu";
 // votemodal 추가
 import VoteModal from "@/app/components/VoteModal";
 import {createVote} from "@/app/api/vote";
+import axios from "axios";
 
 
 type Category = {
@@ -123,8 +124,15 @@ export default function CreateGroupPage() {
 
             alert("모임이 성공적으로 생성되었습니다!");
             router.push("/");
-        } catch (e) {
-            setErrorMessage( e + "모임 생성 중 오류가 발생했습니다.");
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error("Axios Error Details:", {
+                    message: error.message,
+                    status: error.response?.status,
+                    data: error.response?.data
+                });
+            }
+            throw error; // Re-throw to allow caller to handle
         }
     };
 

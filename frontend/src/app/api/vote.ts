@@ -1,6 +1,19 @@
 // api/vote.ts
 import {api} from "./axiosInstance";
 
+interface VoteResult {
+    voteId: number;
+    location: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    voterCount: number;
+    voters: {
+        memberId: number;
+        nickname: string;
+    }[];
+}
+
 export const createVote = async (groupId: number, voteData: {
     location: string;
     address: string;
@@ -26,6 +39,17 @@ export const getVotes = async (groupId: number) => {
         return response.data;
     } catch (error) {
         console.error(error);
+        throw error;
+    }
+};
+
+
+export const getVoteResults = async (groupId: number): Promise<VoteResult[]> => {
+    try {
+        const response = await api.get(`/votes/groups/${groupId}/results`);
+        return response.data;
+    } catch (error) {
+        console.error("투표 결과 조회 중 오류 발생:", error);
         throw error;
     }
 };

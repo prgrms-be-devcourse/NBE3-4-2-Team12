@@ -3,10 +3,13 @@ package com.example.backend.domain.vote.service;
 import com.example.backend.domain.group.service.GroupService;
 import com.example.backend.domain.vote.dto.VoteRequestDto;
 import com.example.backend.domain.vote.dto.VoteResponseDto;
+import com.example.backend.domain.vote.dto.VoteResultResponseDto;
 import com.example.backend.domain.vote.entity.Vote;
 import com.example.backend.domain.vote.repository.VoteRepository;
+import com.example.backend.domain.voter.entity.Voter;
+import com.example.backend.domain.voter.repository.VoterRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class VoteService {
     private final VoteRepository voteRepository;
-
-    private final GroupService groupService;
+    private final VoterRepository voterRepository;
 
     @Transactional
     public VoteResponseDto createVote(Long groupId, VoteRequestDto request) {
@@ -69,6 +71,16 @@ public class VoteService {
                 .orElseThrow(() -> new EntityNotFoundException("Vote not found"));
 
         voteRepository.delete(vote);
+    }
 
+    @Transactional(readOnly = true)
+    public List<VoteResultResponseDto> getVoteResults(Long groupId) {
+        List<Vote> votes = voteRepository.findAllByGroupId(groupId);
+        return votes.stream()
+                .map(vote -> {
+                    List<Voter> voters = voterRepository.findByIdVoteId(vote.getId());
+                    return VoteResultResponseDto.from(vote, voters);
+                })
+                .collect(Collectors.toList());
     }
 }
