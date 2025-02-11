@@ -79,6 +79,9 @@ public class GroupService {
     public void deleteGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(()-> new GroupException(GroupErrorCode.NOT_FOUND));
         checkValidity(group.getStatus());
+        if (group.getStatus() == GroupStatus.COMPLETED){
+            group.updateStatus(GroupStatus.DELETED);
+        }
         group.updateStatus(GroupStatus.DELETED);
         groupRepository.save(group);
     }

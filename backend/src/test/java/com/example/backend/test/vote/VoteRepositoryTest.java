@@ -30,7 +30,6 @@ class VoteRepositoryTest {
                 .address("서울시 강남구")
                 .latitude(37.498095)
                 .longitude(127.027610)
-                .voterCount(0)
                 .build();
     }
 
@@ -62,7 +61,6 @@ class VoteRepositoryTest {
                 .address("서울시 강남구")
                 .latitude(37.500624)
                 .longitude(127.036489)
-                .voterCount(0)
                 .build();
         voteRepository.save(anotherVote);
 
