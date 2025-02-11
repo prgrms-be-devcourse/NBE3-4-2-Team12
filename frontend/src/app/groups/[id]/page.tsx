@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { getGroup, deleteGroup, joinGroup } from "@/app/api";
 import { getCurrentUser } from "@/app/api";
 import { useRouter } from "next/navigation";
+import KakaoMap from "@/app/components/KakaoMap";
 
 type Category = {
   id: number;
@@ -163,7 +164,7 @@ export default function GroupDetailPage() {
               투표 참가
             </button>
             {/* 지도 영역 */}
-            <div className="bg-blue-200 h-40 w-full mt-5 rounded-lg"></div>
+            <KakaoMap onLocationSelect={(location)=>console.log(location)} />
           </div>
 
           {/* 하단 버튼 */}
