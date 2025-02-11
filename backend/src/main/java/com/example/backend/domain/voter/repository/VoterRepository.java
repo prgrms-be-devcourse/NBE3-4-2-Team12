@@ -3,6 +3,7 @@ import com.example.backend.domain.voter.entity.Voter;
 
 import com.example.backend.domain.voter.entity.Voter.VoterId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,4 +23,7 @@ public interface VoterRepository extends JpaRepository<Voter, VoterId> {
     // 새로 추가할 메서드
     @Query("SELECT COUNT(v) FROM Voter v WHERE v.id.voteId = :voteId")
     long countVoters(Long voteId);
+
+    @Query("SELECT v.id FROM Voter v WHERE v.vote.id IN :voteIds AND v.member.id = :memberId")
+    List<Long> findVoteIdsByVoteIdsAndMemberId(List<Long> voteId, Long memberId);
 }

@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @Builder
 public class VoteResultDto {
-    private List<VoteResponseDto> mostVotedLocations;
+    private List<MostVotedLocationDto> mostVotedLocations;
 }

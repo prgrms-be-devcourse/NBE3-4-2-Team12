@@ -11,7 +11,7 @@ interface VoteResultDto {
     mostVotedLocations: MostVotedLocation[];
 }
 
-export const getMostVotedLocations = async (groupId: number): Promise<VoteResultDto> => {
+export const getVoteResult = async (groupId: number): Promise<VoteResultDto> => {
     try {
         const response = await api.get(`/votes/groups/${groupId}/most-voted`);
         return response.data;
@@ -49,24 +49,3 @@ export const getVotes = async (groupId: number) => {
         throw error;
     }
 };
-
-export async function getVoteResult(groupId: number) {
-    return new Promise(async (resolve, reject) => {
-        setTimeout(() => {
-            resolve({
-                mostVotedLocations: [
-                    {
-                        address: "서울특별시 강남구 역삼동",
-                        latitude: 37.499920,
-                        longitude: 127.036350
-                    },
-                    {
-                        address: "서울특별시 종로구 세종로",
-                        latitude: 37.566535,
-                        longitude: 126.977969
-                    }
-                ]
-            });
-        }, 500);
-    });
-}
