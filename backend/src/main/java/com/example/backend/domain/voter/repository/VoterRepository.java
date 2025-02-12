@@ -4,6 +4,7 @@ import com.example.backend.domain.voter.entity.Voter;
 import com.example.backend.domain.voter.entity.Voter.VoterId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,6 +25,9 @@ public interface VoterRepository extends JpaRepository<Voter, VoterId> {
     @Query("SELECT COUNT(v) FROM Voter v WHERE v.id.voteId = :voteId")
     long countVoters(Long voteId);
 
-    @Query("SELECT v.id FROM Voter v WHERE v.vote.id IN :voteIds AND v.member.id = :memberId")
-    List<Long> findVoteIdsByVoteIdsAndMemberId(List<Long> voteId, Long memberId);
+	// 투표id의 list중 현재 사용자가 투표한 투표의 id만 반환
+	@Query("SELECT v.vote.id FROM Voter v WHERE v.vote.id IN :voteIds AND v.member.id = :memberId")
+	List<Long> findVoteIdsByVoteIdsAndMemberId(@Param("voteIds") List<Long> voteIds, @Param("memberId") Long memberId);
+
+	void deleteByVoteIdIn(List<Long> voteIds);
 }
