@@ -28,7 +28,7 @@ const ProfileEditPage = () => {
         try {
             // 프로필 수정 API 호출
             const response = await updateUserProfile({nickname});
-            alert(`이름이 ${response.data.nickname}으로 변경되었습니다!`); // 알림 띄우기
+            alert(`이름이 ${response.data.nickname}(으)로 변경되었습니다!`); // 알림 띄우기
             router.push("/profile"); // 수정 완료 후 profile 페이지로 이동
         } catch (err) {
             setError("프로필 수정에 실패했습니다. 다시 시도해주세요.");
