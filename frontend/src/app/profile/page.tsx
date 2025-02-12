@@ -36,6 +36,11 @@ const MyInfoPage = () => {
         router.push("/profile/edit"); // "/profile/edit" 경로로 네비게이트
     };
 
+    // 그룹 클릭 시 해당 그룹 페이지로 이동
+    const handleGroupClick = (groupId) => {
+        router.push(`/groups/${groupId}`); // 그룹 상세 페이지로 이동
+    };
+
     if (loading) {
         return <div>로딩 중...</div>;
     }
@@ -65,7 +70,11 @@ const MyInfoPage = () => {
                         <li>참여 중인 모임이 없습니다.</li>
                     ) : (
                         groups.map((group) => (
-                            <li key={group.id} className="p-4 border rounded-xl flex justify-between text-lg">
+                            <li
+                                key={group.id}
+                                className="p-4 border rounded-xl flex justify-between text-lg cursor-pointer hover:bg-gray-100"
+                                onClick={() => handleGroupClick(group.id)} // 그룹 클릭 시 해당 페이지로 이동
+                            >
                                 <span>{group.title}</span>
                                 <span className="text-base text-gray-500">{group.status}</span>
                             </li>
