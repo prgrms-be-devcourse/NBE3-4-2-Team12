@@ -9,7 +9,7 @@ import com.example.backend.domain.member.entity.Member;
 import com.example.backend.domain.member.exception.MemberErrorCode;
 import com.example.backend.domain.member.exception.MemberException;
 import com.example.backend.domain.member.repository.MemberRepository;
-import com.example.backend.global.auth.dto.KakaoUserInfoResponseDto;
+import com.example.backend.global.auth.kakao.dto.KakaoUserInfoResponseDto;
 import com.example.backend.global.auth.service.CookieService;
 import com.example.backend.global.auth.util.TokenProvider;
 

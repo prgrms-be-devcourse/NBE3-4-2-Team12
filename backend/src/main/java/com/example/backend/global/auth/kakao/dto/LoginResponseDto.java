@@ -1,4 +1,4 @@
-package com.example.backend.global.auth.dto;
+package com.example.backend.global.auth.kakao.dto;
 
 import lombok.Builder;
 

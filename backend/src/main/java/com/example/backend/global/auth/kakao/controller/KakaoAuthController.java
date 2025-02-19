@@ -1,4 +1,4 @@
-package com.example.backend.global.auth.controller;
+package com.example.backend.global.auth.kakao.controller;
 
 import java.net.URI;
 
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.global.auth.dto.KakaoTokenResponseDto;
-import com.example.backend.global.auth.dto.KakaoUserInfoResponseDto;
-import com.example.backend.global.auth.dto.LoginResponseDto;
+import com.example.backend.global.auth.kakao.dto.KakaoTokenResponseDto;
+import com.example.backend.global.auth.kakao.dto.KakaoUserInfoResponseDto;
+import com.example.backend.global.auth.kakao.dto.LoginResponseDto;
+import com.example.backend.global.auth.kakao.service.KakaoAuthService;
 import com.example.backend.global.auth.model.CustomUserDetails;
 import com.example.backend.global.auth.service.CookieService;
-import com.example.backend.global.auth.service.KakaoAuthService;
 import com.example.backend.global.response.ApiResponse;
 import com.example.backend.global.response.ErrorResponse;
 
@@ -119,13 +119,11 @@ public class KakaoAuthController {
 
 	/**
 	 * 카카오 로그아웃 옵션 선택 페이지로 리다이렉트
-	 * @param response
 	 * @param customUserDetails
 	 * @return
 	 */
 	@GetMapping("/logout")
-	public ResponseEntity<Void> logout(HttpServletResponse response,
-		@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+	public ResponseEntity<Void> logout(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(URI.create(kakaoAuthService.getKakaoLogoutUrl(customUserDetails.getUserId())));
