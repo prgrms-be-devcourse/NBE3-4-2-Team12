@@ -26,7 +26,7 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@GetMapping
-	public ResponseEntity<ApiResponse<MemberInfoDto>> findMember(
+	public ResponseEntity<ApiResponse<MemberInfoDto>> getCurrentMember(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails
 	) {
 
