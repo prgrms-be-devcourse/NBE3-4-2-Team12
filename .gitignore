@@ -38,6 +38,7 @@ out/
 
 #.gitignore yml 로컬 프로필 설정
 application-local.yml
+application-test.yml
 
 #OS
 .DS_Store
