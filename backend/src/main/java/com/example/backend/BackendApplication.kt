@@ -1,13 +1,12 @@
-package com.example.backend;
+package com.example.backend
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
 @SpringBootApplication
-public class BackendApplication {
+class BackendApplication
 
-	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
-	}
-
+fun main(args: Array<String>) {
+    runApplication<BackendApplication>(*args)
 }
+
