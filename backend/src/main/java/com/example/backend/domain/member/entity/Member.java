@@ -65,6 +65,6 @@ public class Member extends BaseEntity {
 	}
 
 	public void modify(MemberModifyRequestDto memberModifyDto) {
-		this.nickname = memberModifyDto.nickname();
+		this.nickname = memberModifyDto.getNickname();
 	}
 }
