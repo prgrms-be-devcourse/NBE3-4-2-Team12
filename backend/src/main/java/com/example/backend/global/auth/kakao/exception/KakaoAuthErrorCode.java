@@ -1,4 +1,4 @@
-package com.example.backend.global.auth.exception;
+package com.example.backend.global.auth.kakao.exception;
 
 import org.springframework.http.HttpStatus;
 

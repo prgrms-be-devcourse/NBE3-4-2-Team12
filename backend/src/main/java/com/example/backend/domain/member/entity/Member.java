@@ -1,7 +1,7 @@
 package com.example.backend.domain.member.entity;
 
 import com.example.backend.domain.member.dto.MemberModifyRequestDto;
-import com.example.backend.global.auth.dto.KakaoUserInfoResponseDto;
+import com.example.backend.global.auth.kakao.dto.KakaoUserInfoResponseDto;
 import com.example.backend.global.base.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -65,6 +65,6 @@ public class Member extends BaseEntity {
 	}
 
 	public void modify(MemberModifyRequestDto memberModifyDto) {
-		this.nickname = memberModifyDto.nickname();
+		this.nickname = memberModifyDto.getNickname();
 	}
 }
