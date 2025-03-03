@@ -3,6 +3,7 @@ package com.example.backend.domain.admin.entity;
 import com.example.backend.global.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +35,12 @@ public class Admin extends BaseEntity {
 
     public enum  Role {
         ADMIN  // 관리자 권한
+    }
+
+    @Builder
+    public Admin(String adminName, String password) {
+        this.adminName = adminName;
+        this.password = password;
     }
 
     public void setRefreshToken(String refreshToken) {
